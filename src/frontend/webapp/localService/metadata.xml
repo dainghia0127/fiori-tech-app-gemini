@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1" />
+  </edmx:Reference>
+
+  <edmx:DataServices>
+    <Schema Namespace="sap.fiori.tech.academy.srv" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      
+      <!-- Entity Type: DemoHeader -->
+      <EntityType Name="DemoHeaderType">
+        <Key>
+          <PropertyRef Name="HeaderId" />
+          <PropertyRef Name="IsActiveEntity" />
+        </Key>
+        <Property Name="HeaderId" Type="Edm.String" Nullable="false" MaxLength="10" />
+        <Property Name="Title" Type="Edm.String" Nullable="false" MaxLength="100" />
+        <Property Name="Category" Type="Edm.String" Nullable="false" MaxLength="20" />
+        <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="20" />
+        <Property Name="StatusCriticality" Type="Edm.Int32" Nullable="false" />
+        <Property Name="TotalAmount" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="2" />
+        <Property Name="CurrencyCode" Type="Edm.String" Nullable="false" MaxLength="3" />
+        <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" />
+        <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" />
+        <Property Name="LastChangedAt" Type="Edm.DateTimeOffset" Precision="7" />
+        <Property Name="LocalLastChangedAt" Type="Edm.DateTimeOffset" Precision="7" />
+        <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" />
+
+        <NavigationProperty Name="_Items" Type="Collection(sap.fiori.tech.academy.srv.DemoItemType)" Partner="_Header">
+          <OnDelete Action="Cascade" />
+        </NavigationProperty>
+      </EntityType>
+
+      <!-- Entity Type: DemoItem -->
+      <EntityType Name="DemoItemType">
+        <Key>
+          <PropertyRef Name="HeaderId" />
+          <PropertyRef Name="ItemId" />
+          <PropertyRef Name="IsActiveEntity" />
+        </Key>
+        <Property Name="HeaderId" Type="Edm.String" Nullable="false" MaxLength="10" />
+        <Property Name="ItemId" Type="Edm.String" Nullable="false" MaxLength="10" />
+        <Property Name="ItemName" Type="Edm.String" Nullable="false" MaxLength="100" />
+        <Property Name="Quantity" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" />
+        <Property Name="QuantityUnit" Type="Edm.String" Nullable="false" MaxLength="3" />
+        <Property Name="UnitPrice" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="2" />
+        <Property Name="LineTotal" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="2" />
+        <Property Name="CurrencyCode" Type="Edm.String" Nullable="false" MaxLength="3" />
+        <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" />
+
+        <NavigationProperty Name="_Header" Type="sap.fiori.tech.academy.srv.DemoHeaderType" Partner="_Items" />
+      </EntityType>
+
+      <!-- Custom Bound Action: markAsVerified -->
+      <Action Name="markAsVerified" IsBound="true">
+        <Parameter Name="in" Type="sap.fiori.tech.academy.srv.DemoHeaderType" />
+        <ReturnType Type="sap.fiori.tech.academy.srv.DemoHeaderType" />
+      </Action>
+
+      <!-- Entity Container -->
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="DemoHeader" EntityType="sap.fiori.tech.academy.srv.DemoHeaderType">
+          <NavigationPropertyBinding Path="_Items" Target="DemoItem" />
+        </EntitySet>
+        <EntitySet Name="DemoItem" EntityType="sap.fiori.tech.academy.srv.DemoItemType">
+          <NavigationPropertyBinding Path="_Header" Target="DemoHeader" />
+        </EntitySet>
+      </EntityContainer>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+

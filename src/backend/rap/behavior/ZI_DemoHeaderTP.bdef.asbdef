@@ -1,0 +1,79 @@
+managed implementation in class zbp_i_demoheadertp unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_DemoHeaderTP alias DemoHeader
+persistent table zdemo_header
+draft table zdemo_header_d
+lock master
+total etag LastChangedAt
+etag master LocalLastChangedAt
+authorization master ( instance )
+{
+  create;
+  update;
+  delete;
+
+  association _Items { create; with draft; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  action ( features : instance ) calculateTotals result [1] $self;
+  action ( features : instance ) approve result [1] $self;
+
+  determination calculateTotalAmount on modify { create; }
+  validation validateStatusCode on save { field StatusCode; create; update; }
+
+  mapping for zdemo_header
+  {
+    HeaderUUID = header_uuid;
+    DemoCode = demo_code;
+    StatusCode = status_code;
+    TotalAmount = total_amount;
+    CurrencyCode = currency_code;
+    ConfigKey = config_key;
+    CreatedBy = created_by;
+    CreatedAt = created_at;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt = last_changed_at;
+  }
+}
+
+define behavior for ZI_DemoItemTP alias DemoItem
+persistent table zdemo_item
+draft table zdemo_item_d
+lock dependent by _Header
+etag dependent by _Header
+authorization dependent by _Header
+{
+  update;
+  delete;
+
+  association _Header { with draft; }
+
+  determination calculateLineTotal on modify { create; field Quantity, UnitPrice; }
+  determination calculateHeaderTotal on modify { create; field Quantity, UnitPrice; }
+  determination calculateHeaderTotalOnSave on save { create; delete; }
+
+  side effects {
+    field Quantity affects field LineTotal, entity _Header;
+    field UnitPrice affects field LineTotal, entity _Header;
+  }
+
+  mapping for zdemo_item
+  {
+    ItemUUID = item_uuid;
+    HeaderUUID = header_uuid;
+    ItemNumber = item_number;
+    Quantity = quantity;
+    QuantityUnit = quantity_unit;
+    UnitPrice = unit_price;
+    LineTotal = line_total;
+    CurrencyCode = currency_code;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

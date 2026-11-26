@@ -1,0 +1,173 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.ArchitectureViewer"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+
+    <Page
+        id="architecturePage"
+        title="Kiến trúc Kỹ thuật Hệ thống (System Architecture)"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding">
+
+        <content>
+            <!-- 3 Execution Tiers Overview -->
+            <Panel headerText="1. Kiến trúc 3 Tầng Thực thi Kỹ thuật (3 Execution Tiers)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                <l:Grid defaultSpan="XL4 L4 M12 S12" class="sapUiSmallMargin">
+                    <f:Card>
+                        <f:header>
+                            <card:Header
+                                title="Tầng 1: UI Preview Mock"
+                                subtitle="@sap-ux/ui5-middleware-fe-mockserver"
+                                iconSrc="sap-icon://dimension"
+                                statusText="Frontend Only" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallMargin">
+                                <Text text="• Đọc trực tiếp metadata.xml và annotations.xml." class="sapUiTinyMarginBottom" />
+                                <Text text="• Kiểm tra bố cục Fiori Elements List Report &amp; Object Page." class="sapUiTinyMarginBottom" />
+                                <Text text="• Dữ liệu mẫu tĩnh tải từ file JSON cục bộ." />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <f:Card>
+                        <f:header>
+                            <card:Header
+                                title="Tầng 2: Protocol Backend Simulation"
+                                subtitle="CAP Node.js Engine (@sap/cds)"
+                                iconSrc="sap-icon://connected"
+                                statusText="Protocol Mock" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallMargin">
+                                <Text text="• Endpoint OData V4 EDMX tương thích UI5." class="sapUiTinyMarginBottom" />
+                                <Text text="• Hỗ trợ Query Options: $filter, $select, $expand, $orderby." class="sapUiTinyMarginBottom" />
+                                <Text text="• Bộ nhớ tạm SQLite in-memory cho thao tác CRUD." />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <f:Card>
+                        <f:header>
+                            <card:Header
+                                title="Tầng 3: Real Execution Engine"
+                                subtitle="SAP S/4HANA 2025 (PQPOC 100)"
+                                iconSrc="sap-icon://database"
+                                statusText="Real SAP Core" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallMargin">
+                                <Text text="• Thực thi thực tế Behavior Pool trong ABAP Platform." class="sapUiTinyMarginBottom" />
+                                <Text text="• Quản lý Transactional Buffer &amp; Save Sequence." class="sapUiTinyMarginBottom" />
+                                <Text text="• Optimistic Locking (ETag Master &amp; Total ETag)." />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+                </l:Grid>
+            </Panel>
+
+            <!-- Foundation Software Components Matrix (Target Reference Baseline) -->
+            <Panel headerText="2. Software Components Baseline Tham Chiếu (SAP S/4HANA 2025 — PQPOC Client 100)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                <Table class="sapUiSmallMargin">
+                    <columns>
+                        <Column width="30%"><Text text="Software Component" /></Column>
+                        <Column width="20%"><Text text="Release / SP" /></Column>
+                        <Column width="35%"><Text text="Vai trò Kiến trúc" /></Column>
+                        <Column width="15%"><Text text="Trạng thái" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="SAP_BASIS" style="font-weight: 600;" />
+                                <Text text="816 (SP 0001)" />
+                                <Text text="Core ABAP Platform Foundation 2025" />
+                                <ObjectStatus text="Verified" state="Success" icon="sap-icon://sys-enter-2" />
+                            </cells>
+                        </ColumnListItem>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="SAP_GWFND" style="font-weight: 600;" />
+                                <Text text="816 (SP 0001)" />
+                                <Text text="SAP Gateway Foundation OData V2/V4" />
+                                <ObjectStatus text="Verified" state="Success" icon="sap-icon://sys-enter-2" />
+                            </cells>
+                        </ColumnListItem>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="SAP_UI" style="font-weight: 600;" />
+                                <Text text="816 (SP 0001)" />
+                                <Text text="Front-End Server Component &amp; FLP Platform" />
+                                <ObjectStatus text="Verified" state="Success" icon="sap-icon://sys-enter-2" />
+                            </cells>
+                        </ColumnListItem>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="S4CORE" style="font-weight: 600;" />
+                                <Text text="109 (SP 0001)" />
+                                <Text text="S/4HANA Application Business Core" />
+                                <ObjectStatus text="Verified" state="Success" icon="sap-icon://sys-enter-2" />
+                            </cells>
+                        </ColumnListItem>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="UIS4H" style="font-weight: 600;" />
+                                <Text text="109 (SP 0001)" />
+                                <Text text="S/4HANA Fiori Application UI Catalog" />
+                                <ObjectStatus text="Verified" state="Success" icon="sap-icon://sys-enter-2" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+
+            <!-- Save Sequence & Point of No Return -->
+            <Panel headerText="3. Chuỗi Lưu trữ Giao dịch (Save Sequence &amp; Point of No Return)" expandable="true" expanded="true">
+                <VBox class="sapUiSmallMargin">
+                    <MessageStrip
+                        text="Quy tắc bắt buộc: Validation nghiệp vụ (như kiểm tra HandlerClass Whitelist) bắt buộc phải thực hiện tại check_before_save (TRƯỚC Point of No Return). save_modified đã vượt qua ranh giới này và tuyệt đối không gọi COMMIT WORK hoặc ROLLBACK WORK."
+                        type="Warning"
+                        showIcon="true"
+                        class="sapUiSmallMarginBottom" />
+
+                    <HBox wrap="Wrap" justifyContent="SpaceAround" class="sapUiMediumMarginTopBottom">
+                        <VBox alignItems="Center" class="sapUiSmallMargin">
+                            <core:Icon src="sap-icon://edit" size="2rem" color="#0854a0" class="sapUiTinyMarginBottom" />
+                            <Title text="1. Interaction Phase" level="H4" />
+                            <Text text="Đọc/ghi Transactional Buffer bằng EML IN LOCAL MODE." align="Center" />
+                        </VBox>
+
+                        <core:Icon src="sap-icon://navigation-right-arrow" size="2rem" color="#6a6d70" class="sapUiMediumMarginTop" />
+
+                        <VBox alignItems="Center" class="sapUiSmallMargin">
+                            <core:Icon src="sap-icon://validate" size="2rem" color="#d14900" class="sapUiTinyMarginBottom" />
+                            <Title text="2. check_before_save" level="H4" />
+                            <Text text="Point of No Return: Kiểm tra Whitelist &amp; validations on save." align="Center" />
+                        </VBox>
+
+                        <core:Icon src="sap-icon://navigation-right-arrow" size="2rem" color="#6a6d70" class="sapUiMediumMarginTop" />
+
+                        <VBox alignItems="Center" class="sapUiSmallMargin">
+                            <core:Icon src="sap-icon://save" size="2rem" color="#107e3e" class="sapUiTinyMarginBottom" />
+                            <Title text="3. save_modified" level="H4" />
+                            <Text text="Ghi dữ liệu sạch xuống database. Không gọi COMMIT WORK." align="Center" />
+                        </VBox>
+
+                        <core:Icon src="sap-icon://navigation-right-arrow" size="2rem" color="#6a6d70" class="sapUiMediumMarginTop" />
+
+                        <VBox alignItems="Center" class="sapUiSmallMargin">
+                            <core:Icon src="sap-icon://accept" size="2rem" color="#107e3e" class="sapUiTinyMarginBottom" />
+                            <Title text="4. Framework Commit" level="H4" />
+                            <Text text="SAP LUW tự động kích hoạt COMMIT WORK đóng transaction." align="Center" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>
+

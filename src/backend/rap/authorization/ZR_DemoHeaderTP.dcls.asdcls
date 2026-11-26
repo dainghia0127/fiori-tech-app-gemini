@@ -1,0 +1,8 @@
+@EndUserText.label: 'Row-level Access Control for Demo Header'
+@MappingRole: true
+define role ZR_DemoHeaderTP {
+  grant select on ZI_DemoHeaderTP
+  where ( StatusCode ) = aspect pfcg_auth( S_TABU_DIS, ACTVT = '03', DICBERCLS = 'ZDEM' )
+     or StatusCode = 'AP';
+}
+

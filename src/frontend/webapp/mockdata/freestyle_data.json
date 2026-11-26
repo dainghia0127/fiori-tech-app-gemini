@@ -1,0 +1,90 @@
+{
+  "systemConfig": {
+    "serverName": "PQPOC-S4HANA-2025",
+    "client": "100",
+    "systemId": "PQP",
+    "sapBasisRelease": "816",
+    "sapUiRelease": "8.16",
+    "maxConcurrentSessions": 50,
+    "currentActiveSessions": 32,
+    "maintenanceMode": false,
+    "logLevel": "DEBUG",
+    "memoryUsagePercent": 68.5,
+    "cpuUsagePercent": 45.2,
+    "dbHitRatioPercent": 98.4
+  },
+  "modules": [
+    {
+      "id": "MOD-01",
+      "name": "RAP Core Engine",
+      "package": "ZNGHIANDD_TEST",
+      "responsible": "NGS.NGHIANDD",
+      "status": "Active",
+      "statusState": "Success",
+      "rating": 5,
+      "healthScore": 96,
+      "details": {
+        "rootEntity": "ZI_DemoHeaderTP",
+        "lockMaster": "ZI_DemoHeaderTP",
+        "draftTable": "ZDEMO_HEADER_D",
+        "description": "Quản lý Transactional Buffer, Save Sequence và EML Dispatcher cho kịch bản Managed Draft."
+      }
+    },
+    {
+      "id": "MOD-02",
+      "name": "OData V4 Gateway Dispatcher",
+      "package": "ZNGHIANDD_TEST",
+      "responsible": "NGS.NGHIANDD",
+      "status": "Active",
+      "statusState": "Success",
+      "rating": 4,
+      "healthScore": 92,
+      "details": {
+        "serviceName": "ZUI_DEMO_HEADER_O4",
+        "bindingType": "OData V4 - UI",
+        "batchProcessing": "Multipart/mixed ChangeSet",
+        "description": "Điều phối các request $batch, Side Effects và ETag validation từ Fiori client tới ABAP backend."
+      }
+    },
+    {
+      "id": "MOD-03",
+      "name": "Fiori Elements Flexible Programming",
+      "package": "ZNGHIANDD_TEST",
+      "responsible": "NGS.NGHIANDD",
+      "status": "Optimized",
+      "statusState": "Information",
+      "rating": 5,
+      "healthScore": 98,
+      "details": {
+        "framework": "SAPUI5 1.136.0",
+        "extensions": "ListReportExtension, ObjectPageExtension",
+        "buildingBlocks": "Table, FilterBar, Field, Chart",
+        "description": "Kết hợp Floorplans tự động sinh bởi Annotations với các Custom Actions và Building Blocks mở rộng."
+      }
+    },
+    {
+      "id": "MOD-04",
+      "name": "Clean Core ABAP Cloud Checker",
+      "package": "ZNGHIANDD_TEST",
+      "responsible": "NGS.NGHIANDD",
+      "status": "Monitoring",
+      "statusState": "Warning",
+      "rating": 4,
+      "healthScore": 88,
+      "details": {
+        "languageVersion": "Standard ABAP with strict(2) rules",
+        "apiContract": "C1 Released APIs check",
+        "atcCheckVariant": "ABAP_CLOUD_READINESS",
+        "description": "Thẩm định cú pháp không sử dụng các lệnh lỗi thời (obsolete statements) và tuân thủ hợp đồng RAP strict 2."
+      }
+    }
+  ],
+  "sampleValidationEntities": {
+    "entityName": "DemoConfigEntity",
+    "configKey": "CFG_DEFAULT_TIMEOUT",
+    "configValue": "3600",
+    "threshold": 100,
+    "emailNotification": "admin@fiori-academy.internal"
+  }
+}
+

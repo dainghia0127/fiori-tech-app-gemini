@@ -1,0 +1,69 @@
+[
+  {
+    "HeaderId": "HDR-001",
+    "ItemId": "ITM-010",
+    "ItemName": "CDS View Entity Base Definition (ZI_DemoHeaderTP)",
+    "Quantity": 1.000,
+    "QuantityUnit": "EA",
+    "UnitPrice": 650.00,
+    "LineTotal": 650.00,
+    "CurrencyCode": "USD",
+    "IsActiveEntity": true
+  },
+  {
+    "HeaderId": "HDR-001",
+    "ItemId": "ITM-020",
+    "ItemName": "RAP Behavior Pool & Determinations Implementation",
+    "Quantity": 1.000,
+    "QuantityUnit": "EA",
+    "UnitPrice": 900.00,
+    "LineTotal": 900.00,
+    "CurrencyCode": "USD",
+    "IsActiveEntity": true
+  },
+  {
+    "HeaderId": "HDR-002",
+    "ItemId": "ITM-010",
+    "ItemName": "Flexible Column Layout & List Report Floorplan",
+    "Quantity": 2.000,
+    "QuantityUnit": "EA",
+    "UnitPrice": 720.25,
+    "LineTotal": 1440.50,
+    "CurrencyCode": "USD",
+    "IsActiveEntity": true
+  },
+  {
+    "HeaderId": "HDR-002",
+    "ItemId": "ITM-020",
+    "ItemName": "Object Page Header Facets & Building Blocks Integration",
+    "Quantity": 2.000,
+    "QuantityUnit": "EA",
+    "UnitPrice": 700.00,
+    "LineTotal": 1400.00,
+    "CurrencyCode": "USD",
+    "IsActiveEntity": true
+  },
+  {
+    "HeaderId": "HDR-003",
+    "ItemId": "ITM-010",
+    "ItemName": "Custom Saver Class save_modified with BAPI Invocation",
+    "Quantity": 1.000,
+    "QuantityUnit": "EA",
+    "UnitPrice": 920.00,
+    "LineTotal": 920.00,
+    "CurrencyCode": "USD",
+    "IsActiveEntity": true
+  },
+  {
+    "HeaderId": "HDR-004",
+    "ItemId": "ITM-010",
+    "ItemName": "Access Control DCL Aspect pfcg_auth with authorization",
+    "Quantity": 2.000,
+    "QuantityUnit": "EA",
+    "UnitPrice": 1700.00,
+    "LineTotal": 3400.00,
+    "CurrencyCode": "USD",
+    "IsActiveEntity": true
+  }
+]
+

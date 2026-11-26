@@ -1,0 +1,286 @@
+{
+  "categories": [
+    {
+      "id": "CAT_FE_V4",
+      "name": "1. Mẫu Thiết Kế Fiori Elements V4",
+      "icon": "sap-icon://dimension",
+      "count": 4,
+      "description": "Kiến trúc và triển khai List Report, Object Page, Analytical List Page và Flexible Column Layout trên OData V4."
+    },
+    {
+      "id": "CAT_FE_BLOCKS",
+      "name": "2. Khối Dựng Sẵn Fiori Building Blocks & Macros",
+      "icon": "sap-icon://grid",
+      "count": 2,
+      "description": "Sử dụng sap.fe.macros: Field, Table, FilterBar, Chart, Form và Visual Filters trong freestyle views."
+    },
+    {
+      "id": "CAT_UI5_FREE",
+      "name": "3. Kiến Trúc Freestyle SAPUI5 Core & MVC",
+      "icon": "sap-icon://developer-settings",
+      "count": 3,
+      "description": "Component lifecycle, nested XML views, fragments, dynamic routing, MessageManager, custom controls."
+    },
+    {
+      "id": "CAT_UI5_BINDING",
+      "name": "4. Liên Kết Dữ Liệu & Quản Trị Trạng Thái",
+      "icon": "sap-icon://synchronize",
+      "count": 1,
+      "description": "OData V4 ContextBinding, ListBinding, Client-side filtering, Expression Binding, JSON/Resource Models."
+    },
+    {
+      "id": "CAT_ODATA_V4",
+      "name": "5. Chuẩn Giao Thức OData V4 Chuyên Sâu",
+      "icon": "sap-icon://connected",
+      "count": 2,
+      "description": "Query options ($filter, $expand, $search, $select, $orderby), Bound/Unbound Actions, Functions, Multipart $batch."
+    },
+    {
+      "id": "CAT_CONCURRENCY",
+      "name": "6. Quản Trị Khóa, Bản Nháp & Xung Đột Dữ Liệu",
+      "icon": "sap-icon://locked",
+      "count": 2,
+      "description": "Optimistic Concurrency Control, ETag Master vs Total ETag, Draft Table DDIC, Enqueue Lock Master."
+    },
+    {
+      "id": "CAT_RAP_CORE",
+      "name": "7. Lập Trình Backend ABAP RAP Core",
+      "icon": "sap-icon://database",
+      "count": 3,
+      "description": "BDEF strict(2), Determinations, Validations, Dynamic Feature Control, Side Effects, EML syntax in local mode."
+    },
+    {
+      "id": "CAT_RAP_ADV",
+      "name": "8. Kịch Bản ABAP RAP Nâng Cao & Mở Rộng",
+      "icon": "sap-icon://puzzle",
+      "count": 2,
+      "description": "Managed with Unmanaged Save (save_modified), Pure Unmanaged, CDS Custom Entity với IF_RAP_QUERY_PROVIDER."
+    },
+    {
+      "id": "CAT_CLEAN_CORE",
+      "name": "9. Nguyên Tắc Clean Core, ABAP Cloud & Bảo Mật",
+      "icon": "sap-icon://shield",
+      "count": 2,
+      "description": "ABAP Language Version Cloud vs Standard, C1 Release Contracts, CDS Access Control (DCL with PFCG), CSRF Tokens."
+    },
+    {
+      "id": "CAT_DEVOPS",
+      "name": "10. Giám Sát Hiệu Năng, Kiểm Thử & CI/CD",
+      "icon": "sap-icon://speed",
+      "count": 1,
+      "description": "UI5 Network Profiling, Preload bundling, QUnit, OPA5, ABAP Unit for RAP BO, FLP Content Deployment."
+    }
+  ],
+  "topics": [
+    {
+      "id": "TOPIC_FE_01",
+      "categoryId": "CAT_FE_V4",
+      "title": "Cấu hình List Report V4 & UI Annotations",
+      "level": "Associate",
+      "lab": "Lab 1: Fiori Elements V4",
+      "summary": "Cấu hình manifest.json và CDS UI annotations (@UI.selectionFields, @UI.lineItem) cho List Report V4.",
+      "keywords": ["List Report", "manifest.json", "@UI.lineItem", "OData V4"],
+      "codeSnippetId": "SNIP_CDS_HEADER_TP"
+    },
+    {
+      "id": "TOPIC_FE_02",
+      "categoryId": "CAT_FE_V4",
+      "title": "Thiết kế Object Page V4 (Header & Facets)",
+      "level": "Associate",
+      "lab": "Lab 1: Fiori Elements V4",
+      "summary": "Xây dựng Header Facets, Sub-sections, Dynamic Page Title và Smart Actions trên Object Page V4.",
+      "keywords": ["Object Page", "Header Facets", "@UI.facet", "Sections"],
+      "codeSnippetId": "SNIP_BDEF_HEADER"
+    },
+    {
+      "id": "TOPIC_FE_03",
+      "categoryId": "CAT_FE_V4",
+      "title": "Mở rộng Controller Floorplan (Controller Extensions)",
+      "level": "Professional",
+      "lab": "Lab 1: Fiori Elements V4",
+      "summary": "Mở rộng controller floorplan bằng sap.ui.core.mvc.ControllerExtension để can thiệp vào Page lifecycle.",
+      "keywords": ["ControllerExtension", "Extension Points", "Custom Actions", "Override"],
+      "codeSnippetId": "SNIP_UI5_CONTROLLER"
+    },
+    {
+      "id": "TOPIC_FE_04",
+      "categoryId": "CAT_FE_V4",
+      "title": "Bố cục Đa Cột Linh Hoạt (Flexible Column Layout)",
+      "level": "Professional",
+      "lab": "Lab 1: Fiori Elements V4",
+      "summary": "Triển khai điều hướng đa cột (Master-Detail-Detail) với 3 tầng phân cấp tự động đồng bộ routing.",
+      "keywords": ["FCL", "Flexible Column Layout", "TwoColumnsMidExpanded", "ThreeColumnsEndExpanded"],
+      "codeSnippetId": "SNIP_MANIFEST_ROUTING"
+    },
+    {
+      "id": "TOPIC_BB_01",
+      "categoryId": "CAT_FE_BLOCKS",
+      "title": "Khối Dựng Sẵn: Bảng Dữ Liệu Thông Minh (Macros Table)",
+      "level": "Professional",
+      "lab": "Lab 1: Fiori Elements V4",
+      "summary": "Tích hợp bảng thông minh Fiori Elements vào XML View tự do với đầy đủ tính năng phân trang và sắp xếp.",
+      "keywords": ["sap.fe.macros.Table", "Building Blocks", "Smart Table", "XML View"],
+      "codeSnippetId": "SNIP_XML_TABLE_MACRO"
+    },
+    {
+      "id": "TOPIC_BB_02",
+      "categoryId": "CAT_FE_BLOCKS",
+      "title": "Khối Dựng Sẵn: Thanh Bộ Lọc Tự Động (Macros FilterBar)",
+      "level": "Professional",
+      "lab": "Lab 1: Fiori Elements V4",
+      "summary": "Tạo bộ lọc đa trường tự động kết nối với Building Block Table mà không cần viết controller logic.",
+      "keywords": ["sap.fe.macros.FilterBar", "Visual Filter", "Selection Variant"],
+      "codeSnippetId": "SNIP_XML_FILTER_MACRO"
+    },
+    {
+      "id": "TOPIC_UI5_01",
+      "categoryId": "CAT_UI5_FREE",
+      "title": "Cấu Trúc MVC & Khai Báo manifest.json Chuẩn",
+      "level": "Associate",
+      "lab": "Lab 2: Freestyle SAPUI5",
+      "summary": "Cấu trúc chuẩn manifest.json (sap.app, sap.ui, sap.ui5), models declaration, asynchronous preload.",
+      "keywords": ["Component.js", "manifest.json", "MVC", "Async Loading"],
+      "codeSnippetId": "SNIP_MANIFEST_ROUTING"
+    },
+    {
+      "id": "TOPIC_UI5_02",
+      "categoryId": "CAT_UI5_FREE",
+      "title": "Định Tuyến Động & Truyền Tham Số URL (Routing)",
+      "level": "Professional",
+      "lab": "Lab 2: Freestyle SAPUI5",
+      "summary": "Định tuyến nâng cao hỗ trợ hash pattern matching, regex arguments, query params và matched event handling.",
+      "keywords": ["Router", "Targets", "Bypassed", "Navigation Parameters"],
+      "codeSnippetId": "SNIP_UI5_CONTROLLER"
+    },
+    {
+      "id": "TOPIC_UI5_03",
+      "categoryId": "CAT_UI5_FREE",
+      "title": "Quản Lý Thông Báo Lỗi Tập Trung (MessageManager)",
+      "level": "Professional",
+      "lab": "Lab 2: Freestyle SAPUI5",
+      "summary": "Tích hợp Core MessageManager, tự động hiển thị message popover cho lỗi HTTP 400/500 và validation.",
+      "keywords": ["MessageManager", "MessagePopover", "sap.ui.core.message", "Target Binding"],
+      "codeSnippetId": "SNIP_UI5_CONTROLLER"
+    },
+    {
+      "id": "TOPIC_BIND_01",
+      "categoryId": "CAT_UI5_BINDING",
+      "title": "Liên Kết Dữ Liệu OData V4: ContextBinding & ListBinding",
+      "level": "Professional",
+      "lab": "Lab 3: OData V4 Engine",
+      "summary": "Cơ chế quản lý Context trong OData V4 Model: auto-expand, requestSideEffects, created contexts, cache invalidation.",
+      "keywords": ["ContextBinding", "ListBinding", "ODataModel V4", "$$updateGroupId"],
+      "codeSnippetId": "SNIP_UI5_CONTROLLER"
+    },
+    {
+      "id": "TOPIC_ODATA_01",
+      "categoryId": "CAT_ODATA_V4",
+      "title": "Tối Ưu Truy Vấn OData V4 ($filter, $expand, $search)",
+      "level": "Professional",
+      "lab": "Lab 3: OData V4 Engine",
+      "summary": "Sử dụng các biểu thức lọc phức tạp, lambda operators (any/all), deep expand đa cấp và full-text search.",
+      "keywords": ["$filter", "$expand", "$search", "Lambda Operators"],
+      "codeSnippetId": "SNIP_QUERY_PROVIDER"
+    },
+    {
+      "id": "TOPIC_ODATA_02",
+      "categoryId": "CAT_ODATA_V4",
+      "title": "Đóng Gói Giao Dịch Multipart $batch & Change Sets",
+      "level": "Architect",
+      "lab": "Lab 3: OData V4 Engine",
+      "summary": "Nguyên lý đóng gói nhiều thao tác mutating vào một HTTP POST Multipart $batch duy nhất nhằm tối ưu hóa SAP LUW.",
+      "keywords": ["$batch", "Changeset", "Content-ID", "Transactional Boundary"],
+      "codeSnippetId": "SNIP_BDEF_HEADER"
+    },
+    {
+      "id": "TOPIC_CONCUR_01",
+      "categoryId": "CAT_CONCURRENCY",
+      "title": "Kiểm Soát Xung Đột Dữ Liệu Đồng Thời (ETag OCC)",
+      "level": "Architect",
+      "lab": "Lab 4: RAP Managed BO",
+      "summary": "Phân biệt ETag Master (LocalLastChangedAt cho HTTP If-Match) và Total ETag (LastChangedAt cho Resume Draft).",
+      "keywords": ["ETag Master", "Total ETag", "If-Match", "Optimistic Locking"],
+      "codeSnippetId": "SNIP_BDEF_HEADER"
+    },
+    {
+      "id": "TOPIC_CONCUR_02",
+      "categoryId": "CAT_CONCURRENCY",
+      "title": "Cấu Trúc Bảng Nháp (Draft Table DDIC & Admin Inc)",
+      "level": "Architect",
+      "lab": "Lab 4: RAP Managed BO",
+      "summary": "Cấu trúc bảng nháp DDIC, cờ ảo IsActiveEntity, Draft Admin Data và quy trình đồng bộ bằng Quick Fix trong ADT.",
+      "keywords": ["Draft Table", "sych_bdl_draft_admin_inc", "IsActiveEntity", "ADT Quick Fix"],
+      "codeSnippetId": "SNIP_DRAFT_TABLE"
+    },
+    {
+      "id": "TOPIC_RAP_01",
+      "categoryId": "CAT_RAP_CORE",
+      "title": "Xây Dựng BDEF Chuẩn Managed strict(2) Mode",
+      "level": "Architect",
+      "lab": "Lab 4: RAP Managed BO",
+      "summary": "Cấu trúc định nghĩa hành vi nghiêm ngặt strict(2), association [create; with draft;], etag dependent by _Header.",
+      "keywords": ["strict (2)", "BDEF", "with draft", "Composition", "etag dependent"],
+      "codeSnippetId": "SNIP_BDEF_HEADER"
+    },
+    {
+      "id": "TOPIC_RAP_02",
+      "categoryId": "CAT_RAP_CORE",
+      "title": "Tự Động Tính Toán & Cập Nhật Giao Diện (Determinations & Side Effects)",
+      "level": "Architect",
+      "lab": "Lab 4: RAP Managed BO",
+      "summary": "Thiết kế Determinations tính tổng độc lập thứ tự thực thi, BDL side effects và cơ chế so sánh giá trị chống vòng lặp.",
+      "keywords": ["Determinations", "Side Effects", "Idempotence", "EML Loop Prevention"],
+      "codeSnippetId": "SNIP_DETERMINATION_HANDLER"
+    },
+    {
+      "id": "TOPIC_RAP_03",
+      "categoryId": "CAT_RAP_CORE",
+      "title": "Kiểm Soát Nút Bấm Động (Dynamic Feature Control)",
+      "level": "Architect",
+      "lab": "Lab 4: RAP Managed BO",
+      "summary": "Hiện thực hóa get_instance_features và get_instance_authorizations để kích hoạt / vô hiệu hóa button trên UI.",
+      "keywords": ["%features", "Feature Control", "Authorization Master", "get_instance_features"],
+      "codeSnippetId": "SNIP_DETERMINATION_HANDLER"
+    },
+    {
+      "id": "TOPIC_ADV_01",
+      "categoryId": "CAT_RAP_ADV",
+      "title": "RAP Managed Kết Hợp Lưu Tùy Chỉnh (Unmanaged Save)",
+      "level": "Architect",
+      "lab": "Lab 5: Advanced RAP",
+      "summary": "Phân định Point of No Return giữa check_before_save (validations) và save_modified. Factory Whitelist pattern.",
+      "keywords": ["save_modified", "check_before_save", "Point of No Return", "Whitelist Pattern"],
+      "codeSnippetId": "SNIP_SAVER_CLASS"
+    },
+    {
+      "id": "TOPIC_ADV_02",
+      "categoryId": "CAT_RAP_ADV",
+      "title": "Dịch Vụ OData V4 Ảo Bằng CDS Custom Entity",
+      "level": "Architect",
+      "lab": "Lab 5: Advanced RAP",
+      "summary": "Xây dựng dịch vụ OData V4 ảo không có bảng vật lý, xử lý auth check an toàn, filter ranges, dynamic sorting, paging và đếm.",
+      "keywords": ["Custom Entity", "IF_RAP_QUERY_PROVIDER", "io_request", "io_response"],
+      "codeSnippetId": "SNIP_QUERY_PROVIDER"
+    },
+    {
+      "id": "TOPIC_CLEAN_01",
+      "categoryId": "CAT_CLEAN_CORE",
+      "title": "Kiến Trúc Clean Core: ABAP Cloud vs Standard ABAP",
+      "level": "Architect",
+      "lab": "Lab 6: Clean Core & Security",
+      "summary": "Ranh giới kiến trúc Clean Core: API Release Contract C1, phân loại Language Version, kỹ thuật bọc logic kế thừa.",
+      "keywords": ["Clean Core", "ABAP Cloud", "Contract C1", "Standard ABAP"],
+      "codeSnippetId": "SNIP_BDEF_HEADER"
+    },
+    {
+      "id": "TOPIC_CLEAN_02",
+      "categoryId": "CAT_CLEAN_CORE",
+      "title": "Phân Quyền Dữ Liệu Cấp Dòng Bằng CDS Access Control (DCL)",
+      "level": "Architect",
+      "lab": "Lab 6: Clean Core & Security",
+      "summary": "Bảo mật cấp dòng (Row-level Security) bằng DEFINE ROLE, aspect(pfcg_auth) kết hợp Authorization Object.",
+      "keywords": ["DCL", "Access Control", "DEFINE ROLE", "pfcg_auth"],
+      "codeSnippetId": "SNIP_CDS_HEADER_TP"
+    }
+  ]
+}

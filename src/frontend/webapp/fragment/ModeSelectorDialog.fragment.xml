@@ -1,0 +1,71 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+    <Dialog
+        id="modeSelectorDialog"
+        title="{i18n>modeDialogTitle}"
+        contentWidth="580px"
+        class="sapUiContentPadding">
+        <content>
+            <VBox class="sapUiTinyMargin">
+                <MessageStrip
+                    text="{i18n>modeDialogDesc}"
+                    type="Information"
+                    showIcon="true"
+                    class="sapUiSmallMarginBottom" />
+
+                <RadioButtonGroup id="modeRadioGroup" selectedIndex="0" select=".onModeSelected" class="sapUiSmallMarginBottom">
+                    <buttons>
+                        <RadioButton
+                            id="rbStandalone"
+                            text="{i18n>modeStandalone}"
+                            tooltip="{i18n>modeStandaloneDesc}" />
+                        <RadioButton
+                            id="rbSapConnected"
+                            text="{i18n>modeSapConnected}"
+                            tooltip="{i18n>modeSapConnectedDesc}" />
+                    </buttons>
+                </RadioButtonGroup>
+
+                <Panel headerText="Thông tin Chi tiết Runtime" expandable="true" expanded="true" class="sapUiSmallMarginTop">
+                    <VBox class="sapUiSmallMargin">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap" class="sapUiSmallMarginBottom">
+                            <Label text="Chế độ hiện tại:" design="Bold" class="sapUiSmallMarginEnd" />
+                            <ObjectStatus
+                                text="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? 'SAP S/4HANA Connected' : 'Standalone Mock Engine' }"
+                                state="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? 'Success' : 'Information' }" />
+                        </HBox>
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap" class="sapUiSmallMarginBottom">
+                            <Label text="Target Endpoint (Tham chiếu):" class="sapUiSmallMarginEnd" />
+                            <Text text="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? '/sap/opu/odata4/.../zsd_demo/0001/ (cần UI5 proxy/FLP)' : '/mock/odata/v4/demo/' }" />
+                        </HBox>
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap" class="sapUiSmallMarginBottom">
+                            <Label text="Môi trường kết nối:" class="sapUiSmallMarginEnd" />
+                            <ObjectStatus
+                                text="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? 'UI Preview (Chưa cấu hình proxy SAP)' : 'FE-Mockserver Local Active' }"
+                                state="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? 'Warning' : 'Success' }" />
+                        </HBox>
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap">
+                            <Label text="Baseline Tham Chiếu:" class="sapUiSmallMarginEnd" />
+                            <Text text="S/4HANA 2025 PQPOC 100 (SAP_BASIS 816)" />
+                        </HBox>
+                    </VBox>
+                </Panel>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="{i18n>modeConfirmBtn}"
+                type="Emphasized"
+                icon="sap-icon://synchronize"
+                press=".onConfirmModeSwitch" />
+        </beginButton>
+        <endButton>
+            <Button
+                text="{i18n>modeCancelBtn}"
+                press=".onCloseModeDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
+

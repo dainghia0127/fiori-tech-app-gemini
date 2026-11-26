@@ -1,0 +1,232 @@
+{
+  "title": "Sổ Tay Hướng Dẫn Sử Dụng & Vận Hành Toàn Diện Ứng Dụng",
+  "subtitle": "Tra cứu trực quan từng chức năng, nội dung, thông tin và kịch bản kiểm thử (Test Guide)",
+  "sections": [
+    {
+      "id": "sec_mode",
+      "index": "01",
+      "title": "Bộ Chuyển Đổi Chế Độ Thực Thi (Runtime Mode Selector)",
+      "category": "Cấu Hình Hệ Thống",
+      "icon": "sap-icon://connected",
+      "targetRoute": "dashboard",
+      "summary": "Chuyển đổi linh hoạt giữa chế độ Standalone Mock (offline) và SAP Connected Mode kết nối máy chủ S/4HANA 2025.",
+      "description": "Nút trạng thái nằm trên thanh ToolHeader cho phép người dùng chuyển đổi runtime mode. Khi xác nhận, ứng dụng lưu cấu hình vào localStorage và tự động reload trang với bộ dữ liệu tương ứng.",
+      "information": [
+        "Chế độ Standalone: Chạy hoàn toàn trên trình duyệt qua fe-mockserver và dữ liệu JSON cục bộ.",
+        "Chế độ SAP Connected: Kết nối máy chủ SAP S/4HANA PQPOC Client 100, gọi OData V4 Service ZUI_DEMO_HEADER_O4."
+      ],
+      "testSteps": [
+        "Bước 1: Nhấp vào nút Runtime Mode Selector trên ToolHeader (nút hiển thị Standalone Mock hoặc SAP S/4HANA).",
+        "Bước 2: Hộp thoại ModeSelectorDialog xuất hiện với thông tin 2 chế độ.",
+        "Bước 3: Chọn chế độ mong muốn và nhấn 'Xác nhận & Tải lại Trang'.",
+        "Bước 4: Kiểm tra ứng dụng tải lại thành công và hiển thị nhãn chế độ mới trên ToolHeader."
+      ],
+      "image": "img/guideline/01_dashboard_view.png"
+    },
+    {
+      "id": "sec_dash",
+      "index": "02",
+      "title": "Tổng Quan Kỹ Thuật (Dashboard)",
+      "category": "Tổng Quan",
+      "icon": "sap-icon://bbyd-dashboard",
+      "targetRoute": "dashboard",
+      "summary": "Bảng điều khiển trung tâm với 4 thẻ KPI số liệu, 3 lộ trình học tập, banner điều hướng nhanh và lưới 10 phân hệ.",
+      "description": "Dashboard cung cấp cái nhìn tổng thể về hệ sinh thái đào tạo kỹ thuật: 10 phân hệ, 80 chuyên đề, 9 phòng thực hành và thông số máy chủ S/4HANA release 816.",
+      "information": [
+        "4 Thẻ KPI: Đo lường tổng số phân hệ (10), chuyên đề (80), phòng lab (9), release nền tảng (816).",
+        "Banner Quick Links: Lối tắt vào Fresher Guideline, Error Playbook (15 lỗi), và Advanced Labs.",
+        "Learning Tracks: Tiến độ đào tạo 3 cấp độ (Cơ bản, Trung bình, Nâng cao)."
+      ],
+      "testSteps": [
+        "Bước 1: Mở ứng dụng tại URL gốc #/ hoặc nhấp 'Tổng quan Kỹ thuật' trên thanh menu bên trái.",
+        "Bước 2: Xác minh 4 thẻ KPI hiển thị đủ số liệu và trạng thái màu sắc.",
+        "Bước 3: Nhấp vào các liên kết trên 3 Banner thông báo để kiểm tra điều hướng sang Guideline, Error Playbook và Advanced Labs.",
+        "Bước 4: Nhấp vào nút 'Khám phá Danh mục' trên một thẻ phân hệ để kiểm tra chuyển sang Catalog."
+      ],
+      "image": "img/guideline/01_dashboard_view.png"
+    },
+    {
+      "id": "sec_catalog",
+      "index": "03",
+      "title": "Danh Mục Chuyên Đề Kỹ Thuật (Technical Catalog)",
+      "category": "Tra Cứu",
+      "icon": "sap-icon://study-leave",
+      "targetRoute": "catalog",
+      "summary": "Thư viện 80 chuyên đề kỹ thuật chuyên sâu với bộ lọc đa tiêu chí (Phân hệ, Cấp độ, Từ khóa).",
+      "description": "Trang Catalog giúp kỹ sư nhanh chóng tìm kiếm kiến thức theo từng chủ đề công nghệ Fiori, OData V4, CDS View Entities, và ABAP RAP.",
+      "information": [
+        "Bộ lọc FilterBar: Lọc theo 10 phân hệ kỹ thuật, 3 cấp độ độ khó, ô SearchField từ khóa trực tiếp.",
+        "Bảng hiển thị: Mã Topic ID, tiêu đề, phân hệ, độ khó, hình thức thực thi và nút xem mã nguồn."
+      ],
+      "testSteps": [
+        "Bước 1: Điều hướng tới mục 'Danh mục Kỹ thuật' trên thanh menu hoặc gõ #/catalog.",
+        "Bước 2: Nhập từ khóa 'SideEffects' vào SearchField -> Kiểm tra bảng lọc ra đúng chuyên đề Side Effects.",
+        "Bước 3: Chọn phân hệ 'ABAP RAP' trong Select -> Bảng lọc danh sách các bài RAP BDL và EML.",
+        "Bước 4: Nhấn nút icon code ở cột Thao tác -> Kiểm tra mở đúng snippet trong Code Explorer."
+      ],
+      "image": "img/guideline/02_catalog_view.png"
+    },
+    {
+      "id": "sec_code",
+      "index": "04",
+      "title": "Trình Khám Phá Mã Nguồn (Code Explorer)",
+      "category": "Tra Cứu",
+      "icon": "sap-icon://source-code",
+      "targetRoute": "codeDefault",
+      "summary": "Trình đọc và sao chép mã nguồn đa ngôn ngữ (CDS, BDL, ABAP, XML, JS) với ghi chú kỹ thuật chuyên sâu.",
+      "description": "Cung cấp các mẫu mã nguồn chuẩn mực Clean ABAP và Clean Core, giúp lập trình viên tra cứu cú pháp và sao chép trực tiếp vào dự án.",
+      "information": [
+        "Danh sách Snippet: Phân loại theo ngôn ngữ và phân hệ công nghệ.",
+        "Khung xem code: Phông chữ monospace, định dạng rõ ràng kèm nút sao chép 1-click vào clipboard.",
+        "Deep Technical Notes: Phân tích kiến trúc và cảnh báo gotchas ở bên dưới."
+      ],
+      "testSteps": [
+        "Bước 1: Điều hướng tới mục 'Trình xem Mã nguồn' trên thanh menu hoặc gõ #/code.",
+        "Bước 2: Chọn một snippet bất kỳ từ danh sách bên trái (ví dụ: ZI_DemoHeaderTP.bdef).",
+        "Bước 3: Kiểm tra khung mã nguồn hiển thị đúng cú pháp BDL.",
+        "Bước 4: Nhấn nút 'Sao chép Snippet' -> Xác minh thông báo MessageToast xuất hiện và code đã vào Clipboard."
+      ],
+      "image": "img/guideline/03_code_explorer_view.png"
+    },
+    {
+      "id": "sec_fe",
+      "index": "05",
+      "title": "Phòng Lab Fiori Elements V4 (FE Lab)",
+      "category": "Thực Hành",
+      "icon": "sap-icon://table-view",
+      "targetRoute": "feLab",
+      "summary": "Phòng thực hành Fiori Elements V4 List Report, Object Page, và Live Side Effects Sandbox tính toán tức thời.",
+      "description": "Mô phỏng floorplan chuẩn Fiori Elements V4 cho thực thể DemoHeader và DemoItem, trực quan hóa cơ chế Side Effects và Building Blocks của FPM.",
+      "information": [
+        "Tab 1 Floorplan: Bảng @UI.LineItem và bộ lọc @UI.SelectionFields.",
+        "Tab 2 Side Effects: Tương tác nhập số lượng / đơn giá để xem Header Total cập nhật tự động.",
+        "Tab 3 Building Blocks: Cấu trúc XML của Table, FilterBar, Field theo chuẩn FPM."
+      ],
+      "testSteps": [
+        "Bước 1: Chọn mục 'Phòng Lab Fiori Elements V4' trên thanh menu hoặc gõ #/fe-lab.",
+        "Bước 2: Chuyển sang Tab '2. Live Side Effects Simulation'.",
+        "Bước 3: Thay đổi số lượng Quantity từ 2 lên 5 -> Quan sát LineTotal và Header TotalAmount tự động nhảy số.",
+        "Bước 4: Chuyển sang Tab '3. Building Blocks & FPM' -> Kiểm tra hiển thị mã nguồn XML macro."
+      ],
+      "image": "img/guideline/05_fiori_elements_lab_view.png"
+    },
+    {
+      "id": "sec_freestyle",
+      "index": "06",
+      "title": "Phòng Lab Freestyle SAPUI5 (Freestyle Lab)",
+      "category": "Thực Hành",
+      "icon": "sap-icon://custom-font",
+      "targetRoute": "freestyleLab",
+      "summary": "Thực hành Data Binding nâng cao, Enterprise MessageManager, Custom Control Gauge và XML Fragments.",
+      "description": "Trình diễn các kỹ thuật Freestyle SAPUI5 chuyên sâu: Two-way binding, Master-Detail element binding, bắt lỗi biểu mẫu qua MessagePopover và mở Dialog fragment bất đồng bộ.",
+      "information": [
+        "Two-Way Binding: Thanh trượt Slider liên kết trực tiếp với trường nhập liệu.",
+        "MessageManager: Quản lý thông báo lỗi tập trung, tự động hiển thị trên MessagePopover.",
+        "Custom Control: TechnicalHealthGauge tự vẽ bằng HTML5 RenderManager.",
+        "XML Fragment: QuickInspectDialog nạp bất đồng bộ qua Fragment.load()."
+      ],
+      "testSteps": [
+        "Bước 1: Điều hướng tới mục 'Phòng Lab Freestyle SAPUI5' trên thanh menu hoặc gõ #/freestyle-lab.",
+        "Bước 2: Nhập địa chỉ email sai định dạng (ví dụ: test@) và nhấn 'Kiểm Tra Hợp Lệ'.",
+        "Bước 3: Nút đỏ MessagePopover xuất hiện ở góc dưới bên trái, nhấp vào để xem chi tiết lỗi RFC 5322.",
+        "Bước 4: Nhấn nút 'Mở Hộp Thoại Soát Nhanh (XML Fragment)' -> Kiểm tra Dialog mở ra mượt mà."
+      ],
+      "image": "img/guideline/10_freestyle_lab_view.png"
+    },
+    {
+      "id": "sec_odata",
+      "index": "07",
+      "title": "Phòng Lab OData V4 Deep Dive (OData Lab)",
+      "category": "Thực Hành",
+      "icon": "sap-icon://chain-link",
+      "targetRoute": "odataLab",
+      "summary": "Mổ xẻ giao thức OData V4: URL Query Builder, Bound Actions, Multipart $batch và ETag OCC.",
+      "description": "Công cụ tương tác cho phép xây dựng và gửi các truy vấn OData V4 phức tạp, trực quan hóa cấu trúc Multipart/Mixed MIME boundary và thử nghiệm xung đột Lost Update HTTP 412.",
+      "information": [
+        "Request Builder: Sinh URL tự động với $select, $expand, $filter, $orderby, $top, $skip.",
+        "Bound Actions: Gọi action markAsVerified kèm xác thực ETag.",
+        "Multipart $batch: Xem payload batch với atomic changeset rollback.",
+        "ETag OCC: Thử nghiệm xung đột đồng thời giữa User A và User B."
+      ],
+      "testSteps": [
+        "Bước 1: Chọn mục 'Phòng Lab OData V4 Deep Dive' trên thanh menu hoặc gõ #/odata-lab.",
+        "Bước 2: Tại Tab 1 Request Builder, nhấn 'Thực Thi Truy Vấn OData V4' -> Xem JSON payload trả về.",
+        "Bước 3: Chuyển sang Tab 3 Multipart $batch -> Nhấn 'Thực Thi Batch Payload' -> Quan sát kết quả xử lý batch.",
+        "Bước 4: Chuyển sang Tab 4 ETag OCC -> Nhấn nút mô phỏng xung đột -> Bắt lỗi HTTP 412 Precondition Failed."
+      ],
+      "image": "img/guideline/14_odata_v4_lab_view.png"
+    },
+    {
+      "id": "sec_adv",
+      "index": "08",
+      "title": "Phòng Lab Kỹ Thuật Nâng Cao (Advanced Labs - Phase 6)",
+      "category": "Thực Hành",
+      "icon": "sap-icon://lab",
+      "targetRoute": "advancedLab",
+      "summary": "Trải nghiệm 4 chuyên đề hạ tầng: Bảo mật DCL (Lab 07), Tích hợp SM59 (Lab 06), Kiểm thử tự động (Lab 08), và Đóng gói FLP (Lab 09).",
+      "description": "Phòng lab nâng cao giúp kỹ sư làm chủ các kỹ thuật cốt lõi: Phân quyền dòng DCL qua aspect pfcg_auth, bắt tay CSRF token, cấu hình proxy CORS, chạy OPA5/QUnit runner, và cấu hình deploy BSP kèm FLP Spaces & Pages.",
+      "information": [
+        "Tab 1 Security: Live DCL Role Simulator (Admin, Approver, Viewer) & Bắt tay CSRF Token.",
+        "Tab 2 Integration: Danh sách SM59 RFC/HTTP Destinations có nút Ping Connection & Cấu hình CORS.",
+        "Tab 3 Testing: Chỉ số QUnit, OPA5 và mã nguồn ABAP Unit Test cho RAP Business Object.",
+        "Tab 4 Deployment: Cấu hình ui5-deploy.yaml (TR S4DK911884, Package ZNGHIANDD_TEST) & Live FLP Tile Preview."
+      ],
+      "testSteps": [
+        "Bước 1: Chọn mục 'Phòng Lab Kỹ Thuật Nâng Cao' trên thanh menu hoặc gõ #/advanced-lab.",
+        "Bước 2: Tại Tab 1 Security, đổi vai trò sang Z_DEMO_VIEWER -> Kiểm tra số bản ghi xem được giảm còn 4.",
+        "Bước 3: Nhấn nút 'Gửi Request Bắt Tay (Fetch CSRF Token)' -> Nhận token và cookie hợp lệ.",
+        "Bước 4: Sang Tab 2 Integration, nhấn 'Ping Test' trên dòng S4H_PQPOC_100 -> Xem thời gian phản hồi (18 ms).",
+        "Bước 5: Sang Tab 4 Deployment, nhấn 'Tải File Cấu Hình ui5-deploy.yaml' -> Kiểm tra tải file thành công."
+      ],
+      "image": "img/guideline/01_dashboard_view.png"
+    },
+    {
+      "id": "sec_guide",
+      "index": "09",
+      "title": "Cẩm Nang Fresher Từ Số 0 (Fresher Guideline)",
+      "category": "Đào Tạo",
+      "icon": "sap-icon://education",
+      "targetRoute": "guideline",
+      "summary": "10 chương hướng dẫn từng bước tái tạo ứng dụng 100% kèm tính năng rê chuột giải nghĩa từng dòng code.",
+      "description": "Tài liệu học tập toàn diện dành cho lập trình viên fresher, cung cấp hướng dẫn thiết lập môi trường, lệnh CLI terminal, toàn bộ mã nguồn file và bảng chú thích chi tiết từng dòng mã nguồn với ResponsivePopover.",
+      "information": [
+        "10 Chương chi tiết bao quát từ Setup dự án đến Backend RAP và Advanced Labs.",
+        "Lệnh Terminal CLI: Nút sao chép 1-click toàn bộ lệnh cài đặt và khởi chạy.",
+        "Mã nguồn file hoàn chỉnh: Nút sao chép toàn bộ nội dung file.",
+        "Interactive Annotated Code: Rê chuột vào từng dòng code trong bảng để mở Pop-Up giải nghĩa."
+      ],
+      "testSteps": [
+        "Bước 1: Nhấn nút 'Guideline (Fresher từ 0)' trên ToolHeader hoặc gõ #/guideline.",
+        "Bước 2: Chọn Chương 5 (Fiori Elements Lab) từ danh sách hoặc IconTabBar.",
+        "Bước 3: Nhấn 'Sao chép các lệnh Terminal' -> Kiểm tra lệnh CLI được copy vào clipboard.",
+        "Bước 4: Rê chuột qua các dòng code trong bảng chú thích -> Xác nhận Pop-Up giải thích chi tiết xuất hiện tức thì."
+      ],
+      "image": "img/guideline/08_fresher_guideline_view.png"
+    },
+    {
+      "id": "sec_err",
+      "index": "10",
+      "title": "Sổ Tay Xử Lý Sự Cố Kỹ Thuật (Error Playbook - 15 Lỗi)",
+      "category": "Đào Tạo",
+      "icon": "sap-icon://alert",
+      "targetRoute": "errorPlaybook",
+      "summary": "Cẩm nang 15 sự cố kỹ thuật thực tế từ Phase 0 đến Phase 5 kèm Pop-Up phân tích khi rê chuột và Code Diff.",
+      "description": "Tổng hợp chi tiết các lỗi phát sinh trong suốt quá trình xây dựng ứng dụng (Port conflict, UI5 build, SideEffects, ETag 412, ADT BDEF, RAP BDL grammar, strict 2 authorization, Derived Types, EML duplicate key).",
+      "information": [
+        "6 Thẻ KPI: Thống kê số lượng lỗi theo từng phân hệ và tỷ lệ khắc phục 100%.",
+        "Bộ lọc đa chiều: Tìm kiếm từ khóa, phân hệ (Frontend, OData, ADT, RAP), Phase và Severity.",
+        "Interactive Hover: Rê chuột vào dòng bất kỳ để mở Pop-Up phân tích 6 chiều.",
+        "Code Diff Dialog: So sánh trực quan mã nguồn Trước (đỏ) vs Sau (xanh) khi sửa lỗi kèm nút copy."
+      ],
+      "testSteps": [
+        "Bước 1: Nhấn nút màu cam 'Handle Error (15 Lỗi)' trên ToolHeader hoặc gõ #/errors.",
+        "Bước 2: Rê chuột vào dòng ERR_001 (Lỗi trùng port) -> Kiểm tra Pop-Up giải thích hiện ra.",
+        "Bước 3: Nhấn nút 'Xem Code Diff' trên Pop-Up -> Xem hộp thoại so sánh 2 cột trước/sau khi sửa.",
+        "Bước 4: Nhập từ khóa 'BDEF' vào ô tìm kiếm -> Kiểm tra bảng lọc ra đúng 3 lỗi liên quan.",
+        "Bước 5: Nhấn nút 'Tải File Tài Liệu Markdown' trên Header -> Kiểm tra tải file ERROR_HANDLING_PLAYBOOK.md."
+      ],
+      "image": "img/guideline/01_dashboard_view.png"
+    }
+  ]
+}
+

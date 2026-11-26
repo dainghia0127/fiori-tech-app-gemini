@@ -1,0 +1,20 @@
+{
+  "name": "sap-fiori-technical-academy",
+  "version": "1.0.0",
+  "description": "SAP Fiori Technical Academy - Technical-First Learning & Engineering Platform for SAPUI5, OData V4 and ABAP RAP",
+  "private": true,
+  "scripts": {
+    "start": "ui5 serve --port 8080 --open index.html",
+    "build": "ui5 build --clean-dest --dest dist",
+    "lint": "eslint webapp"
+  },
+  "devDependencies": {
+    "@sap-ux/ui5-middleware-fe-mockserver": "^2.4.19",
+    "@ui5/cli": "^4.0.0"
+  },
+  "ui5": {
+    "dependencies": [
+      "@sap-ux/ui5-middleware-fe-mockserver"
+    ]
+  }
+}

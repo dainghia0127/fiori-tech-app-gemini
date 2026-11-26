@@ -1,0 +1,296 @@
+{
+  "_version": "1.59.0",
+  "sap.app": {
+    "id": "sap.fiori.tech.academy",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appSubtitle}}",
+    "crossNavigation": {
+      "inbounds": {
+        "demoTechnicalApp-display": {
+          "semanticObject": "DemoTechnicalApp",
+          "action": "display",
+          "title": "{{appTitle}}",
+          "subTitle": "{{appSubtitle}}",
+          "icon": "sap-icon://study-leave"
+        }
+      }
+    },
+    "dataSources": {
+      "catalogSource": {
+        "uri": "mockdata/technical_catalog.json",
+        "type": "JSON"
+      },
+      "codeSource": {
+        "uri": "mockdata/code_snippets.json",
+        "type": "JSON"
+      },
+      "pathsSource": {
+        "uri": "mockdata/learning_paths.json",
+        "type": "JSON"
+      },
+      "healthSource": {
+        "uri": "mockdata/system_health.json",
+        "type": "JSON"
+      },
+      "errorPlaybookSource": {
+        "uri": "mockdata/error_playbook.json",
+        "type": "JSON"
+      },
+      "advancedLabSource": {
+        "uri": "mockdata/advanced_lab_data.json",
+        "type": "JSON"
+      },
+      "userManualSource": {
+        "uri": "mockdata/user_manual.json",
+        "type": "JSON"
+      },
+      "demoODataV4Source": {
+        "uri": "/mock/odata/v4/demo/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0",
+          "annotations": ["demoAnnotations"],
+          "localUri": "localService/metadata.xml"
+        }
+      },
+      "demoAnnotations": {
+        "type": "ODataAnnotation",
+        "uri": "/annotations/annotations.xml",
+        "settings": {
+          "localUri": "localService/annotations.xml"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://study-leave"
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "rootView": {
+      "viewName": "sap.fiori.tech.academy.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
+    },
+    "dependencies": {
+      "minUI5Version": "1.136.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.tnt": {},
+        "sap.f": {},
+        "sap.fe.core": {},
+        "sap.fe.templates": {},
+        "sap.fe.macros": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "sap.fiori.tech.academy.i18n.i18n",
+          "supportedLocales": ["", "vi", "en"],
+          "fallbackLocale": ""
+        }
+      },
+      "catalog": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "catalogSource"
+      },
+      "snippets": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "codeSource"
+      },
+      "paths": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "pathsSource"
+      },
+      "health": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "healthSource"
+      },
+      "errorPlaybook": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "errorPlaybookSource"
+      },
+      "advancedLab": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "advancedLabSource"
+      },
+      "userManual": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "userManualSource"
+      },
+      "demoOData": {
+        "type": "sap.ui.model.odata.v4.ODataModel",
+        "dataSource": "demoODataV4Source",
+        "preload": false,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "sap.fiori.tech.academy.view",
+        "controlId": "pageContainer",
+        "controlAggregation": "pages",
+        "async": true,
+        "bypassed": {
+          "target": "notFound"
+        }
+      },
+      "routes": [
+        {
+          "name": "dashboard",
+          "pattern": "",
+          "target": "dashboard"
+        },
+        {
+          "name": "catalog",
+          "pattern": "catalog",
+          "target": "catalog"
+        },
+        {
+          "name": "code",
+          "pattern": "code/{snippetId}",
+          "target": "code"
+        },
+        {
+          "name": "codeDefault",
+          "pattern": "code",
+          "target": "code"
+        },
+        {
+          "name": "architecture",
+          "pattern": "architecture",
+          "target": "architecture"
+        },
+        {
+          "name": "feLab",
+          "pattern": "fe-lab",
+          "target": "feLab"
+        },
+        {
+          "name": "guideline",
+          "pattern": "guideline",
+          "target": "guideline"
+        },
+        {
+          "name": "freestyleLab",
+          "pattern": "freestyle-lab",
+          "target": "freestyleLab"
+        },
+        {
+          "name": "odataLab",
+          "pattern": "odata-lab",
+          "target": "odataLab"
+        },
+        {
+          "name": "errorPlaybook",
+          "pattern": "errors",
+          "target": "errorPlaybook"
+        },
+        {
+          "name": "advancedLab",
+          "pattern": "advanced-lab",
+          "target": "advancedLab"
+        },
+        {
+          "name": "userManual",
+          "pattern": "manual",
+          "target": "userManual"
+        }
+      ],
+      "targets": {
+        "dashboard": {
+          "viewName": "Dashboard",
+          "viewLevel": 1
+        },
+        "catalog": {
+          "viewName": "Catalog",
+          "viewLevel": 2
+        },
+        "code": {
+          "viewName": "CodeExplorer",
+          "viewLevel": 3
+        },
+        "architecture": {
+          "viewName": "ArchitectureViewer",
+          "viewLevel": 4
+        },
+        "feLab": {
+          "viewName": "FioriElementsLab",
+          "viewId": "feLabView",
+          "viewLevel": 5
+        },
+        "guideline": {
+          "viewName": "Guideline",
+          "viewId": "guidelineView",
+          "viewLevel": 6
+        },
+        "errorPlaybook": {
+          "viewName": "ErrorPlaybook",
+          "viewId": "errorPlaybookView",
+          "viewLevel": 7
+        },
+        "freestyleLab": {
+          "viewName": "FreestyleLab",
+          "viewId": "freestyleLabView",
+          "viewLevel": 8
+        },
+        "odataLab": {
+          "viewName": "ODataV4Lab",
+          "viewId": "odataLabView",
+          "viewLevel": 9
+        },
+        "advancedLab": {
+          "viewName": "AdvancedLab",
+          "viewId": "advancedLabView",
+          "viewLevel": 10
+        },
+        "userManual": {
+          "viewName": "UserManual",
+          "viewId": "userManualView",
+          "viewLevel": 11
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewLevel": 99
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,650 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.Guideline"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    height="100%">
+
+    <Page
+        id="guidelinePage"
+        title="🎓 Cẩm Nang Fresher Workspace: Dựng App Từ Số 0 Tới 100%"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        enableScrolling="false"
+        height="100%">
+
+        <headerContent>
+            <Button
+                text="Quay Về App Chính"
+                icon="sap-icon://home"
+                type="Transparent"
+                press=".onNavBack"
+                tooltip="Đóng không gian Guideline và quay về màn hình chính Dashboard" />
+            <ObjectStatus
+                text="Fresher 0 → 100% (14 Chương)"
+                state="Success"
+                icon="sap-icon://education"
+                class="academyHeroStatusTag sapUiSmallMarginEnd" />
+        </headerContent>
+
+        <content>
+            <l:Splitter height="100%">
+                <!-- ========================================================= -->
+                <!-- PANE TRÁI: CÂY THƯ MỤC CHA - CON ĐỒNG BỘ MAPPING KHI CUỘN -->
+                <!-- ========================================================= -->
+                <l:contentAreas>
+                    <VBox width="100%" height="100%" class="guidelineTreeSidebar">
+                        <layoutData>
+                            <l:SplitterLayoutData size="335px" minSize="260px" />
+                        </layoutData>
+
+                        <!-- Header & Công Cụ Cây Thư Mục -->
+                        <VBox class="guidelineTreeHeader">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                <Title text="🗂️ Cây Thư Mục &amp; Lộ Trình" level="H5" />
+                                <HBox>
+                                    <Button
+                                        icon="sap-icon://expand-all"
+                                        type="Transparent"
+                                        press=".onExpandAllTree"
+                                        tooltip="Mở rộng toàn bộ cây thư mục cha-con" />
+                                    <Button
+                                        icon="sap-icon://collapse-all"
+                                        type="Transparent"
+                                        press=".onCollapseAllTree"
+                                        tooltip="Thu gọn cây về 5 Giai đoạn" />
+                                </HBox>
+                            </HBox>
+
+                            <SearchField
+                                id="treeSearchField"
+                                placeholder="Tìm file, bước hoặc chương..."
+                                liveChange=".onTreeSearch"
+                                width="100%"
+                                class="sapUiTinyMarginBottom" />
+
+                            <Text
+                                text="📍 Đang mapping: {guidelineModel>/activeTreeLabel}"
+                                class="guidelineTreeActivePill"
+                                wrapping="true" />
+                        </VBox>
+
+                        <!-- Danh sách Cây Thư Mục Cha - Con scrollable độc lập -->
+                        <ScrollContainer vertical="true" horizontal="false" height="100%">
+                            <Tree
+                                id="guidelineNavTree"
+                                items="{
+                                    path: 'guidelineModel>/filteredTreeNodes',
+                                    parameters: { arrayNames: ['nodes'] },
+                                    templateShareable: false
+                                }"
+                                mode="SingleSelectMaster"
+                                selectionChange=".onTreeItemSelect"
+                                class="guidelineNavTree">
+                                <StandardTreeItem
+                                    title="{guidelineModel>title}"
+                                    icon="{guidelineModel>icon}"
+                                    tooltip="{guidelineModel>tooltip}">
+                                    <customData>
+                                        <core:CustomData key="node-id" value="{guidelineModel>id}" writeToDom="true" />
+                                    </customData>
+                                </StandardTreeItem>
+                            </Tree>
+                        </ScrollContainer>
+                    </VBox>
+
+                    <!-- ========================================================= -->
+                    <!-- PANE PHẢI: NỘI DUNG HƯỚNG DẪN TỪNG BƯỚC + CHECKLIST + CODE -->
+                    <!-- ========================================================= -->
+                    <ScrollContainer id="guidelineRightScroll" vertical="true" horizontal="false" width="100%" height="100%">
+                        <layoutData>
+                            <l:SplitterLayoutData size="auto" />
+                        </layoutData>
+
+                        <VBox class="sapUiSmallMargin">
+                            <!-- Mini Hero Header -->
+                            <VBox class="academyHeroBanner sapUiSmallMarginBottom">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                                    <VBox>
+                                        <Title text="🎓 Cẩm Nang Fresher: Dựng Toàn Bộ App Từ Con Số 0 (Step-by-Step 100%)" level="H3" class="academyHeroTitle" />
+                                        <Text text="Cây thư mục bên trái tự động mapping &amp; nổi bật theo vị trí bạn đang đọc bên phải. Bấm trực tiếp vào bất kỳ Thư mục / Bước / File nào bên trái để nhảy tới ngay." class="academyHeroSubtitle" />
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+
+                            <!-- 1. BỘ CÔNG CỤ NỀN TẢNG -->
+                            <Panel headerText="🛠️ Bộ Công Cụ Nền Tảng &amp; Phím Tắt Vàng Cho Fresher" expandable="true" expanded="false" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiSmallMargin">
+                                    <l:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                                        <VBox>
+                                            <Title text="4 Công Cụ Nền Tảng Bắt Buộc:" level="H4" class="sapUiTinyMarginBottom" />
+                                            <List items="{path: 'guidelineModel>/fastTrackTools', templateShareable: false}">
+                                                <StandardListItem
+                                                    title="{guidelineModel>name}"
+                                                    description="{guidelineModel>desc}"
+                                                    icon="sap-icon://developer-settings"
+                                                    info="{guidelineModel>link}"
+                                                    wrapping="true" />
+                                            </List>
+                                        </VBox>
+                                        <VBox>
+                                            <Title text="5 Phím Tắt Vàng Cần Thuộc Lòng:" level="H4" class="sapUiTinyMarginBottom" />
+                                            <List items="{path: 'guidelineModel>/goldenShortcuts', templateShareable: false}">
+                                                <StandardListItem
+                                                    title="{guidelineModel>key} ({guidelineModel>app})"
+                                                    description="{guidelineModel>desc}"
+                                                    icon="sap-icon://keyboard-and-mouse"
+                                                    wrapping="true" />
+                                            </List>
+                                        </VBox>
+                                    </l:Grid>
+                                </VBox>
+                            </Panel>
+
+                            <!-- 2. BẢN THIẾT KẾ TỔNG THỂ (PROJECT BLUEPRINT) -->
+                            <Panel
+                                id="guidelineBlueprintPanel"
+                                headerText="🗂️ Bản Thiết Kế Tổng Thể App (Project Blueprint &amp; Thứ Tự Tạo 91/91 File Từ Số 0)"
+                                expandable="true"
+                                expanded="false"
+                                class="sapUiSmallMarginBottom">
+                                <customData>
+                                    <core:CustomData key="spy-type" value="section" writeToDom="true" />
+                                    <core:CustomData key="spy-section" value="overview-blueprint" writeToDom="true" />
+                                </customData>
+                                <VBox class="sapUiSmallMargin">
+                                    <MessageStrip
+                                        text="Dùng cây thư mục bên dưới và 5 giai đoạn dựng app để biết chính xác thứ tự tạo từng thư mục/file từ con số 0 và đường dẫn từng màn hình."
+                                        type="Success"
+                                        showIcon="true"
+                                        class="sapUiSmallMarginBottom" />
+                                    <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                        <VBox>
+                                            <Title text="Cây Thư Mục Chuẩn Dự Án (FIORI_TECH_APP):" level="H4" class="sapUiTinyMarginBottom" />
+                                            <core:HTML
+                                                content="{path: 'guidelineModel>/blueprint/folderTree', formatter: '.formatCodeBlockHtml'}"
+                                                preferDOM="true" />
+                                        </VBox>
+                                        <VBox>
+                                            <Title text="5 Giai Đoạn Tái Tạo Toàn App Từ Số 0:" level="H4" class="sapUiTinyMarginBottom" />
+                                            <List items="{path: 'guidelineModel>/blueprint/buildPhases', templateShareable: false}" class="sapUiSmallMarginBottom">
+                                                <StandardListItem
+                                                    title="{guidelineModel>phase}"
+                                                    description="{guidelineModel>scope}"
+                                                    info="{guidelineModel>chapters}"
+                                                    icon="sap-icon://step"
+                                                    wrapping="true" />
+                                            </List>
+                                            <Title text="Bản Đồ 12 Routes &amp; Screens:" level="H4" class="sapUiTinyMarginTopBottom" />
+                                            <List items="{path: 'guidelineModel>/blueprint/routesSummary', templateShareable: false}">
+                                                <StandardListItem
+                                                    title="{guidelineModel>route} ➔ {guidelineModel>view}"
+                                                    description="{guidelineModel>chapter} • {guidelineModel>model}"
+                                                    icon="sap-icon://chain-link"
+                                                    wrapping="true" />
+                                            </List>
+                                        </VBox>
+                                    </l:Grid>
+                                </VBox>
+                            </Panel>
+
+                            <!-- 3. CHECKLIST TƯƠNG TÁC DỰNG APP TỪ 0 ĐẾN 100% -->
+                            <Panel
+                                id="guidelineChecklistPanel"
+                                headerText="✅ Checklist Thực Hành Từng Mục Từ 0 → 100% (Đã xong {guidelineModel>/checklistStats/doneCount}/{guidelineModel>/checklistStats/totalCount} • {guidelineModel>/checklistStats/percent}%)"
+                                expandable="true"
+                                expanded="false"
+                                class="sapUiSmallMarginBottom guidelineChecklistCard">
+                                <customData>
+                                    <core:CustomData key="spy-type" value="section" writeToDom="true" />
+                                    <core:CustomData key="spy-section" value="overview-checklist" writeToDom="true" />
+                                </customData>
+                                <VBox class="sapUiSmallMargin">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap" class="sapUiSmallMarginBottom">
+                                        <ProgressIndicator
+                                            percentValue="{guidelineModel>/checklistStats/percent}"
+                                            displayValue="Hoàn thành {guidelineModel>/checklistStats/doneCount} / {guidelineModel>/checklistStats/totalCount} hạng mục ({guidelineModel>/checklistStats/percent}%)"
+                                            state="{= ${guidelineModel>/checklistStats/percent} === 100 ? 'Success' : 'Information' }"
+                                            width="380px"
+                                            class="sapUiSmallMarginEnd sapUiTinyMarginBottom" />
+                                        <HBox alignItems="Center" wrap="Wrap">
+                                            <SegmentedButton selectedKey="{guidelineModel>/checklistFilter}" selectionChange=".onChecklistFilterChange" class="sapUiSmallMarginEnd">
+                                                <items>
+                                                    <SegmentedButtonItem key="ALL" text="Tất cả" />
+                                                    <SegmentedButtonItem key="PENDING" text="Chưa làm" />
+                                                    <SegmentedButtonItem key="DONE" text="Đã xong" />
+                                                </items>
+                                            </SegmentedButton>
+                                            <Button text="Reset" icon="sap-icon://reset" type="Transparent" press=".onResetChecklist" />
+                                        </HBox>
+                                    </HBox>
+
+                                    <List id="guidelineChecklistList" items="{path: 'guidelineModel>/filteredChecklist', templateShareable: false}">
+                                        <CustomListItem>
+                                            <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap" class="sapUiTinyMargin">
+                                                <HBox alignItems="Center" wrap="Wrap" class="sapUiSmallMarginEnd">
+                                                    <CheckBox
+                                                        selected="{guidelineModel>done}"
+                                                        select=".onToggleChecklistItem"
+                                                        text="[{guidelineModel>phase}] {guidelineModel>title}" />
+                                                </HBox>
+                                                <HBox alignItems="Center" wrap="Wrap">
+                                                    <ObjectStatus text="{guidelineModel>verifyHint}" state="{= ${guidelineModel>done} ? 'Success' : 'None' }" class="sapUiSmallMarginEnd" />
+                                                    <Button
+                                                        text="Đi tới bước"
+                                                        icon="sap-icon://navigation-right-arrow"
+                                                        type="Transparent"
+                                                        press=".onJumpToChecklistItem" />
+                                                </HBox>
+                                            </HBox>
+                                        </CustomListItem>
+                                    </List>
+                                </VBox>
+                            </Panel>
+
+                            <!-- 4. SƠ ĐỒ LUỒNG TỔNG QUAN 5 TẦNG -->
+                            <Panel headerText="🗺️ Sơ Đồ Luồng Làm Việc Toàn Ứng Dụng (Từ Màn Hình UI Tới SAP RAP Backend)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiSmallMargin">
+                                    <MessageStrip
+                                        text="Bức tranh tổng thể cho Fresher: Mọi tính năng trong app đều đi theo 5 tầng từ trái sang phải."
+                                        type="Information"
+                                        showIcon="true"
+                                        class="sapUiSmallMarginBottom" />
+                                    <HBox items="{path: 'guidelineModel>/globalWorkflow', templateShareable: false}" class="guidelineFlowContainer" wrap="Wrap">
+                                        <VBox class="guidelineFlowNode">
+                                            <Text text="{guidelineModel>step} • {guidelineModel>layer}" class="guidelineFlowNodeLayer" />
+                                            <Text text="{guidelineModel>title}" class="guidelineFlowNodeTitle" />
+                                            <Text text="{guidelineModel>detail}" class="guidelineFlowNodeDetail" />
+                                            <Text text="{guidelineModel>fileRef}" class="guidelineFlowNodeFile" />
+                                        </VBox>
+                                    </HBox>
+                                </VBox>
+                            </Panel>
+
+                            <!-- 5. THANH CHỌN NHANH 14 CHƯƠNG (TOÀN CHIỀU RỘNG KHÔNG CẮT CHỮ) -->
+                            <VBox width="100%" class="guidelineQuickJumpBar sapUiTinyMarginBottom">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap" width="100%" class="sapUiTinyMarginBottom">
+                                    <HBox alignItems="Center">
+                                        <core:Icon src="sap-icon://course-book" color="#0a6ed1" class="sapUiTinyMarginEnd" />
+                                        <Label text="Chọn Nhanh Chương (14 Chương Từ 0 → 100%):" design="Bold" labelFor="quickChapterSelect" />
+                                    </HBox>
+                                    <ObjectStatus text="Lộ trình 14 Chương • 91/91 Files Thật" state="Information" icon="sap-icon://sys-enter-2" />
+                                </HBox>
+                                <Select
+                                    id="quickChapterSelect"
+                                    items="{path: 'guidelineModel>/chapters', templateShareable: false}"
+                                    selectedKey="{guidelineModel>/selectedChapterId}"
+                                    change=".onQuickChapterChange"
+                                    width="100%">
+                                    <core:Item key="{guidelineModel>id}" text="{guidelineModel>title}" />
+                                </Select>
+                            </VBox>
+
+                            <IconTabBar
+                                id="chapterTabBar"
+                                visible="false"
+                                headerMode="Inline"
+                                select=".onChapterSelect"
+                                selectedKey="{guidelineModel>/selectedChapterId}"
+                                expandable="false"
+                                applyContentPadding="false"
+                                class="sapUiSmallMarginBottom">
+                                <items>
+                                    <IconTabFilter key="chap1" icon="sap-icon://laptop" text="1. Setup Môi Trường" />
+                                    <IconTabFilter key="chap2" icon="sap-icon://create" text="2. Cấu Trúc &amp; Bootstrap" />
+                                    <IconTabFilter key="chap3" icon="sap-icon://wrench" text="3. ui5.yaml &amp; Mock" />
+                                    <IconTabFilter key="chap4" icon="sap-icon://home" text="4. App Shell &amp; Routing" />
+                                    <IconTabFilter key="chap5" icon="sap-icon://bbyd-dashboard" text="5. Dashboard" />
+                                    <IconTabFilter key="chap6" icon="sap-icon://study-leave" text="6. Catalog &amp; CodeTips" />
+                                    <IconTabFilter key="chap7" icon="sap-icon://table-view" text="7. Fiori Elements V4" />
+                                    <IconTabFilter key="chap8" icon="sap-icon://dimension" text="8. Freestyle MVC" />
+                                    <IconTabFilter key="chap9" icon="sap-icon://connected" text="9. OData V4 Lab" />
+                                    <IconTabFilter key="chap10" icon="sap-icon://alert" text="10. Playbook &amp; Manual" />
+                                    <IconTabFilter key="chap11" icon="sap-icon://lab" text="11. Advanced &amp; Deploy" />
+                                    <IconTabFilter key="chap12" icon="sap-icon://task" text="12. Tests &amp; Guideline" />
+                                    <IconTabFilter key="chap13" icon="sap-icon://database" text="13. RAP Data Model" />
+                                    <IconTabFilter key="chap14" icon="sap-icon://process" text="14. RAP BDEF &amp; Publish" />
+                                </items>
+                            </IconTabBar>
+
+                            <!-- 6. NỘI DUNG CHI TIẾT CỦA CHƯƠNG -->
+                            <VBox binding="{guidelineModel>/selectedChapter}">
+                                <Panel id="chapterHeaderPanel" expandable="false" class="sapUiSmallMarginBottom">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <Title text="{guidelineModel>title}" level="H2" class="academySectionTitle" />
+                                            <ToolbarSpacer />
+                                            <Button
+                                                text="Sao Chép Mã File Chính"
+                                                icon="sap-icon://copy"
+                                                type="Emphasized"
+                                                press=".onCopyCodeSnippet" />
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <content>
+                                        <VBox class="sapUiSmallMargin">
+                                            <FormattedText htmlText="{path: 'guidelineModel>summary', formatter: '.formatInstructionHtml'}" class="sapUiSmallMarginBottom guidelineSummaryText" />
+
+                                            <Title text="Điều Kiện Tiên Quyết Trước Khi Bắt Đầu (Prerequisites):" level="H4" class="sapUiTinyMarginTopBottom" />
+                                            <List items="{path: 'guidelineModel>prerequisites', templateShareable: false}" class="sapUiSmallMarginBottom">
+                                                <StandardListItem title="{guidelineModel>}" icon="sap-icon://sys-enter-2" wrapping="true" />
+                                            </List>
+
+                                            <Title text="🔄 Sơ Đồ Luồng Thực Thi Của Chương Này (Workflow &amp; Data Flow):" level="H4" class="sapUiTinyMarginTopBottom" visible="{= !!${guidelineModel>workflowNodes} &amp;&amp; ${guidelineModel>workflowNodes}.length > 0 }" />
+                                            <HBox items="{path: 'guidelineModel>workflowNodes', templateShareable: false}" class="guidelineFlowContainer sapUiSmallMarginBottom" wrap="Wrap" visible="{= !!${guidelineModel>workflowNodes} &amp;&amp; ${guidelineModel>workflowNodes}.length > 0 }">
+                                                <VBox class="guidelineFlowNode">
+                                                    <Text text="{guidelineModel>step} • {guidelineModel>layer}" class="guidelineFlowNodeLayer" />
+                                                    <Text text="{guidelineModel>title}" class="guidelineFlowNodeTitle" />
+                                                    <Text text="{guidelineModel>detail}" class="guidelineFlowNodeDetail" />
+                                                    <Text text="{guidelineModel>fileRef}" class="guidelineFlowNodeFile" />
+                                                </VBox>
+                                            </HBox>
+
+                                            <!-- CÁC BƯỚC LÀM CHI TIẾT XUỐNG HÀNG TỪNG Ý -->
+                                            <Title text="📋 Hướng Dẫn Thực Hiện Từng Bước 1 (Step-by-Step Cầm Tay Chỉ Việc):" level="H4" class="sapUiTinyMarginTopBottom" />
+                                            <List id="guidelineStepsList" items="{path: 'guidelineModel>steps', templateShareable: false}" class="sapUiSmallMarginBottom">
+                                                <CustomListItem class="guidelineStepItem sapUiTinyMarginBottom">
+                                                    <customData>
+                                                        <core:CustomData key="spy-type" value="step" writeToDom="true" />
+                                                        <core:CustomData key="spy-step" value="{= '' + (${guidelineModel>stepNumber} || '') }" writeToDom="true" />
+                                                        <core:CustomData key="spy-file" value="{= '' + (${guidelineModel>targetFilePath} || '') }" writeToDom="true" />
+                                                    </customData>
+                                                    <VBox class="sapUiSmallMargin">
+                                                        <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap" class="sapUiTinyMarginBottom">
+                                                            <HBox alignItems="Center" wrap="Wrap">
+                                                                <ObjectStatus text="Bước {guidelineModel>stepNumber}" state="Information" inverted="true" class="lineBadge sapUiTinyMarginEnd" />
+                                                                <ObjectStatus
+                                                                    text="{guidelineModel>ideOrTool}"
+                                                                    state="Indication05"
+                                                                    icon="sap-icon://developer-settings"
+                                                                    class="sapUiTinyMarginEnd"
+                                                                    visible="{= !!${guidelineModel>ideOrTool} }" />
+                                                                <Title text="{guidelineModel>actionTitle}" level="H4" class="sapUiTextBold" />
+                                                            </HBox>
+                                                            <ObjectStatus
+                                                                text="{guidelineModel>expectedResult}"
+                                                                state="Success"
+                                                                icon="sap-icon://sys-enter-2"
+                                                                visible="{= !!${guidelineModel>expectedResult} }" />
+                                                        </HBox>
+
+                                                        <!-- Đã chuyển từ 1 đoạn văn dài sang FormattedText xuống hàng từng ý -->
+                                                        <FormattedText
+                                                            htmlText="{path: 'guidelineModel>detailedInstruction', formatter: '.formatInstructionHtml'}"
+                                                            class="guidelineFormattedText sapUiSmallMarginBottom" />
+
+                                                        <HBox alignItems="Center" class="sapUiTinyMarginBottom terminalCommandBox" visible="{= !!${guidelineModel>commandOrPath} }">
+                                                            <core:Icon src="sap-icon://source-code" color="#0a6ed1" class="sapUiTinyMarginEnd" />
+                                                            <Text text="{guidelineModel>commandOrPath}" class="terminalCommandText" />
+                                                            <ToolbarSpacer />
+                                                            <Button
+                                                                icon="sap-icon://copy"
+                                                                tooltip="Sao chép lệnh hoặc đường dẫn này"
+                                                                type="Transparent"
+                                                                press=".onCopyStepCommand" />
+                                                        </HBox>
+
+                                                        <!-- ĐOẠN CODE / SCHEMA CẦN VIẾT NGAY TRONG BƯỚC NÀY -->
+                                                        <VBox class="sapUiTinyMarginTopBottom stepCodeContainer" visible="{= !!${guidelineModel>stepCode} }">
+                                                            <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap" class="sapUiTinyMarginBottom">
+                                                                <HBox alignItems="Center" class="sapUiSmallMarginEnd">
+                                                                    <core:Icon src="sap-icon://syntax" color="#0a6ed1" class="sapUiTinyMarginEnd" />
+                                                                    <Text text="Code / Schema cần viết ở bước này:" class="sapUiTextBold" />
+                                                                </HBox>
+                                                                <HBox alignItems="Center" wrap="Wrap">
+                                                                    <Button
+                                                                        text="Copy Code Bước"
+                                                                        icon="sap-icon://copy"
+                                                                        type="Transparent"
+                                                                        press=".onCopyStepCode"
+                                                                        class="sapUiTinyMarginEnd" />
+                                                                    <Button
+                                                                        text="Nạp File Chính Xuống Mục 3"
+                                                                        icon="sap-icon://download"
+                                                                        type="Emphasized"
+                                                                        press=".onInspectStepTargetFile"
+                                                                        visible="{= !!${guidelineModel>targetFilePath} }" />
+                                                                </HBox>
+                                                            </HBox>
+
+                                                            <!-- Nếu bước tạo nhiều file: hiện nút nạp riêng cho từng file -->
+                                                            <HBox items="{path: 'guidelineModel>targetFiles', templateShareable: false}" wrap="Wrap" class="sapUiTinyMarginBottom" visible="{= !!${guidelineModel>targetFiles} &amp;&amp; ${guidelineModel>targetFiles}.length > 0 }">
+                                                                <Button
+                                                                    text="📄 Nạp {guidelineModel>label}"
+                                                                    type="Ghost"
+                                                                    press=".onInspectStepTargetFile"
+                                                                    class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                                                                    <customData>
+                                                                        <core:CustomData key="filePath" value="{guidelineModel>filePath}" />
+                                                                    </customData>
+                                                                </Button>
+                                                            </HBox>
+
+                                                            <core:HTML
+                                                                content="{path: 'guidelineModel>stepCode', formatter: '.formatCodeBlockHtml'}"
+                                                                preferDOM="true" />
+                                                        </VBox>
+
+                                                        <!-- TỰ KIỂM TRA ĐẠT CHUẨN (VERIFY) -->
+                                                        <HBox alignItems="Start" class="fresherVerifyBox sapUiTinyMarginTop" visible="{= !!${guidelineModel>verifyStep} }">
+                                                            <core:Icon src="sap-icon://accept" color="#16a34a" class="sapUiTinyMarginEnd sapUiTinyMarginTop" />
+                                                            <VBox width="100%">
+                                                                <Text text="Tự kiểm tra sau bước này (Verify):" class="sapUiTextBold" />
+                                                                <FormattedText
+                                                                    htmlText="{path: 'guidelineModel>verifyStep', formatter: '.formatInstructionHtml'}"
+                                                                    class="fresherVerifyText guidelineFormattedText" />
+                                                            </VBox>
+                                                        </HBox>
+
+                                                        <!-- HÌNH ẢNH MINH HỌA BƯỚC NÀY -->
+                                                        <VBox class="sapUiTinyMarginTopBottom stepImageContainer" visible="{= !!${guidelineModel>stepImage} }">
+                                                            <Image
+                                                                src="{guidelineModel>stepImage}"
+                                                                width="100%"
+                                                                decorative="false"
+                                                                densityAware="false"
+                                                                class="stepScreenshotImg zoomableImage"
+                                                                press=".onPreviewImage"
+                                                                tooltip="🔍 Nhấp vào ảnh để xem phóng to chi tiết" />
+                                                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                                                                <HBox alignItems="Center">
+                                                                    <core:Icon src="sap-icon://camera" color="#0a6ed1" size="0.85rem" class="sapUiTinyMarginEnd" />
+                                                                    <Text text="{guidelineModel>stepImageCaption}" class="sapUiTextMuted stepImageCaptionText" />
+                                                                </HBox>
+                                                                <Button
+                                                                    text="🔍 Phóng To"
+                                                                    icon="sap-icon://zoom-in"
+                                                                    type="Transparent"
+                                                                    press=".onPreviewImage"
+                                                                    tooltip="Bấm để xem phóng to ảnh thao tác này" />
+                                                            </HBox>
+                                                        </VBox>
+
+                                                        <!-- LƯU Ý TRÁNH BẪY LỖI -->
+                                                        <HBox alignItems="Start" class="fresherGotchaBox sapUiTinyMarginTop" visible="{= !!${guidelineModel>fresherGotcha} }">
+                                                            <core:Icon src="sap-icon://hint" color="#d97706" class="sapUiTinyMarginEnd sapUiTinyMarginTop" />
+                                                            <VBox width="100%">
+                                                                <Text text="Lưu ý Fresher (Tránh bẫy lỗi):" class="sapUiTextBold" />
+                                                                <FormattedText
+                                                                    htmlText="{path: 'guidelineModel>fresherGotcha', formatter: '.formatInstructionHtml'}"
+                                                                    class="fresherGotchaText guidelineFormattedText" />
+                                                            </VBox>
+                                                        </HBox>
+                                                    </VBox>
+                                                </CustomListItem>
+                                            </List>
+
+                                            <!-- BẢN ĐỒ FILE & ĐOẠN CODE THỰC TẾ -->
+                                            <Title text="📂 Chức Năng Này Code Ở Những File Nào &amp; Mã Nguồn Chi Tiết:" level="H4" class="sapUiTinyMarginTopBottom" visible="{= !!${guidelineModel>relatedFiles} &amp;&amp; ${guidelineModel>relatedFiles}.length > 0 }" />
+                                            <List
+                                                id="guidelineRelatedFilesTable"
+                                                items="{path: 'guidelineModel>relatedFiles', templateShareable: false}"
+                                                class="sapUiSmallMarginBottom"
+                                                visible="{= !!${guidelineModel>relatedFiles} &amp;&amp; ${guidelineModel>relatedFiles}.length > 0 }">
+                                                <CustomListItem class="guidelineFileCard sapUiTinyMarginBottom">
+                                                    <customData>
+                                                        <core:CustomData key="spy-type" value="file" writeToDom="true" />
+                                                        <core:CustomData key="spy-file" value="{= '' + (${guidelineModel>filePath} || '') }" writeToDom="true" />
+                                                    </customData>
+                                                    <VBox class="sapUiSmallMargin">
+                                                        <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap" class="sapUiTinyMarginBottom">
+                                                            <VBox class="sapUiSmallMarginEnd">
+                                                                <HBox alignItems="Center" wrap="Wrap" class="sapUiTinyMarginBottom">
+                                                                    <Text text="{guidelineModel>filePath}" class="guidelineFlowNodeFile sapUiTinyMarginEnd" />
+                                                                    <ObjectStatus text="{guidelineModel>lineHint}" state="None" class="sapUiTinyMarginEnd" />
+                                                                    <ObjectStatus text="{guidelineModel>keySymbol}" state="Information" />
+                                                                </HBox>
+                                                                <Text text="Vai trò: {guidelineModel>role}" class="sapUiTextBold" wrapping="true" />
+                                                            </VBox>
+                                                            <Button
+                                                                text="Nạp Xuống Mục 3"
+                                                                icon="sap-icon://source-code"
+                                                                type="Emphasized"
+                                                                press=".onInspectRelatedFile"
+                                                                tooltip="Hiển thị đầy đủ mã nguồn file này ở Mục 3 kèm hover giải thích từng dòng" />
+                                                        </HBox>
+                                                        <core:HTML
+                                                            content="{path: 'guidelineModel>codeExcerpt', formatter: '.formatCodeExcerptHtml'}"
+                                                            preferDOM="true" />
+                                                        <ObjectStatus
+                                                            text="{guidelineModel>excerptNote}"
+                                                            state="Information"
+                                                            icon="sap-icon://detail-view"
+                                                            visible="{= !!${guidelineModel>excerptNote} }"
+                                                            class="sapUiTinyMarginTop" />
+                                                    </VBox>
+                                                </CustomListItem>
+                                            </List>
+                                        </VBox>
+                                    </content>
+                                </Panel>
+
+                                <!-- Lưới 2 Cột: Ảnh kết quả & Lệnh Terminal -->
+                                <l:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                                    <Panel headerText="1. Hình Ảnh Minh Họa Kết Quả (Actual App Screenshot)" class="sapUiSmallMarginBottom">
+                                        <headerToolbar>
+                                            <OverflowToolbar>
+                                                <Title text="1. Hình Ảnh Minh Họa Kết Quả" level="H4" />
+                                                <ToolbarSpacer />
+                                                <Button
+                                                    text="🔍 Phóng To Ảnh Lớn"
+                                                    icon="sap-icon://zoom-in"
+                                                    type="Emphasized"
+                                                    press=".onPreviewImage"
+                                                    tooltip="Bấm vào để phóng to hình ảnh kết quả thực tế" />
+                                            </OverflowToolbar>
+                                        </headerToolbar>
+                                        <VBox class="sapUiSmallMargin">
+                                            <Image
+                                                src="{guidelineModel>image}"
+                                                width="100%"
+                                                decorative="false"
+                                                densityAware="false"
+                                                class="guidelinePreviewImg zoomableImage sapUiSmallMarginBottom"
+                                                press=".onPreviewImage"
+                                                tooltip="🔍 Nhấp vào ảnh để xem phóng to chi tiết" />
+                                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                                <ObjectStatus
+                                                    text="{guidelineModel>imageCaption}"
+                                                    state="Information"
+                                                    icon="sap-icon://camera" />
+                                                <Text text="💡 Bấm vào ảnh để phóng to" class="sapUiTextMuted sapUiTinyMarginEnd" />
+                                            </HBox>
+                                        </VBox>
+                                    </Panel>
+
+                                    <Panel headerText="2. Các Lệnh Terminal Cần Chạy Từ Số 0" class="sapUiSmallMarginBottom">
+                                        <headerToolbar>
+                                            <OverflowToolbar>
+                                                <Title text="2. Các Lệnh Terminal Cần Chạy" level="H4" />
+                                                <ToolbarSpacer />
+                                                <Button
+                                                    text="Sao Chép Lệnh"
+                                                    icon="sap-icon://copy"
+                                                    press=".onCopyCliCommand" />
+                                            </OverflowToolbar>
+                                        </headerToolbar>
+                                        <VBox class="sapUiSmallMargin">
+                                            <List items="{path: 'guidelineModel>cliCommands', templateShareable: false}">
+                                                <CustomListItem>
+                                                    <HBox alignItems="Center" class="sapUiTinyMargin">
+                                                        <core:Icon src="sap-icon://navigation-right-arrow" color="#0a6ed1" class="sapUiTinyMarginEnd" />
+                                                        <Text text="{guidelineModel>}" class="terminalCommandText" />
+                                                    </HBox>
+                                                </CustomListItem>
+                                            </List>
+                                            <MessageStrip
+                                                text="Mẹo Windows PowerShell: Chạy từng dòng lệnh riêng biệt (không dùng dấu &amp;&amp; trên PowerShell 5.1)."
+                                                type="Success"
+                                                class="sapUiSmallMarginTop" />
+                                        </VBox>
+                                    </Panel>
+                                </l:Grid>
+
+                                <!-- 3. MÃ NGUỒN HOÀN CHỈNH -->
+                                <Panel headerText="3. Mã Nguồn Hoàn Chỉnh Của File: {guidelineModel>/activeCodeFileName}" class="sapUiSmallMarginBottom">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <Title text="3. Mã Nguồn Hoàn Chỉnh: {guidelineModel>/activeCodeFilePath}" level="H4" />
+                                            <ToolbarSpacer />
+                                            <Button
+                                                text="Quay Về File Chính"
+                                                icon="sap-icon://reset"
+                                                type="Transparent"
+                                                press=".onResetPrimaryCode"
+                                                visible="{= ${guidelineModel>/activeCodeFilePath} !== ${guidelineModel>primaryFilePath} }" />
+                                            <Button
+                                                text="Sao Chép Toàn Bộ Mã Nguồn"
+                                                icon="sap-icon://copy"
+                                                type="Emphasized"
+                                                press=".onCopyCodeSnippet" />
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <VBox class="sapUiSmallMargin">
+                                        <MessageStrip
+                                            text="🔥 RÊ CHUỘT HOẶC CLICK VÀO TỪNG DÒNG CODE DƯỚI ĐÂY: Dòng mã lệnh sẽ lập tức xuất hiện KHUNG ĐỎ NỔI BẬT và Pop-Up giải thích chi tiết ý nghĩa kỹ thuật sẽ hiện ngay BÊN CẠNH con trỏ chuột!"
+                                            type="Information"
+                                            showIcon="true"
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <core:HTML
+                                            id="guidelineFullCodeHtml"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+
+                                <!-- 4. FOOTER NAVIGATION -->
+                                <Panel class="sapUiSmallMarginBottom">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                                        <Button
+                                            id="btnPrevChapter"
+                                            icon="sap-icon://navigation-left-arrow"
+                                            text="Chương Trước"
+                                            type="Default"
+                                            press=".onPreviousChapter"
+                                            tooltip="Quay lại chương học trước đó" />
+
+                                        <HBox alignItems="Center" class="sapUiSmallMarginTopBottom">
+                                            <core:Icon src="sap-icon://education" color="#0a6ed1" class="sapUiTinyMarginEnd" />
+                                            <Text text="Đang xem: {guidelineModel>title}" class="sapUiTextBold" />
+                                        </HBox>
+
+                                        <Button
+                                            id="btnNextChapter"
+                                            icon="sap-icon://navigation-right-arrow"
+                                            iconFirst="false"
+                                            text="Chương Kế Tiếp"
+                                            type="Emphasized"
+                                            press=".onNextChapter"
+                                            tooltip="Học tiếp chương tiếp theo trong lộ trình 14 bước" />
+                                    </HBox>
+                                </Panel>
+                            </VBox>
+                        </VBox>
+                    </ScrollContainer>
+                </l:contentAreas>
+            </l:Splitter>
+        </content>
+    </Page>
+</mvc:View>

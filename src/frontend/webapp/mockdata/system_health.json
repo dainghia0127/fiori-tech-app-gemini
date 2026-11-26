@@ -1,0 +1,42 @@
+{
+  "currentMode": "STANDALONE",
+  "modes": {
+    "STANDALONE": {
+      "title": "Standalone Mode (Mock Engine)",
+      "badge": "Active (Local Mock)",
+      "badgeState": "Information",
+      "endpoint": "/mockdata/",
+      "latency": "5 ms",
+      "serverType": "In-Memory Browser Simulation & UI5 Tooling",
+      "description": "Thực thi hoàn toàn độc lập phía client bằng mock data JSON và UI5 local tooling. Thích hợp cho việc nghiên cứu frontend và UI patterns.",
+      "features": {
+        "odataV4Simulation": true,
+        "abapExecution": false,
+        "draftSemantics": "Simulated",
+        "lockMaster": "Simulated"
+      }
+    },
+    "SAP_CONNECTED": {
+      "title": "SAP Connected Mode (S/4HANA 2025)",
+      "badge": "Backend Verified via MCP",
+      "badgeState": "Success",
+      "endpoint": "/sap/opu/odata4/sap/zui_demo_o4/srvd/sap/zsd_demo/0001/",
+      "systemId": "PQPOC",
+      "client": "100",
+      "sapBasis": "816 (SP 0001)",
+      "sapGwfnd": "816 (SP 0001)",
+      "sapUi": "816 (SP 0001)",
+      "s4Core": "109 (SP 0001)",
+      "latency": "42 ms",
+      "serverType": "SAP S/4HANA ABAP Platform 2025 Connected",
+      "description": "Kết nối thực tế tới hệ thống SAP S/4HANA PQPOC Client 100. Đã xác minh kết nối ADT và Software Components qua MCP Server.",
+      "features": {
+        "odataV4Simulation": false,
+        "abapExecution": true,
+        "draftSemantics": "Full SAP Runtime",
+        "lockMaster": "Full SAP Enqueue"
+      }
+    }
+  }
+}
+

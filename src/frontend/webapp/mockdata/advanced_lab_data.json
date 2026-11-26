@@ -1,0 +1,110 @@
+{
+  "security": {
+    "dclCode": "@EndUserText.label: 'Row-level Access Control for Demo Header'\n@MappingRole: true\ndefine role ZR_DemoHeaderTP {\n  grant select on ZI_DemoHeaderTP\n  where ( StatusCode ) = aspect pfcg_auth( S_TABU_DIS, ACTVT = '03', DICBERCLS = 'ZDEM' )\n     or StatusCode = 'AP';\n}",
+    "roles": [
+      {
+        "roleId": "Z_DEMO_ADMIN",
+        "roleName": "Chuyên Viên Quản Trị Hệ Thống (Full Access)",
+        "pfcgObject": "S_TABU_DIS",
+        "actvt": "02 (Change), 03 (Display)",
+        "allowedStatuses": ["DR", "IP", "AP", "RJ"],
+        "viewableCount": 10
+      },
+      {
+        "roleId": "Z_DEMO_APPROVER",
+        "roleName": "Cán Bộ Phê Duyệt Kỹ Thuật (Approver)",
+        "pfcgObject": "S_TABU_DIS",
+        "actvt": "03 (Display)",
+        "allowedStatuses": ["IP", "AP"],
+        "viewableCount": 6
+      },
+      {
+        "roleId": "Z_DEMO_VIEWER",
+        "roleName": "Người Dùng Tiêu Chuẩn (Viewer - Public Only)",
+        "pfcgObject": "NONE",
+        "actvt": "03 (Display)",
+        "allowedStatuses": ["AP"],
+        "viewableCount": 4
+      }
+    ],
+    "csrfSimulation": {
+      "endpoint": "/sap/opu/odata4/sap/zui_demo_header_o4/srvd/sap/zui_demo_header_o4/0001/",
+      "tokenValue": "A9B2C4D8E0F1234567890ABCDEF12345==",
+      "cookieValue": "SAP_SESSIONID_PQP_100=abcdef0123456789; path=/",
+      "headerRequired": "X-CSRF-Token",
+      "fetchHeader": "X-CSRF-Token: Fetch"
+    }
+  },
+  "integration": {
+    "destinations": [
+      {
+        "destination": "S4H_PQPOC_100",
+        "type": "3 (ABAP RFC)",
+        "description": "Kết nối RFC nội bộ tới máy chủ SAP S/4HANA 2025 Client 100",
+        "targetHost": "s4h2025.corp.internal:3300",
+        "systemNumber": "00",
+        "client": "100",
+        "status": "Active",
+        "responseTime": "18 ms"
+      },
+      {
+        "destination": "EXT_TAX_API_HTTPS",
+        "type": "G (HTTP to External)",
+        "description": "Tiêu thụ REST API dịch vụ tính thuế ngoại vi",
+        "targetHost": "https://api.tax-service.enterprise.com/v1",
+        "ssl": "Active (STRUST Certificate OK)",
+        "status": "Active",
+        "responseTime": "120 ms"
+      },
+      {
+        "destination": "BTP_CLOUD_CONNECTOR",
+        "type": "H (HTTP to ABAP via SCC)",
+        "description": "Kênh liên lạc ảo từ SAP BTP qua SAP Cloud Connector vào On-Premise",
+        "targetHost": "virtual-s4h:443",
+        "proxy": "SCC Reverse Proxy",
+        "status": "Active",
+        "responseTime": "45 ms"
+      }
+    ],
+    "proxyConfigYaml": "# ui5.yaml: Cấu hình Proxy Middleware giải quyết CORS\nserver:\n  customMiddleware:\n    - name: fiori-tools-proxy\n      afterMiddleware: compression\n      configuration:\n        ignoreCertError: true\n        backend:\n          - path: /sap\n            url: http://s4h2025.corp.internal:8000\n            client: '100'\n        ui5:\n          path:\n            - /resources\n            - /test-resources\n          url: https://ui5.sap.com"
+  },
+  "testing": {
+    "qunitMetrics": {
+      "totalSuites": 4,
+      "totalTests": 28,
+      "passed": 28,
+      "failed": 0,
+      "coverage": "96.4%",
+      "executionTime": "124 ms"
+    },
+    "opa5Metrics": {
+      "totalJourneys": 2,
+      "totalSteps": 14,
+      "passed": 14,
+      "failed": 0,
+      "executionTime": "3.2 s"
+    },
+    "abapUnitCode": "\" ABAP Unit Test cho RAP Business Object ZI_DemoHeaderTP\nCLASS ltcl_demo_header_test DEFINITION FINAL FOR TESTING\n  DURATION SHORT\n  RISK LEVEL HARMLESS.\n\n  PRIVATE SECTION.\n    CLASS-DATA: mo_environment TYPE REF TO if_cds_test_environment.\n    CLASS-METHODS: class_setup, class_teardown.\n    METHODS: test_validation_status_code FOR TESTING,\n             test_action_approve FOR TESTING.\nENDCLASS.\n\nCLASS ltcl_demo_header_test IMPLEMENTATION.\n  METHOD class_setup.\n    mo_environment = cl_cds_test_environment=>create( 'ZI_DEMOHEADERTP' ).\n  ENDMETHOD.\n  METHOD class_teardown.\n    mo_environment->destroy( ).\n  ENDMETHOD.\n  METHOD test_validation_status_code.\n    MODIFY ENTITIES OF ZI_DemoHeaderTP\n      ENTITY DemoHeader\n      CREATE FIELDS ( DemoCode StatusCode )\n      WITH VALUE #( ( %cid = 'ROOT_01' DemoCode = 'INVALID_01' StatusCode = 'XX' ) )\n      FAILED DATA(lt_failed)\n      REPORTED DATA(lt_reported).\n    cl_abap_unit_assert=>assert_not_initial( lt_failed-demoheader ).\n  ENDMETHOD.\n  METHOD test_action_approve.\n    MODIFY ENTITIES OF ZI_DemoHeaderTP\n      ENTITY DemoHeader\n      EXECUTE approve FROM VALUE #( ( HeaderUUID = '00000000000000000000000000000001' ) )\n      RESULT DATA(lt_result)\n      FAILED DATA(lt_failed).\n    cl_abap_unit_assert=>assert_initial( lt_failed-demoheader ).\n  ENDMETHOD.\nENDCLASS."
+  },
+  "deployment": {
+    "flpConfig": {
+      "semanticObject": "DemoTechnicalApp",
+      "action": "display",
+      "title": "SAP Fiori Technical Academy",
+      "subTitle": "Generic Technical Engine 2025",
+      "icon": "sap-icon://study-leave",
+      "catalogId": "Z_CATALOG_TECH_ACADEMY",
+      "spaceId": "Z_SPACE_DEVELOPER_CORE",
+      "pageId": "Z_PAGE_FIORI_RAP_MASTERY"
+    },
+    "bspPackage": {
+      "bspName": "ZFIORI_TECH_APP",
+      "package": "ZNGHIANDD_TEST",
+      "transportRequest": "S4DK911884",
+      "targetSystem": "S/4HANA 2025 (PQPOC Client 100)",
+      "zipTask": "ui5-task-zipper",
+      "deployerPlugin": "@sap/ux-ui5-tooling"
+    }
+  }
+}
+

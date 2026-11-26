@@ -1,0 +1,216 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.UserManual"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    height="100%">
+
+    <Page
+        id="userManualPage"
+        title="📖 Sổ Tay Vận Hành &amp; Kiểm Thử (User Manual)"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding">
+
+        <headerContent>
+            <Button
+                id="btnDownloadUserManualMd"
+                icon="sap-icon://download"
+                text="Tải Markdown"
+                type="Emphasized"
+                press=".onDownloadUserManualMd"
+                tooltip="Tải file tài liệu hướng dẫn vận hành USER_MANUAL.md đầy đủ" />
+            <Button
+                icon="sap-icon://bbyd-dashboard"
+                text="Dashboard"
+                type="Transparent"
+                press=".onNavBack"
+                tooltip="Quay lại Dashboard" />
+            <Button
+                icon="sap-icon://education"
+                text="Fresher Guideline"
+                type="Transparent"
+                press=".onNavToGuideline"
+                tooltip="Xem Cẩm Nang Fresher" />
+            <Button
+                icon="sap-icon://alert"
+                text="Handle Error"
+                type="Critical"
+                press=".onNavToErrorPlaybook"
+                tooltip="Xem Sổ Tay 15 Lỗi Kỹ Thuật" />
+        </headerContent>
+
+        <content>
+            <!-- Hero Banner -->
+            <VBox class="academyHeroBanner sapUiSmallMarginBottom">
+                <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                    <VBox class="sapUiSmallMarginEnd">
+                        <Title text="📖 Sổ Tay Hướng Dẫn Vận Hành &amp; Kịch Bản Kiểm Thử (10 Phân Hệ)" level="H3" class="academyHeroTitle" />
+                        <Text text="Tra cứu chi tiết từng chức năng, nội dung hiển thị, các bước kiểm thử thực tế và ảnh chụp màn hình trực quan từ ứng dụng." class="academyHeroSubtitle" />
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Hướng Dẫn Cho Người Mới Bắt Đầu -->
+            <MessageStrip
+                text="💡 Dành Cho Người Mới Bắt Đầu: Chọn 1 trong 10 phân hệ ở cột bên trái để xem chi tiết mục đích, dữ liệu hiển thị và kịch bản test từng bước. Khi đã sẵn sàng, nhấn nút 'Trải Nghiệm Ngay' để chuyển thẳng vào màn hình chức năng!"
+                type="Information"
+                showIcon="true"
+                class="sapUiSmallMarginBottom" />
+
+            <!-- Master - Detail Two Columns Layout (Dàn đều 100% không chừa khoảng trắng) -->
+            <l:Grid defaultSpan="XL3 L4 M12 S12" hSpacing="1" vSpacing="1">
+
+                <!-- CỘT TRÁI: BẢNG CHỈ MỤC (TABLE OF CONTENTS) -->
+                <VBox class="sapUiTinyMarginEnd sapUiSmallMarginBottom">
+                    <layoutData>
+                        <l:GridData span="XL3 L4 M12 S12" />
+                    </layoutData>
+                    <Panel headerText="📋 Chỉ Mục Phân Hệ (10 Mục)" expandable="false" class="sapUiNoContentPadding">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="📋 Chỉ Mục Phân Hệ (10 Mục)" level="H4" class="academySectionTitle" />
+                                <ToolbarSpacer />
+                            </Toolbar>
+                        </headerToolbar>
+                        <content>
+                            <VBox class="sapUiSmallMargin">
+                                <SearchField
+                                    id="manualSearchField"
+                                    placeholder="Tìm chức năng, từ khóa..."
+                                    liveChange=".onSearchManualLiveChange"
+                                    class="sapUiSmallMarginBottom" />
+
+                                <List
+                                    id="manualSectionList"
+                                    items="{
+                                        path: 'userManual>/sections',
+                                        sorter: { path: 'index', descending: false }
+                                    }"
+                                    mode="SingleSelectMaster"
+                                    itemPress=".onSectionSelect"
+                                    selectionChange=".onSectionSelect"
+                                    class="manualIndexList">
+                                    <StandardListItem
+                                        title="{userManual>index}. {userManual>title}"
+                                        description="{userManual>summary}"
+                                        icon="{userManual>icon}"
+                                        info="{userManual>category}"
+                                        infoState="Information"
+                                        type="Active"
+                                        wrapping="true" />
+                                </List>
+                            </VBox>
+                        </content>
+                    </Panel>
+                </VBox>
+
+                <!-- CỘT PHẢI: CHI TIẾT CHỨC NĂNG, CÁCH TEST & HÌNH ẢNH MINH HỌA -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <layoutData>
+                        <l:GridData span="XL9 L8 M12 S12" />
+                    </layoutData>
+                    <Panel id="manualDetailPanel" expandable="false">
+                        <headerToolbar>
+                            <Toolbar>
+                                <core:Icon src="{userManual>/selectedSection/icon}" color="#0a6ed1" size="1.4rem" class="sapUiTinyMarginEnd" />
+                                <Title text="{userManual>/selectedSection/index}. {userManual>/selectedSection/title}" level="H3" class="academySectionTitle" />
+                                <ToolbarSpacer />
+                                <Button
+                                    icon="sap-icon://navigation-right-arrow"
+                                    text="Trải Nghiệm Ngay"
+                                    type="Emphasized"
+                                    press=".onNavigateToFeature"
+                                    tooltip="Chuyển ngay tới màn hình chức năng này trong app" />
+                            </Toolbar>
+                        </headerToolbar>
+                        <content>
+                            <VBox class="sapUiSmallMargin">
+
+                                <!-- Badge Category & Target Route -->
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom" wrap="Wrap">
+                                    <Text text="Phân loại: {userManual>/selectedSection/category}" class="errorCodeBadge sapUiSmallMarginEnd" />
+                                    <Text text="Route điều hướng: #{userManual>/selectedSection/targetRoute}" class="sapUiTextMuted" />
+                                </HBox>
+
+                                <!-- Tóm tắt & Mô tả -->
+                                <Panel headerText="1. Giới Thiệu Chức Năng &amp; Mục Đích Kỹ Thuật" expandable="false" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="{userManual>/selectedSection/description}" class="sapUiSmallMarginBottom errorTriggerText" style="line-height: 1.6;" wrapping="true" />
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Thông tin dữ liệu -->
+                                <Panel headerText="2. Nội Dung &amp; Dữ Liệu Hiển Thị" expandable="false" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <List items="{path: 'userManual>/selectedSection/information', templateShareable: false}">
+                                            <StandardListItem icon="sap-icon://accept" title="{userManual>}" wrapping="true" />
+                                        </List>
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Kịch bản kiểm thử (Test Guide) -->
+                                <Panel headerText="3. Quy Trình &amp; Các Bước Kiểm Thử Chi Tiết (Test Guide)" expandable="false" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <MessageStrip
+                                            text="💡 Thực hiện tuần tự các bước dưới đây để kiểm tra chức năng hoạt động chính xác:"
+                                            type="Success"
+                                            class="sapUiSmallMarginBottom" />
+                                        <VBox class="codeDiffBox codeDiffBoxAfter">
+                                            <List items="{path: 'userManual>/selectedSection/testSteps', templateShareable: false}">
+                                                <StandardListItem icon="sap-icon://step" title="{userManual>}" wrapping="true" />
+                                            </List>
+                                        </VBox>
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Hình ảnh minh họa -->
+                                <Panel headerText="4. Hình Ảnh Giao Diện Minh Họa Chụp Thực Tế" expandable="false" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin manualImageBox">
+                                        <Image
+                                            id="manualImage"
+                                            src="{userManual>/selectedSection/image}"
+                                            alt="{userManual>/selectedSection/title}"
+                                            width="100%"
+                                            class="manualScreenshot" />
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Thanh Điều Hướng: Chuyển Phân Hệ Trước / Sau -->
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiMediumMarginTop" wrap="Wrap">
+                                    <Button
+                                        icon="sap-icon://navigation-left-arrow"
+                                        text="Phân Hệ Trước"
+                                        type="Default"
+                                        press=".onPreviousSection"
+                                        tooltip="Quay lại phân hệ kỹ thuật trước đó" />
+
+                                    <Button
+                                        icon="sap-icon://navigation-right-arrow"
+                                        text="🚀 Mở &amp; Trải Nghiệm Chức Năng Này Ngay"
+                                        type="Emphasized"
+                                        press=".onNavigateToFeature"
+                                        tooltip="Chuyển ngay tới màn hình chức năng này trong app" />
+
+                                    <Button
+                                        icon="sap-icon://navigation-right-arrow"
+                                        iconFirst="false"
+                                        text="Phân Hệ Kế Tiếp"
+                                        type="Default"
+                                        press=".onNextSection"
+                                        tooltip="Xem tiếp phân hệ kỹ thuật kế tiếp" />
+                                </HBox>
+
+                            </VBox>
+                        </content>
+                    </Panel>
+                </VBox>
+
+            </l:Grid>
+
+        </content>
+    </Page>
+</mvc:View>

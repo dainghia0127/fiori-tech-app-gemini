@@ -1,0 +1,341 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.ErrorPlaybook"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f.cards"
+    xmlns:card="sap.f.cards"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    height="100%">
+
+    <Page
+        id="errorPlaybookPage"
+        title="🛠️ Sổ Tay Khắc Phục Sự Cố Kỹ Thuật (Error Playbook)"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding academyErrorPage">
+
+        <headerContent>
+            <Button
+                id="btnDownloadPlaybookDoc"
+                icon="sap-icon://download"
+                text="Tải Markdown"
+                type="Emphasized"
+                press=".onDownloadPlaybookMarkdown"
+                tooltip="Tải về file tài liệu kỹ thuật docs/ERROR_HANDLING_PLAYBOOK.md đầy đủ" />
+            <Button
+                icon="sap-icon://refresh"
+                type="Transparent"
+                press=".onRefreshData"
+                tooltip="Tải lại danh sách lỗi" />
+        </headerContent>
+
+        <content>
+            <!-- ================================================================= -->
+            <!-- 1. HERO HEADER BANNER                                             -->
+            <!-- ================================================================= -->
+            <VBox class="academyHeroBanner sapUiSmallMarginBottom">
+                <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                    <VBox class="sapUiSmallMarginEnd">
+                        <Title text="🛠️ Sổ Tay Khắc Phục Sự Cố Kỹ Thuật (15 Lỗi Thực Chiến)" level="H3" class="academyHeroTitle" />
+                        <Text text="Tổng hợp toàn diện 15 lỗi kỹ thuật thực tế gặp phải từ đầu dự án đến khi hoàn thiện. Rê chuột vào từng dòng để xem Pop-Up phân tích nguyên nhân và giải pháp." class="academyHeroSubtitle" />
+                    </VBox>
+                    <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                        <ObjectStatus
+                            text="15/15 Sự Cố Đã Khắc Phục (100%)"
+                            state="Success"
+                            icon="sap-icon://sys-enter-2"
+                            class="academyHeroStatusTag" />
+                    </HBox>
+                </HBox>
+            </VBox>
+
+            <!-- ================================================================= -->
+            <!-- 2. KPI & CATEGORY SUMMARY TILES                                   -->
+            <!-- ================================================================= -->
+            <l:Grid
+                defaultSpan="XL2 L4 M6 S12"
+                hSpacing="1"
+                vSpacing="1"
+                class="sapUiSmallMarginBottom">
+
+                <!-- Tile 1: Tổng số lỗi -->
+                <GenericTile
+                    header="Tổng Sự Cố Đã Gặp"
+                    subheader="Phase 0 đến Phase 5"
+                    class="sapUiTinyMarginBegin errorStatTile"
+                    press=".onFilterAll">
+                    <TileContent unit="Sự cố">
+                        <NumericContent
+                            value="{errorPlaybook>/summary/totalErrors}"
+                            icon="sap-icon://alert"
+                            valueColor="Critical" />
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Tile 2: Frontend & UI5 Tooling -->
+                <GenericTile
+                    header="Frontend &amp; UI5"
+                    subheader="Port, Build, Runtime"
+                    class="sapUiTinyMarginBegin errorStatTile"
+                    press=".onFilterFE">
+                    <TileContent unit="Lỗi">
+                        <NumericContent
+                            value="3"
+                            icon="sap-icon://desktop-mobile"
+                            valueColor="Neutral" />
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Tile 3: OData V4 & Fiori Elements -->
+                <GenericTile
+                    header="OData V4 &amp; FE"
+                    subheader="SideEffects, ETag OCC"
+                    class="sapUiTinyMarginBegin errorStatTile"
+                    press=".onFilterOData">
+                    <TileContent unit="Lỗi">
+                        <NumericContent
+                            value="2"
+                            icon="sap-icon://connected"
+                            valueColor="Neutral" />
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Tile 4: SAP ADT Tools & API -->
+                <GenericTile
+                    header="SAP ADT API"
+                    subheader="Package, BDEF, Session"
+                    class="sapUiTinyMarginBegin errorStatTile"
+                    press=".onFilterADT">
+                    <TileContent unit="Lỗi">
+                        <NumericContent
+                            value="3"
+                            icon="sap-icon://wrench"
+                            valueColor="Neutral" />
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Tile 5: ABAP RAP & Backend -->
+                <GenericTile
+                    header="ABAP RAP Backend"
+                    subheader="BDL, strict(2), EML"
+                    class="sapUiTinyMarginBegin errorStatTile"
+                    press=".onFilterRAP">
+                    <TileContent unit="Lỗi">
+                        <NumericContent
+                            value="7"
+                            icon="sap-icon://database"
+                            valueColor="Neutral" />
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Tile 6: Trạng thái Giải quyết -->
+                <GenericTile
+                    header="Tỷ Lệ Khắc Phục"
+                    subheader="Verified in Test Suite"
+                    class="sapUiTinyMarginBegin errorStatTile">
+                    <TileContent unit="% Success">
+                        <NumericContent
+                            value="100"
+                            indicator="Up"
+                            icon="sap-icon://sys-enter-2"
+                            valueColor="Good" />
+                    </TileContent>
+                </GenericTile>
+            </l:Grid>
+
+            <!-- ================================================================= -->
+            <!-- 3. SEARCH & FILTER CONTROLS PANEL                                 -->
+            <!-- ================================================================= -->
+            <Panel
+                expandable="true"
+                expanded="true"
+                headerText="Bộ Lọc Sự Cố &amp; Tìm Kiếm Nhanh"
+                class="sapUiSmallMarginBottom errorFilterPanel">
+                <content>
+                    <HBox alignItems="Center" wrap="Wrap" justifyContent="SpaceBetween">
+                        <!-- Search Box -->
+                        <SearchField
+                            id="errorSearchField"
+                            placeholder="Tìm kiếm theo mã lỗi (ERR-...), tiêu đề, từ khóa, file..."
+                            width="340px"
+                            liveChange=".onSearchLiveChange"
+                            class="sapUiSmallMarginEnd sapUiTinyMarginBottom" />
+
+                        <HBox alignItems="Center" wrap="Wrap">
+                            <!-- Category Filter -->
+                            <Label text="Phân hệ:" class="sapUiTinyMarginEnd sapUiTinyMarginBegin" design="Bold" />
+                            <Select
+                                id="categoryFilterSelect"
+                                change=".onFilterChange"
+                                selectedKey="ALL"
+                                class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                <core:Item key="ALL" text="Tất cả phân hệ (15)" />
+                                <core:Item key="CAT_FE" text="Frontend &amp; UI5 Tooling (3)" />
+                                <core:Item key="CAT_ODATA" text="OData V4 &amp; Fiori Elements (2)" />
+                                <core:Item key="CAT_ADT" text="SAP ADT Tools &amp; API (3)" />
+                                <core:Item key="CAT_RAP" text="ABAP RAP &amp; Backend Engine (7)" />
+                            </Select>
+
+                            <!-- Phase Filter -->
+                            <Label text="Phase:" class="sapUiTinyMarginEnd sapUiTinyMarginBegin" design="Bold" />
+                            <Select
+                                id="phaseFilterSelect"
+                                change=".onFilterChange"
+                                selectedKey="ALL"
+                                class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                <core:Item key="ALL" text="Tất cả Phase" />
+                                <core:Item key="Phase 0 &amp; 1" text="Phase 0 &amp; 1: Setup &amp; Frontend" />
+                                <core:Item key="Phase 2" text="Phase 2: Fiori Elements &amp; Annotations" />
+                                <core:Item key="Phase 3" text="Phase 3: Freestyle UI5 &amp; Architecture" />
+                                <core:Item key="Phase 4" text="Phase 4: OData V4 &amp; Concurrency" />
+                                <core:Item key="Phase 5" text="Phase 5: ABAP RAP Backend &amp; EML" />
+                            </Select>
+
+                            <!-- Severity Filter -->
+                            <Label text="Mức độ:" class="sapUiTinyMarginEnd sapUiTinyMarginBegin" design="Bold" />
+                            <Select
+                                id="severityFilterSelect"
+                                change=".onFilterChange"
+                                selectedKey="ALL"
+                                class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                <core:Item key="ALL" text="Tất cả mức độ (15)" />
+                                <core:Item key="Critical" text="Critical (Nghiêm trọng - 2)" />
+                                <core:Item key="High" text="High (Mức cao - 7)" />
+                                <core:Item key="Medium" text="Medium (Trung bình - 5)" />
+                                <core:Item key="Low" text="Low (Mức thấp - 1)" />
+                            </Select>
+
+                            <Button
+                                icon="sap-icon://clear-filter"
+                                text="Đặt lại bộ lọc"
+                                type="Transparent"
+                                press=".onResetFilters"
+                                class="sapUiTinyMarginBottom" />
+                        </HBox>
+                    </HBox>
+                </content>
+            </Panel>
+
+            <!-- ================================================================= -->
+            <!-- 4. TABLE OF ERRORS                                                -->
+            <!-- ================================================================= -->
+            <Table
+                id="errorTable"
+                items="{
+                    path: 'errorPlaybook>/errors',
+                    sorter: { path: 'id', descending: false }
+                }"
+                updateFinished=".onTableUpdateFinished"
+                noDataText="Không tìm thấy sự cố nào phù hợp với bộ lọc."
+                class="sapUiSmallMarginBottom errorPlaybookTable"
+                growing="true"
+                growingThreshold="20">
+                <headerToolbar>
+                    <Toolbar>
+                        <Title id="errorTableTitle" text="Danh Sách 15 Sự Cố Kỹ Thuật (Rê chuột vào dòng để xem Pop-Up chi tiết)" level="H4" class="academySectionTitle" />
+                        <ToolbarSpacer />
+                        <Button
+                            icon="sap-icon://hint"
+                            text="Hướng Dẫn Hover"
+                            type="Ghost"
+                            press=".onShowQuickHoverHelp"
+                            tooltip="Xem giới thiệu tính năng Pop-Up khi rê chuột" />
+                    </Toolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column width="5.5rem">
+                        <Text text="Mã Lỗi" class="sapUiTableColHeader" />
+                    </Column>
+                    <Column width="6rem" minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="Mức Độ" class="sapUiTableColHeader" />
+                    </Column>
+                    <Column width="11%" minScreenWidth="Desktop" demandPopin="true">
+                        <Text text="Phân Hệ / Phase" class="sapUiTableColHeader" />
+                    </Column>
+                    <Column width="20%">
+                        <Text text="Tiêu Đề &amp; Mã Kỹ Thuật" class="sapUiTableColHeader" />
+                    </Column>
+                    <Column width="21%" minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="Làm Gì Bị Lỗi (Trigger)" class="sapUiTableColHeader" />
+                    </Column>
+                    <Column width="22%" minScreenWidth="Desktop" demandPopin="true">
+                        <Text text="Tư Duy Phân Tích (Mental Model)" class="sapUiTableColHeader" />
+                    </Column>
+                    <Column width="12rem" hAlign="End">
+                        <Text text="Hành Động" class="sapUiTableColHeader" />
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem
+                        vAlign="Middle"
+                        type="Active"
+                        press=".onItemRowPress"
+                        class="errorTableRowItem">
+                        <cells>
+                            <!-- Mã Lỗi ID -->
+                            <ObjectIdentifier
+                                title="{errorPlaybook>id}"
+                                text="{errorPlaybook>phase}" />
+
+                            <!-- Mức Độ Severity -->
+                            <ObjectStatus
+                                text="{errorPlaybook>severity}"
+                                state="{= ${errorPlaybook>severity} === 'Critical' ? 'Error' : (${errorPlaybook>severity} === 'High' ? 'Warning' : (${errorPlaybook>severity} === 'Medium' ? 'Information' : 'None')) }"
+                                icon="{= ${errorPlaybook>severity} === 'Critical' ? 'sap-icon://error' : (${errorPlaybook>severity} === 'High' ? 'sap-icon://alert' : 'sap-icon://information') }" />
+
+                            <!-- Phân Hệ & Phase -->
+                            <VBox>
+                                <Text text="{errorPlaybook>categoryName}" class="sapUiTinyMarginBottom errorCategoryTag" />
+                                <Text text="{errorPlaybook>phase}" class="sapUiTextMuted" />
+                            </VBox>
+
+                            <!-- Tiêu Đề & Mã Kỹ Thuật -->
+                            <VBox>
+                                <Text text="{errorPlaybook>title}" class="errorTitleText" wrapping="true" />
+                                <Text text="{errorPlaybook>errorCode}" class="errorCodeBadge" />
+                            </VBox>
+
+                            <!-- Trigger: Làm gì bị lỗi (HIỂN THỊ ĐẦY ĐỦ 100%, KHÔNG CẮT ...) -->
+                            <Text
+                                text="{errorPlaybook>whatTriggered}"
+                                wrapping="true"
+                                class="errorTriggerText" />
+
+                            <!-- Tư duy phân tích (HIỂN THỊ ĐẦY ĐỦ 100%, KHÔNG CẮT ...) -->
+                            <Text
+                                text="{errorPlaybook>thoughtProcess}"
+                                wrapping="true"
+                                class="errorThoughtText" />
+
+                            <!-- Action Buttons -->
+                            <HBox justifyContent="End" alignItems="Center" wrap="Wrap">
+                                <Button
+                                    icon="sap-icon://hint"
+                                    text="Chi Tiết"
+                                    type="Transparent"
+                                    press=".onShowPopoverForCurrentRow"
+                                    tooltip="Mở phân tích chi tiết lỗi này" />
+                                <Button
+                                    icon="sap-icon://source-code"
+                                    text="Code Diff"
+                                    type="Ghost"
+                                    press=".onOpenCodeDiffForCurrentRow"
+                                    tooltip="Xem Code Trước &amp; Sau khi sửa (Code Diff)" />
+                                <Button
+                                    icon="sap-icon://copy"
+                                    type="Transparent"
+                                    press=".onCopySolutionForCurrentRow"
+                                    tooltip="Sao chép hướng dẫn giải quyết" />
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+        </content>
+    </Page>
+</mvc:View>

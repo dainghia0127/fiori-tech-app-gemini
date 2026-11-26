@@ -1,0 +1,12 @@
+{
+  "name": "sap-fiori-technical-academy-root",
+  "version": "1.0.0",
+  "description": "SAP Fiori Technical Academy - Technical-First Learning & Engineering Platform for SAPUI5, OData V4 and ABAP RAP",
+  "private": true,
+  "scripts": {
+    "start": "npm --prefix src/frontend start",
+    "build": "npm --prefix src/frontend run build",
+    "test": "node tests/unit/test_frontend_runtime.js",
+    "test:syntax": "node tests/unit/verify_frontend_syntax.js"
+  }
+}

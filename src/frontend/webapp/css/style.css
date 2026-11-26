@@ -1,0 +1,1016 @@
+/* ==========================================================================
+   SAP Fiori Technical Academy - Horizon Design System Stylesheet
+   Design Philosophy: Clean, Modern, Low Cognitive Load, Clear Visual Hierarchy
+   Theme: SAP Morning Horizon (sap_horizon)
+   ========================================================================== */
+
+/* --- 1. CORE LAYOUT & TYPOGRAPHY TOKENS --- */
+:root {
+    --fiori-primary: #0a6ed1;
+    --fiori-primary-hover: #0854a0;
+    --fiori-primary-light: #ebf3fb;
+    --fiori-bg-canvas: #f5f6f8;
+    --fiori-card-bg: #ffffff;
+    --fiori-border-soft: #e2e8f0;
+    --fiori-border-subtle: #edf2f7;
+    --fiori-text-title: #1d2d3e;
+    --fiori-text-body: #324456;
+    --fiori-text-muted: #6a7b8c;
+    --fiori-code-bg: #1b222d;
+    --fiori-code-text: #e2e8f0;
+    --fiori-radius-sm: 6px;
+    --fiori-radius-md: 10px;
+    --fiori-radius-lg: 14px;
+    --fiori-radius-pill: 24px;
+    --fiori-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --fiori-shadow-md: 0 4px 12px rgba(10, 110, 209, 0.08);
+    --fiori-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+body,
+.sapUiBody {
+    background-color: var(--fiori-bg-canvas);
+    color: var(--fiori-text-body);
+    font-family: "72", "72full", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- 2. APP SHELL & TOOL HEADER --- */
+.academyToolHeader {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid var(--fiori-border-soft) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+.academyHeaderTitle {
+    color: var(--fiori-text-title) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.2px;
+}
+
+/* --- 3. MODERN HERO BANNER (REPLACES STACKED MESSAGE STRIPS) --- */
+.academyHeroBanner {
+    background: linear-gradient(135deg, #eef5fc 0%, #f7fafd 60%, #ffffff 100%);
+    border: 1px solid #d4e5f7;
+    border-radius: var(--fiori-radius-lg);
+    box-shadow: var(--fiori-shadow-md);
+    padding: 22px 26px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.academyHeroBanner::after {
+    content: "";
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(10, 110, 209, 0.07) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.academyHeroTitle {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--fiori-text-title);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.academyHeroSubtitle {
+    font-size: 0.95rem;
+    color: var(--fiori-text-muted);
+    line-height: 1.55;
+    max-width: 900px;
+}
+
+.academyPillGroup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.academyActionPill {
+    border-radius: var(--fiori-radius-pill) !important;
+    font-weight: 600 !important;
+    font-size: 0.86rem !important;
+    padding: 0 16px !important;
+    height: 36px !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.academyActionPill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 110, 209, 0.18) !important;
+}
+
+.academyPillPrimary {
+    background-color: var(--fiori-primary) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.academyPillSecondary {
+    background-color: #ffffff !important;
+    color: var(--fiori-primary) !important;
+    border: 1px solid #c8ddf2 !important;
+}
+
+.academyPillSecondary:hover {
+    background-color: var(--fiori-primary-light) !important;
+}
+
+.academyHeroStatusTag {
+    background: #ffffff;
+    border: 1px solid #c2dbf4;
+    border-radius: var(--fiori-radius-pill);
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--fiori-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* --- 4. SECTION HEADERS & VISUAL HIERARCHY --- */
+.academySectionTitle {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--fiori-text-title);
+    letter-spacing: -0.2px;
+}
+
+.academySectionSubtext {
+    font-size: 0.88rem;
+    color: var(--fiori-text-muted);
+    margin-top: 2px;
+}
+
+/* --- 5. CARDS, TILES & CONTAINERS --- */
+.sapFCard,
+.sapMPanel {
+    border-radius: var(--fiori-radius-md) !important;
+    border: 1px solid var(--fiori-border-soft) !important;
+    box-shadow: var(--fiori-shadow-card) !important;
+    background-color: var(--fiori-card-bg) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sapFCard:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
+}
+
+.academyTileCard {
+    border-radius: var(--fiori-radius-md) !important;
+    border: 1px solid var(--fiori-border-soft) !important;
+    background: #ffffff !important;
+    box-shadow: var(--fiori-shadow-card) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.academyTileCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(10, 110, 209, 0.1) !important;
+}
+
+/* --- 6. MODERN CODE BOXES & SNIPPETS (SLATE THEME & FULL PAGE VIEW) --- */
+.academyCodeBox {
+    background-color: var(--fiori-code-bg);
+    color: var(--fiori-code-text);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 16px 20px;
+    border-radius: var(--fiori-radius-md);
+    border: 1px solid #2a3444;
+    overflow-x: auto;
+    white-space: pre;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Hiển thị Code Full Chiều Dài Trang (Không Bị Khung Scroll Giới Hạn) */
+.academyFullCodeView {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    overflow-x: auto !important;
+    display: block !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+}
+
+.academyFullCodeView pre, .academyFullCodeView code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    line-height: 1.6 !important;
+    font-family: inherit !important;
+}
+
+/* Badge từ khóa sạch không có dấu # */
+.academyKeywordBadge {
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.terminalCommandText {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fiori-primary-hover);
+    background-color: #f1f6fb;
+    padding: 5px 10px;
+    border-radius: var(--fiori-radius-sm);
+    border: 1px solid #d2e4f6;
+    display: inline-block;
+}
+
+.codeLineText {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 13px;
+    color: #1e293b;
+    background-color: #f8fafc;
+    padding: 6px 10px;
+    border-radius: var(--fiori-radius-sm);
+    border-left: 3px solid var(--fiori-primary);
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+/* KHUNG ĐỎ NỔI BẬT KHI RÊ CHUỘT VÀO DÒNG/BLOCK CODE */
+.guidelineCodeRow {
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+}
+
+.guidelineCodeRow:hover {
+    background-color: #fef2f2 !important;
+    box-shadow: inset 0 0 0 2px #ef4444, 0 2px 8px rgba(239, 68, 68, 0.15) !important;
+}
+
+.guidelineCodeRow:hover .codeLineText {
+    background-color: #fee2e2 !important;
+    border-left-color: #ef4444 !important;
+    color: #991b1b !important;
+    font-weight: 600 !important;
+}
+
+.guidelineCodeRow:hover .lineBadge {
+    background-color: #ef4444 !important;
+}
+
+.fresherTipText {
+    color: #991b1b;
+    background-color: #fef2f2;
+    padding: 10px 14px;
+    border-radius: var(--fiori-radius-sm);
+    border-left: 4px solid #ef4444;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.lineBadge {
+    background-color: var(--fiori-primary);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+/* Guideline Preview Image */
+.guidelinePreviewImg {
+    border-radius: var(--fiori-radius-md);
+    border: 1px solid var(--fiori-border-soft);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    max-height: 380px;
+    object-fit: cover;
+    background-color: #f8fafc;
+}
+
+/* --- 7. ERROR PLAYBOOK STYLING --- */
+.academyErrorPage {
+    background-color: var(--fiori-bg-canvas);
+}
+
+.errorStatTile {
+    border-radius: var(--fiori-radius-md);
+    box-shadow: var(--fiori-shadow-card);
+    border: 1px solid var(--fiori-border-soft);
+    background: #ffffff;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.errorStatTile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(10, 110, 209, 0.1);
+}
+
+.errorFilterPanel {
+    background: #ffffff;
+    border-radius: var(--fiori-radius-md);
+    border: 1px solid var(--fiori-border-soft);
+    box-shadow: var(--fiori-shadow-sm);
+}
+
+.errorPlaybookTable .errorTableRowItem {
+    transition: background-color 0.15s ease;
+    cursor: pointer;
+}
+
+.errorPlaybookTable .errorTableRowItem:hover {
+    background-color: #f1f7fd !important;
+}
+
+.errorTitleText {
+    font-weight: 600;
+    color: var(--fiori-text-title);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.errorCodeBadge {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 0.8rem;
+    color: #b91c1c;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    padding: 2px 8px;
+    border-radius: var(--fiori-radius-sm);
+    display: inline-block;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.errorCategoryTag {
+    font-weight: 600;
+    color: var(--fiori-primary);
+    font-size: 0.88rem;
+}
+
+.errorTriggerText {
+    color: var(--fiori-text-body);
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+.errorThoughtText {
+    color: #15803d;
+    font-size: 0.88rem;
+    font-style: italic;
+    line-height: 1.45;
+}
+
+/* Popover Content Styles */
+.errorPopoverTriggerText {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 8px 12px;
+    border-radius: var(--fiori-radius-sm);
+    color: #78350f;
+    line-height: 1.45;
+}
+
+.errorPopoverSymptomText {
+    background: #fef2f2;
+    border-left: 4px solid #ef4444;
+    padding: 8px 12px;
+    border-radius: var(--fiori-radius-sm);
+    color: #991b1b;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 0.85rem;
+}
+
+.errorPopoverThoughtText {
+    background: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    padding: 8px 12px;
+    border-radius: var(--fiori-radius-sm);
+    color: #14532d;
+    line-height: 1.45;
+}
+
+.errorPopoverGotchaBox {
+    background: #fff7ed;
+    border: 1px dashed #fb923c;
+    border-radius: var(--fiori-radius-sm);
+    padding: 10px 14px;
+    color: #9a3412;
+}
+
+/* Code Diff Box Styles */
+.codeDiffBox {
+    border-radius: var(--fiori-radius-sm);
+    padding: 12px;
+    min-height: 220px;
+    font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.codeDiffBoxBefore {
+    background-color: #fff5f5;
+    border: 1px solid #fecaca;
+}
+
+.codeDiffBoxAfter {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.codeDiffText,
+.sapMText.codeDiffText {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 0.85rem;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    line-height: 1.55;
+    display: block;
+    width: 100%;
+}
+
+.codeBeforeColor {
+    color: #dc2626;
+}
+
+.codeAfterColor {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+/* --- 8. USER MANUAL STYLES --- */
+.manualIndexList .sapMLIB {
+    border-radius: var(--fiori-radius-sm);
+    margin-bottom: 4px;
+    transition: background-color 0.15s ease;
+}
+
+.manualIndexList .sapMLIB:hover {
+    background-color: #f1f7fd;
+}
+
+.manualImageBox {
+    background: #f8fafc;
+    border: 1px solid var(--fiori-border-soft);
+    border-radius: var(--fiori-radius-md);
+    padding: 12px;
+    box-shadow: var(--fiori-shadow-sm);
+}
+
+.manualScreenshot {
+    border-radius: var(--fiori-radius-sm);
+    max-height: 480px;
+    object-fit: contain;
+    border: 1px solid #e2e8f0;
+}
+
+/* --- 9. CUSTOM CONTROL: TECHNICAL HEALTH GAUGE --- */
+.techGaugeContainer {
+    background-color: #ffffff;
+    border: 1px solid var(--fiori-border-soft);
+    border-radius: var(--fiori-radius-md);
+    padding: 14px 18px;
+    box-shadow: var(--fiori-shadow-sm);
+    margin-bottom: 12px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.techGaugeContainer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 110, 209, 0.08);
+}
+
+.techGaugeTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fiori-text-muted);
+    margin-bottom: 8px;
+}
+
+.techGaugeTrack {
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.techGaugeFill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease, background-color 0.4s ease;
+}
+
+.techGaugeReadout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.techGaugeNumber {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.techGaugeBadge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid;
+    text-transform: uppercase;
+}
+
+/* --- 10. TOÀN DIỆN: LOẠI BỎ TRIỆT ĐỂ VIỆC CHỮ BỊ CẮT '...' --- */
+.sapMLIBContent,
+.sapMLIBDesc,
+.sapMLIBTitle,
+.sapMText,
+.sapMObjStatusText,
+.sapMTitle {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+.sapMListTblCell .sapMText {
+    white-space: normal !important;
+    word-break: break-word !important;
+    text-overflow: clip !important;
+}
+
+.sapFCardHeaderTitle,
+.sapFCardHeaderSubtitle {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+/* --- 11. CODE TIPS & BLOCK HIERARCHY ENGINE (APP STT STANDARD) --- */
+.code pre,
+.academyCodeBox pre {
+    background: #1b222d !important;
+    color: #e2e8f0 !important;
+    padding: 16px 20px !important;
+    border-radius: var(--fiori-radius-md) !important;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+    font-size: 13.5px !important;
+    line-height: 1.6 !important;
+    overflow-x: auto !important;
+    border: 1px solid #2d3748 !important;
+}
+
+/* KHỐI CỤM BLOCK (VÍ DỤ CỤM devDependencies, scripts, sap.ui5...) */
+.code-block {
+    position: relative;
+    border-radius: 6px;
+    margin: 3px 0;
+    padding: 2px 4px;
+    transition: outline 0.12s ease, background 0.12s ease;
+}
+
+/* KHUNG ĐỎ CHO CẢ CỤM BLOCK KHI HOVER VÀO HEADER BLOCK */
+.code-block.hot-block {
+    outline: 2.5px solid #ef4444 !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+    border-radius: 6px !important;
+}
+
+/* DÒNG MÃ NGUỒN ĐƠN LẺ */
+.code-line {
+    display: flex;
+    align-items: flex-start;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin: 1px 0;
+    cursor: pointer;
+    transition: outline 0.12s ease, background 0.12s ease;
+}
+
+.code-line .line-number {
+    display: inline-block;
+    width: 2.5rem;
+    color: #64748b;
+    font-size: 11.5px;
+    user-select: none;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 12px;
+}
+
+.code-line .line-content {
+    flex-grow: 1;
+    white-space: pre;
+}
+
+/* KHI HOVER HOẶC CLICK VÀO DÒNG ĐƠN: CHỈ DÒNG ĐÓ SÁNG KHUNG ĐỎ! */
+.code-line.hot {
+    outline: 2px solid #ef4444 !important;
+    background: rgba(239, 68, 68, 0.16) !important;
+    border-radius: 4px !important;
+    z-index: 2;
+}
+
+/* DÒNG HEADER BLOCK KHI RÊ CHUỘT */
+.code-line.is-block-header.hot {
+    outline: none !important;
+}
+
+/* POP-UP GIẢI THÍCH CHI TIẾT Ý NGHĨA KỸ THUẬT HIỆN NGAY BÊN CẠNH */
+.code-tip {
+    position: fixed;
+    z-index: 999999;
+    display: none;
+    max-width: 480px;
+    background: #ffffff;
+    color: #1d2d3e;
+    border: 2px solid #ef4444;
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
+    font-size: 13px;
+    line-height: 1.55;
+    pointer-events: none;
+    font-family: "72", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.code-tip .k {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0a6ed1;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+}
+
+.code-tip > b {
+    display: block;
+    font-size: 15px;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.code-tip .code-tip-body {
+    color: #374151;
+    line-height: 1.6;
+}
+
+.code-tip code {
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+    font-weight: 600;
+}
+
+.code-tip .n {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed #cbd5e1;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* --- 12. FRESHER GUIDELINE STEP-BY-STEP STYLES --- */
+.guidelineStepItem {
+    border: 1px solid var(--fiori-border-soft) !important;
+    border-radius: var(--fiori-radius-md) !important;
+    margin-bottom: 12px !important;
+    background: #ffffff !important;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.guidelineStepItem:hover {
+    border-color: #93c5fd !important;
+    box-shadow: 0 4px 12px rgba(10, 110, 209, 0.06) !important;
+}
+
+.terminalCommandBox {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    border: 1px solid #334155 !important;
+}
+
+.terminalCommandBox .terminalCommandText {
+    color: #38bdf8 !important;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+}
+
+.fresherGotchaBox {
+    background: #fffbeb !important;
+    border: 1px solid #fef3c7 !important;
+    border-left: 3.5px solid #f59e0b !important;
+    border-radius: 6px !important;
+    padding: 8px 14px !important;
+}
+
+.fresherGotchaText {
+    color: #92400e !important;
+    font-size: 12.5px !important;
+    line-height: 1.5 !important;
+    font-weight: 500 !important;
+}
+
+/* --- 13. IMAGE ZOOM & STEP SCREENSHOT STYLES --- */
+.zoomableImage {
+    cursor: zoom-in !important;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.22s ease !important;
+}
+
+.zoomableImage:hover {
+    transform: scale(1.008);
+    box-shadow: 0 8px 24px rgba(10, 110, 209, 0.18) !important;
+    border-color: #0a6ed1 !important;
+}
+
+.stepImageContainer {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+.stepScreenshotImg {
+    border-radius: 6px !important;
+    border: 1px solid #cbd5e1 !important;
+    max-height: 280px !important;
+    object-fit: cover !important;
+    background: #0f172a !important;
+}
+
+.stepImageCaptionText {
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+}
+
+.dialogPreviewImage {
+    max-height: 70vh !important;
+    width: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+.dialogCaptionText {
+    font-size: 14.5px !important;
+    color: #0f172a !important;
+    text-align: center !important;
+    max-width: 800px !important;
+}
+
+.imageDialogContainer {
+    background: #f8fafc !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+}
+
+.guidelineSummaryText {
+    font-size: 1.05rem !important;
+    line-height: 1.6 !important;
+    color: #324456 !important;
+}
+
+.guidelineInstructionText {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    color: #2d3748 !important;
+}
+
+/* --- 14. WORKFLOW DIAGRAM & MULTI-FILE CODE MAP --- */
+.guidelineFlowContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 24px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1px solid var(--fiori-border-soft);
+    border-radius: var(--fiori-radius-md);
+}
+
+.guidelineFlowNode {
+    position: relative;
+    flex: 1 1 145px;
+    min-width: 145px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-top: 4px solid var(--fiori-primary);
+    border-radius: 8px;
+    padding: 10px 12px;
+    box-shadow: var(--fiori-shadow-sm);
+}
+
+.guidelineFlowNode:not(:last-child)::after {
+    content: "➔";
+    position: absolute;
+    right: -19px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--fiori-primary);
+    font-weight: 700;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.guidelineFlowNodeLayer {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--fiori-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+.guidelineFlowNodeTitle {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--fiori-text-title);
+    margin-bottom: 4px;
+}
+
+.guidelineFlowNodeDetail {
+    font-size: 12.5px;
+    color: var(--fiori-text-body);
+    line-height: 1.45;
+    margin-bottom: 6px;
+}
+
+.guidelineFlowNodeFile {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11.5px;
+    color: #0369a1;
+    background: #e0f2fe;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    word-break: break-all;
+}
+
+.guidelineFlowArrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fiori-primary);
+    font-weight: 700;
+    padding: 0 2px;
+}
+
+.guidelineFileCard {
+    border: 1px solid var(--fiori-border-soft) !important;
+    border-left: 4px solid var(--fiori-primary) !important;
+    border-radius: var(--fiori-radius-md) !important;
+    background: #ffffff !important;
+    box-shadow: var(--fiori-shadow-sm) !important;
+}
+
+.guidelineFileExcerpt {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace !important;
+    font-size: 12.5px !important;
+    line-height: 1.55 !important;
+    color: #e2e8f0 !important;
+    background: #1b222d !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #2d3748 !important;
+    margin: 4px 0 0 0 !important;
+    white-space: pre !important;
+    overflow-x: auto !important;
+    word-break: normal !important;
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Đảm bảo mọi Dialog / Popover có khoảng thở thoáng, không dính sát khung */
+.sapMDialog .sapMDialogScrollCont {
+    padding: 18px 22px !important;
+    box-sizing: border-box !important;
+}
+
+.guidelineQuickJumpBar {
+    background: #ffffff;
+    border: 1px solid var(--fiori-border-soft);
+    border-radius: var(--fiori-radius-md);
+    padding: 10px 14px;
+    box-shadow: var(--fiori-shadow-sm);
+}
+
+.stepCodeContainer {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #f8fafc;
+    padding: 10px 12px;
+    box-sizing: border-box;
+}
+
+.fresherVerifyBox {
+    width: 100%;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-left: 4px solid #16a34a;
+    border-radius: 6px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+.fresherVerifyText {
+    color: #166534 !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
+}
+
+/* Chế độ không gian làm việc riêng của Guideline: ẩn thanh Aside mặc định để Splitter chiếm 100% bề ngang */
+.academyWorkspaceMode .sapTntToolPageAside {
+    display: none !important;
+}
+
+.guidelineTreeSidebar {
+    background: #ffffff;
+    border-right: 1px solid var(--fiori-border-soft);
+}
+
+.guidelineTreeHeader {
+    background: linear-gradient(135deg, #f0f6ff 0%, #ffffff 100%);
+    border-bottom: 1px solid var(--fiori-border-soft);
+    padding: 10px 12px;
+}
+
+.guidelineTreeActivePill {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    word-break: break-word;
+}
+
+.guidelineNavTree .sapMTreeItemBaseSelected,
+.guidelineNavTree .sapMLIBSelected {
+    background-color: #e6f2ff !important;
+    border-left: 4px solid var(--fiori-primary) !important;
+    font-weight: 600 !important;
+}
+
+.guidelineFormattedText {
+    font-size: 0.95rem !important;
+    line-height: 1.65 !important;
+    color: #1e293b !important;
+    width: 100%;
+}
+
+.guidelineFormattedText p {
+    margin: 0 0 6px 0 !important;
+}
+
+.guidelineFormattedText ul {
+    margin: 4px 0 8px 0 !important;
+    padding-left: 20px !important;
+}
+
+.guidelineFormattedText li {
+    margin-bottom: 5px !important;
+    line-height: 1.6 !important;
+}
+
+.guidelineFormattedText code {
+    background: #eff6ff;
+    color: #0c4a6e;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 0.88em;
+}
+
+.guidelineChecklistCard {
+    border: 1px solid var(--fiori-border-soft) !important;
+    border-radius: var(--fiori-radius-md) !important;
+    background: #ffffff !important;
+}

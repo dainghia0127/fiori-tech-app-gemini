@@ -1,0 +1,24 @@
+unmanaged implementation in class zbp_i_democonfigunmantp unique;
+strict ( 2 );
+
+define behavior for ZI_DemoConfigUnmanTP alias DemoConfigUnman
+lock master
+authorization master ( instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly : update ) ConfigKey;
+  field ( readonly ) LastChangedAt;
+
+  mapping for zdemo_config_u
+  {
+    ConfigKey = config_key;
+    ConfigName = config_name;
+    ConfigValue = config_value;
+    IsActive = is_active;
+    LastChangedAt = last_changed_at;
+  }
+}

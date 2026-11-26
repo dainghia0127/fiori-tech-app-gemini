@@ -1,0 +1,155 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.Catalog"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+
+    <Page
+        id="catalogPage"
+        title="{i18n>catTitle}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding">
+
+        <content>
+            <!-- Hướng Dẫn Cho Người Mới -->
+            <MessageStrip
+                text="💡 Gợi Ý Cho Fresher: Chọn Cấp Độ 'Associate Level' để chỉ xem các bài cơ bản khởi đầu, hoặc gõ từ khóa như 'LineItem', 'Two-Way', 'Mock' để tra cứu nhanh cú pháp kỹ thuật."
+                type="Information"
+                showIcon="true"
+                class="sapUiSmallMarginBottom" />
+
+            <!-- Filter Toolbar -->
+            <Panel headerText="Bộ lọc Tìm kiếm Nâng cao" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                <VBox spacing="Small">
+                    <HBox wrap="Wrap" alignItems="Center" class="sapUiTinyMarginBottom">
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="320px">
+                            <Label text="Tìm kiếm Từ khóa / Annotation:" />
+                            <SearchField
+                                id="catalogSearchField"
+                                value="{appView>/searchQuery}"
+                                placeholder="{i18n>catSearchPlaceholder}"
+                                search=".onFilterChange"
+                                liveChange=".onFilterChange"
+                                width="100%" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="280px">
+                            <Label text="{i18n>catFilterCategory}:" />
+                            <Select
+                                id="categorySelect"
+                                selectedKey="{appView>/activeFilterCategory}"
+                                change=".onFilterChange"
+                                width="100%">
+                                <core:Item key="ALL" text="{i18n>catAllCategories}" />
+                                <core:Item key="CAT_FE_V4" text="1. Fiori Elements V4 Floorplans" />
+                                <core:Item key="CAT_FE_BLOCKS" text="2. Building Blocks &amp; Macros" />
+                                <core:Item key="CAT_UI5_FREE" text="3. Freestyle SAPUI5 MVC Core" />
+                                <core:Item key="CAT_UI5_BINDING" text="4. Advanced Data Binding" />
+                                <core:Item key="CAT_ODATA_V4" text="5. OData V4 Protocol Spec" />
+                                <core:Item key="CAT_CONCURRENCY" text="6. Concurrency &amp; Draft" />
+                                <core:Item key="CAT_RAP_CORE" text="7. ABAP RAP Core (strict 2)" />
+                                <core:Item key="CAT_RAP_ADV" text="8. Advanced RAP Scenarios" />
+                                <core:Item key="CAT_CLEAN_CORE" text="9. Clean Core &amp; ABAP Cloud" />
+                                <core:Item key="CAT_DEVOPS" text="10. Profiling, Test &amp; CI/CD" />
+                            </Select>
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="200px">
+                            <Label text="{i18n>catFilterLevel}:" />
+                            <Select
+                                id="levelSelect"
+                                selectedKey="{appView>/activeFilterLevel}"
+                                change=".onFilterChange"
+                                width="100%">
+                                <core:Item key="ALL" text="{i18n>catAllLevels}" />
+                                <core:Item key="Associate" text="Associate Level" />
+                                <core:Item key="Professional" text="Professional Level" />
+                                <core:Item key="Architect" text="Architect Level" />
+                            </Select>
+                        </VBox>
+
+                        <VBox justifyContent="End" class="sapUiTinyMarginBottom">
+                            <Label text="" />
+                            <Button
+                                text="Đặt lại Bộ lọc"
+                                icon="sap-icon://clear-filter"
+                                press=".onResetFilters" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </Panel>
+
+            <!-- Topics Table -->
+            <Table
+                id="topicsTable"
+                items="{
+                    path: 'catalog>/topics',
+                    sorter: { path: 'level', descending: false }
+                }"
+                growing="true"
+                growingThreshold="20"
+                class="sapUiResponsiveMargin">
+
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="{i18n>catTableTitle}" level="H3" />
+                        <ToolbarSpacer />
+                        <Text id="itemCountText" text="Đang hiển thị chuyên đề" />
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column width="40%">
+                        <Text text="{i18n>colTitle}" />
+                    </Column>
+                    <Column width="18%" minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="{i18n>colLevel}" />
+                    </Column>
+                    <Column width="26%" minScreenWidth="Desktop" demandPopin="true">
+                        <Text text="{i18n>colLab}" />
+                    </Column>
+                    <Column width="16%" hAlign="End">
+                        <Text text="{i18n>colAction}" />
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem type="Inactive">
+                        <cells>
+                            <VBox class="sapUiTinyMarginTopBottom">
+                                <Text text="{catalog>title}" class="sapUiTinyMarginBottom" style="font-weight: 600;" wrapping="true" />
+                                <Text text="{catalog>summary}" class="sapUiTinyMarginBottom sapUiDarkText" wrapping="true" />
+                                <HBox wrap="Wrap" items="{path: 'catalog>keywords', templateShareable: false}" class="sapUiTinyMarginTop">
+                                    <!-- Keyword badges rendered cleanly without # prefix -->
+                                    <ObjectStatus text="{catalog>}" state="None" class="sapUiTinyMarginEnd academyKeywordBadge" />
+                                </HBox>
+                            </VBox>
+
+                            <ObjectStatus
+                                text="{catalog>level}"
+                                state="{
+                                    path: 'catalog>level',
+                                    formatter: '.formatter.levelState'
+                                }"
+                                icon="{
+                                    path: 'catalog>level',
+                                    formatter: '.formatter.levelIcon'
+                                }" />
+
+                            <Text text="{catalog>lab}" wrapping="true" />
+
+                            <Button
+                                text="Xem Code"
+                                icon="sap-icon://source-code"
+                                type="Emphasized"
+                                press=".onViewSnippetPress" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>
+

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="localService/metadata.xml">
+    <edmx:Include Alias="Service" Namespace="sap.fiori.tech.academy.srv" />
+  </edmx:Reference>
+
+  <edmx:DataServices>
+    <Schema Namespace="sap.fiori.tech.academy.annotations" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+      <!-- ============================================================= -->
+      <!-- ANNOTATIONS FOR DemoHeaderType                                -->
+      <!-- ============================================================= -->
+      <Annotations Target="sap.fiori.tech.academy.srv.DemoHeaderType">
+
+        <!-- Header Info -->
+        <Annotation Term="UI.HeaderInfo">
+          <Record Type="UI.HeaderInfoType">
+            <PropertyValue Property="TypeName" String="Demo Header" />
+            <PropertyValue Property="TypeNamePlural" String="Demo Headers" />
+            <PropertyValue Property="Title">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="Title" />
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="Description">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="HeaderId" />
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+
+        <!-- Filter Bar Selection Fields -->
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>HeaderId</PropertyPath>
+            <PropertyPath>Category</PropertyPath>
+            <PropertyPath>Status</PropertyPath>
+          </Collection>
+        </Annotation>
+
+        <!-- List Report Table (LineItem) -->
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="HeaderId" />
+              <PropertyValue Property="Label" String="Mã Demo ID" />
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+            </Record>
+
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="Title" />
+              <PropertyValue Property="Label" String="Tiêu Đề Kỹ Thuật" />
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+            </Record>
+
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="Category" />
+              <PropertyValue Property="Label" String="Phân Loại (Category)" />
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium" />
+            </Record>
+
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="Status" />
+              <PropertyValue Property="Label" String="Trạng Thái" />
+              <PropertyValue Property="Criticality" Path="StatusCriticality" />
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+            </Record>
+
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="TotalAmount" />
+              <PropertyValue Property="Label" String="Tổng Tiền (Total Amount)" />
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+            </Record>
+
+            <!-- Custom Action on Table Toolbar -->
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="sap.fiori.tech.academy.srv.markAsVerified" />
+              <PropertyValue Property="Label" String="Xác Minh (Verify)" />
+              <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+            </Record>
+          </Collection>
+        </Annotation>
+
+        <!-- Object Page Facets -->
+        <Annotation Term="UI.Facets">
+          <Collection>
+            <Record Type="UI.CollectionFacet">
+              <PropertyValue Property="ID" String="GeneralInfoFacet" />
+              <PropertyValue Property="Label" String="Thông Tin Tổng Quan" />
+              <PropertyValue Property="Facets">
+                <Collection>
+                  <Record Type="UI.ReferenceFacet">
+                    <PropertyValue Property="ID" String="GeneralDataFacet" />
+                    <PropertyValue Property="Label" String="Chi Tiết Thuộc Tính" />
+                    <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GeneralData" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="ID" String="ItemsTableFacet" />
+              <PropertyValue Property="Label" String="Danh Sách Chi Tiết (Items)" />
+              <PropertyValue Property="Target" AnnotationPath="_Items/@UI.LineItem" />
+            </Record>
+          </Collection>
+        </Annotation>
+
+        <!-- FieldGroup: GeneralData -->
+        <Annotation Term="UI.FieldGroup" Qualifier="GeneralData">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="HeaderId" />
+                  <PropertyValue Property="Label" String="Mã Header ID" />
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="Title" />
+                  <PropertyValue Property="Label" String="Tiêu Đề Kỹ Thuật" />
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="Category" />
+                  <PropertyValue Property="Label" String="Phân Loại" />
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="Status" />
+                  <PropertyValue Property="Label" String="Trạng Thái" />
+                  <PropertyValue Property="Criticality" Path="StatusCriticality" />
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="TotalAmount" />
+                  <PropertyValue Property="Label" String="Tổng Tiền" />
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="CurrencyCode" />
+                  <PropertyValue Property="Label" String="Loại Tiền Tệ" />
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="CreatedBy" />
+                  <PropertyValue Property="Label" String="Người Khởi Tạo" />
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="CreatedAt" />
+                  <PropertyValue Property="Label" String="Thời Gian Tạo" />
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+
+      </Annotations>
+
+      <!-- ============================================================= -->
+      <!-- ANNOTATIONS FOR DemoItemType                                  -->
+      <!-- ============================================================= -->
+      <Annotations Target="sap.fiori.tech.academy.srv.DemoItemType">
+
+        <!-- LineItem on Items Table -->
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="ItemId" />
+              <PropertyValue Property="Label" String="Mã Item ID" />
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="ItemName" />
+              <PropertyValue Property="Label" String="Tên Linh Kiện / Dịch Vụ" />
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="Quantity" />
+              <PropertyValue Property="Label" String="Số Lượng (Qty)" />
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="QuantityUnit" />
+              <PropertyValue Property="Label" String="Đơn Vị" />
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="UnitPrice" />
+              <PropertyValue Property="Label" String="Đơn Giá" />
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="LineTotal" />
+              <PropertyValue Property="Label" String="Thành Tiền (Line Total)" />
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="CurrencyCode" />
+              <PropertyValue Property="Label" String="Tiền Tệ" />
+            </Record>
+          </Collection>
+        </Annotation>
+
+        <!-- Side Effects: Changing Quantity or UnitPrice recalculates LineTotal & Header TotalAmount -->
+        <Annotation Term="Common.SideEffects" Qualifier="RecalculateItemTotals">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceProperties">
+              <Collection>
+                <PropertyPath>Quantity</PropertyPath>
+                <PropertyPath>UnitPrice</PropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <PropertyPath>LineTotal</PropertyPath>
+                <PropertyPath>_Header/TotalAmount</PropertyPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+
+      </Annotations>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+

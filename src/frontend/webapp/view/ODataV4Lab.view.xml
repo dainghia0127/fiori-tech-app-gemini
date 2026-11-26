@@ -1,0 +1,270 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.ODataV4Lab"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    height="100%">
+
+    <Page
+        id="odataLabPage"
+        title="Phòng Lab 03: OData V4 Protocol &amp; Transactional Batch Engineering"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding">
+
+        <headerContent>
+            <ObjectStatus
+                text="OData V4 Protocol Active"
+                state="Success"
+                icon="sap-icon://chain-link"
+                class="sapUiTinyMarginEnd" />
+        </headerContent>
+
+        <content>
+            <IconTabBar id="odataTabBar" headerMode="Inline" select=".onTabSelect" expandable="false" applyContentPadding="false">
+                <items>
+                    <!-- TAB 1: REQUEST BUILDER & QUERY OPTIONS EXPLORER -->
+                    <IconTabFilter key="queryBuilder" text="1. Request Builder &amp; Query" icon="sap-icon://source-code">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="✅ CHẠY THẬT VỚI FE-MOCKSERVER: Tab này gửi HTTP GET thật tới /mock/odata/v4/demo/ (mở F12 → Network để kiểm tra). Mọi $select, $expand, $filter, $orderby, $top, $skip đều do engine OData V4 Mockserver xử lý trực tiếp."
+                                type="Success"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <!-- Request Parameter Builder -->
+                                <Panel headerText="Cấu Hình Truy Vấn OData V4 (Request Parameters)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Label text="Chọn Mẫu Truy Vấn Nhanh (Preset):" />
+                                        <Select
+                                            id="presetSelect"
+                                            items="{path: 'odataModel>/queryPresets', templateShareable: false}"
+                                            change=".onPresetSelectChange"
+                                            width="100%"
+                                            class="sapUiSmallMarginBottom">
+                                            <core:Item key="{odataModel>id}" text="{odataModel>name}" />
+                                        </Select>
+
+                                        <Label text="Thực Thể Gốc (EntitySet):" />
+                                        <ComboBox id="inputEntity" selectedKey="{odataModel>/activeQuery/entity}" change=".onQueryParamChange" width="100%" class="sapUiSmallMarginBottom">
+                                            <core:Item key="DemoHeader" text="DemoHeader (Tập Thực Thể Header)" />
+                                            <core:Item key="DemoItem" text="DemoItem (Tập Thực Thể Item)" />
+                                        </ComboBox>
+
+                                        <Label text="Lựa Chọn Thuộc Tính ($select):" />
+                                        <Input id="inputSelect" value="{odataModel>/activeQuery/select}" liveChange=".onQueryParamChange" placeholder="VD: HeaderId,Title,TotalAmount" class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Mở Rộng Navigation ($expand):" />
+                                        <Input id="inputExpand" value="{odataModel>/activeQuery/expand}" liveChange=".onQueryParamChange" placeholder="VD: _Items($select=ItemId,Quantity)" class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Biểu Thức Lọc ($filter):" />
+                                        <Input id="inputFilter" value="{odataModel>/activeQuery/filter}" liveChange=".onQueryParamChange" placeholder="VD: TotalAmount gt 1000 and Status eq 'Verified'" class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Sắp Xếp ($orderby):" />
+                                        <Input id="inputOrderby" value="{odataModel>/activeQuery/orderby}" liveChange=".onQueryParamChange" placeholder="VD: TotalAmount desc" class="sapUiSmallMarginBottom" />
+
+                                        <HBox class="sapUiSmallMarginBottom">
+                                            <VBox class="sapUiMediumMarginEnd">
+                                                <Label text="Số Lượng ($top):" />
+                                                <StepInput id="inputTop" value="{odataModel>/activeQuery/top}" min="1" max="50" change=".onQueryParamChange" />
+                                            </VBox>
+                                            <VBox>
+                                                <Label text="Bỏ Qua ($skip):" />
+                                                <StepInput id="inputSkip" value="{odataModel>/activeQuery/skip}" min="0" max="100" change=".onQueryParamChange" />
+                                            </VBox>
+                                        </HBox>
+
+                                        <HBox class="sapUiSmallMarginTop">
+                                            <Button
+                                                text="Thực Thi Truy Vấn OData V4"
+                                                icon="sap-icon://play"
+                                                type="Emphasized"
+                                                press=".onExecuteQuery"
+                                                class="sapUiTinyMarginEnd" />
+                                            <Button
+                                                text="Khôi Phục Mặc Định"
+                                                icon="sap-icon://reset"
+                                                press=".onResetQuery" />
+                                        </HBox>
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Live URL Box & Response Viewer -->
+                                <Panel headerText="Kết Quả Thực Thi &amp; Phản Hồi Từ Máy Chủ" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Label text="Đường Dẫn URL Sinh Tự Động (Request URL):" style="font-weight: 600;" />
+                                        <Text text="{odataModel>/generatedUrl}" class="terminalCommandText sapUiSmallMarginBottom" />
+
+                                        <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                            <Label text="Dữ Liệu JSON Phản Hồi (Response Body):" style="font-weight: 600;" />
+                                            <ObjectStatus
+                                                text="{odataModel>/responseStatus}"
+                                                state="{odataModel>/responseState}"
+                                                icon="sap-icon://connected" />
+                                        </HBox>
+                                        <core:HTML
+                                            content="{path: 'odataModel>/rawResponseJson', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 2: BOUND & UNBOUND OPERATIONS -->
+                    <IconTabFilter key="operations" text="2. Bound &amp; Unbound Ops" icon="sap-icon://action">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="🧪 MÔ PHỎNG GIAO THỨC (Client Sandbox): OData V4 phân định rạch ròi giữa Actions (làm biến đổi trạng thái dữ liệu) và Functions (đọc thuần túy). Tab này minh họa cấu trúc HTTP Request/Response mẫu trên client."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <!-- Bound Action Simulator -->
+                                <Panel headerText="Thực Thi Bound Action: markAsVerified" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="Bound Action được gắn kết với một Entity Instance cụ thể (DemoHeader/HDR-001) và làm thay đổi trường Status sang 'Verified' kèm kích hoạt Side Effects làm mới dữ liệu:" class="sapUiSmallMarginBottom" />
+
+                                        <HBox class="sapUiSmallMarginBottom" alignItems="Center">
+                                            <Label text="Entity Context Mục Tiêu:" class="sapUiTinyMarginEnd" />
+                                            <Text text="DemoHeader('HDR-001')" style="font-family: monospace; font-weight: 700; color: #0854a0;" />
+                                        </HBox>
+
+                                        <Button
+                                            text="Gửi Yêu Cầu POST: /DemoHeader('HDR-001')/markAsVerified"
+                                            type="Accept"
+                                            icon="sap-icon://accept"
+                                            press=".onExecuteBoundAction"
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Gói Tin HTTP Request Gửi Đi:" class="sapUiTinyMarginBottom" />
+                                        <core:HTML
+                                            content="{path: 'odataModel>/boundActionPayload', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Unbound Operation Simulator -->
+                                <Panel headerText="Thực Thi Unbound Function: getSystemHealthReport" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="Unbound Function không gắn với entity nào, có thể gọi trực tiếp từ Service Root qua giao thức GET và trả về báo cáo tổng hợp kỹ thuật:" class="sapUiSmallMarginBottom" />
+
+                                        <Button
+                                            text="Gửi Yêu Cầu GET: /getSystemHealthReport()"
+                                            type="Emphasized"
+                                            icon="sap-icon://line-charts"
+                                            press=".onExecuteUnboundFunction"
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Dữ Liệu Báo Cáo Kỹ Thuật Trả Về:" class="sapUiTinyMarginBottom" />
+                                        <core:HTML
+                                            content="{path: 'odataModel>/unboundFunctionResult', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 3: MULTIPART $BATCH & CHANGESET -->
+                    <IconTabFilter key="batch" text="3. Multipart $batch" icon="sap-icon://attachment">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="🧪 MÔ PHỎNG GIAO THỨC $BATCH: Minh họa cấu trúc gói tin OData V4 Multipart $batch (gom Tạo Header + Tạo Items vào 1 ChangeSet nguyên tử để rollback nếu có lỗi)."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <Panel headerText="Cấu Trúc Gói Tin Multipart/mixed $batch Request" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <core:HTML
+                                            content="{path: 'odataModel>/batchSample/requestRaw', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                        <Button
+                                            text="Mô Phỏng Gửi Gói Tin $batch ChangeSet"
+                                            icon="sap-icon://upload"
+                                            type="Emphasized"
+                                            press=".onSimulateBatchExecution"
+                                            class="sapUiSmallMarginTop" />
+                                    </VBox>
+                                </Panel>
+
+                                <Panel headerText="Phản Hồi Multipart/mixed Từ Máy Chủ (Server Response)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <core:HTML
+                                            content="{path: 'odataModel>/batchResponseRaw', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 4: OPTIMISTIC CONCURRENCY CONTROL (ETAG) -->
+                    <IconTabFilter key="etag" text="4. Concurrency (ETag)" icon="sap-icon://key">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="🧪 MÔ PHỎNG ETAG OCC: Minh họa cơ chế Optimistic Concurrency Control (If-Match và Weak ETag W/...) chặn lỗi ghi đè Lost Update bằng HTTP 412 Precondition Failed."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <!-- Concurrency Scenario Simulator -->
+                                <Panel headerText="Mô Phỏng Xung Đột Dữ Liệu (Lost Update Prevention)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <HBox justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                            <Text text="ETag Hiện Tại Trên Server:" style="font-weight: 600;" />
+                                            <ObjectStatus text="{odataModel>/etagDemo/currentServerEtag}" state="Success" />
+                                        </HBox>
+
+                                        <Text text="Kịch bản: Cả Kỹ sư A và Kỹ sư B cùng đọc dữ liệu lúc 08:00 (cùng giữ ETag V1)." class="sapUiSmallMarginBottom" />
+
+                                        <VBox class="sapUiSmallMarginBottom">
+                                            <Button
+                                                text="Bước 1: Kỹ sư B Cập Nhật &amp; Commit Trước (Lên Server ETag V2)"
+                                                type="Default"
+                                                icon="sap-icon://user-edit"
+                                                press=".onUserBCommit"
+                                                class="sapUiTinyMarginBottom" />
+                                            <Button
+                                                text="Bước 2: Kỹ sư A Gửi Cập Nhật Với ETag Cũ (Kích Hoạt HTTP 412)"
+                                                type="Reject"
+                                                icon="sap-icon://alert"
+                                                press=".onUserAConflictCommit"
+                                                class="sapUiTinyMarginBottom" />
+                                            <Button
+                                                text="Bước 3: Kỹ sư A Làm Mới &amp; Đồng Bộ Lại (Resolve Conflict)"
+                                                type="Emphasized"
+                                                icon="sap-icon://refresh"
+                                                press=".onUserAResolveConflict" />
+                                        </VBox>
+                                    </VBox>
+                                </Panel>
+
+                                <!-- ETag Event Log -->
+                                <Panel headerText="Nhật Ký Giao Thức ETag (Protocol Audit Log)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <List items="{path: 'odataModel>/etagLogs', templateShareable: false}">
+                                            <StandardListItem
+                                                title="{odataModel>title}"
+                                                description="{odataModel>details}"
+                                                info="{odataModel>status}"
+                                                icon="{odataModel>icon}"
+                                                infoState="{odataModel>state}" />
+                                        </List>
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </content>
+    </Page>
+</mvc:View>
+

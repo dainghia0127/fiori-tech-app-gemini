@@ -1,0 +1,323 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.AdvancedLab"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    height="100%">
+
+    <Page
+        id="advancedLabPage"
+        title="🔬 Phòng Lab Kỹ Thuật Nâng Cao (Advanced Technical Labs)"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding">
+
+        <headerContent>
+            <Button
+                id="btnBackToDashboard"
+                icon="sap-icon://bbyd-dashboard"
+                text="Tổng Quan"
+                type="Transparent"
+                press=".onNavBack"
+                tooltip="Quay lại Dashboard" />
+            <Button
+                icon="sap-icon://education"
+                text="Fresher Guideline"
+                type="Transparent"
+                press=".onNavToGuideline"
+                tooltip="Xem Cẩm Nang Kiến Tạo Cho Fresher" />
+            <Button
+                icon="sap-icon://alert"
+                text="Handle Error"
+                type="Critical"
+                press=".onNavToErrorPlaybook"
+                tooltip="Mở Sổ Tay 15 Lỗi Kỹ Thuật Thực Tế" />
+        </headerContent>
+
+        <content>
+            <!-- Introduction Banner -->
+            <MessageStrip
+                text="💡 PHÒNG THỰC HÀNH KỸ THUẬT NÂNG CAO (PHASE 6): Khám phá và mô phỏng 4 chuyên đề hạ tầng cốt lõi của SAP Fiori 2025: Bảo Mật Phân Quyền DCL (Lab 07), Tích Hợp SM59 &amp; CORS (Lab 06), Tự Động Hóa Kiểm Thử QUnit/OPA5/ABAP Unit (Lab 08), và Đóng Gói Triển Khai FLP Spaces &amp; Pages (Lab 09)."
+                type="Information"
+                showIcon="true"
+                class="sapUiSmallMarginBottom" />
+
+            <!-- Main IconTabBar Navigation for 4 Labs -->
+            <IconTabBar
+                id="advancedLabTabBar"
+                headerMode="Inline"
+                selectedKey="securityLab"
+                select=".onTabSelect"
+                expandable="false"
+                class="sapUiResponsiveContentPadding">
+                <items>
+
+                    <!-- TAB 1: SECURITY & AUTHORIZATION LAB (LAB 07) -->
+                    <IconTabFilter
+                        key="securityLab"
+                        icon="sap-icon://shield"
+                        text="1. Bảo Mật DCL (Lab 07)"
+                        iconColor="Critical">
+                        <content>
+                            <VBox class="sapUiSmallMargin">
+                                <Title text="🛡️ Phân Quyền Dữ Liệu Tầng Dòng (DCL Row-Level Security) &amp; Bắt Tay CSRF Token" level="H3" class="sapUiSmallMarginBottom" />
+                                <Text text="Trong kiến trúc ABAP Core Data Services (CDS), Data Control Language (DCL) tự động chèn mệnh đề WHERE ẩn vào các câu lệnh SQL runtime để giới hạn tập dữ liệu mà người dùng được phép xem, dựa trên PFCG Authorization Objects của tài khoản SAP." class="sapUiSmallMarginBottom" />
+
+                                <l:Grid defaultSpan="XL6 L6 M12 S12" hSpacing="1" vSpacing="1">
+                                    <!-- Box 1: DCL Code Walkthrough -->
+                                    <VBox class="codeDiffBox codeDiffBoxAfter sapUiSmallMarginBottom">
+                                        <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                            <Label text="Mã Nguồn CDS Access Control (DCL):" design="Bold" />
+                                            <Button icon="sap-icon://copy" text="Copy DCL Code" type="Transparent" press=".onCopyDclCode" />
+                                        </HBox>
+                                        <Text text="{advLab>/security/dclCode}" class="codeDiffText codeAfterColor" />
+                                        <Text text="💡 Ghi chú: Sử dụng aspect pfcg_auth để liên kết trực tiếp với Authorization Object S_TABU_DIS (kiểm tra trường ACTVT và DICBERCLS). Trường hợp Status = 'AP' (Đã duyệt) cho phép mọi người dùng xem public." class="sapUiTinyMarginTop sapUiTextMuted" />
+                                    </VBox>
+
+                                    <!-- Box 2: Live Simulator Role & Data Visibility -->
+                                    <VBox class="codeDiffBox codeDiffBoxBefore sapUiSmallMarginBottom">
+                                        <Label text="Trình Mô Phỏng Phân Quyền Người Dùng (Role Simulator):" design="Bold" class="sapUiTinyMarginBottom" />
+                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                            <Label text="Chọn Vai Trò (PFCG Role):" class="sapUiTinyMarginEnd" />
+                                            <Select id="roleSelect" change=".onRoleChange" selectedKey="Z_DEMO_ADMIN" width="280px">
+                                                <core:Item key="Z_DEMO_ADMIN" text="Z_DEMO_ADMIN (Admin - Toàn quyền)" />
+                                                <core:Item key="Z_DEMO_APPROVER" text="Z_DEMO_APPROVER (Approver - Duyệt &amp; Xem)" />
+                                                <core:Item key="Z_DEMO_VIEWER" text="Z_DEMO_VIEWER (Viewer - Chỉ xem Public AP)" />
+                                            </Select>
+                                        </HBox>
+
+                                        <VBox class="sapUiTinyMarginBottom">
+                                            <Label text="Đối tượng PFCG:" design="Bold" />
+                                            <Text id="txtPfcgObj" text="S_TABU_DIS (ACTVT: 02, 03)" class="sapUiTinyMarginBottom" />
+                                            
+                                            <Label text="Trạng thái được xem:" design="Bold" />
+                                            <Text id="txtAllowedStatuses" text="DR (Draft), IP (In Progress), AP (Approved), RJ (Rejected)" class="sapUiTinyMarginBottom" />
+
+                                            <Label text="Mệnh đề WHERE SQL do SAP Kernel tự chèn:" design="Bold" />
+                                            <Text id="txtSqlWhereClause" text="WHERE StatusCode IN ('DR', 'IP', 'AP', 'RJ')" class="errorCodeBadge sapUiTinyMarginBottom" />
+
+                                            <Label text="Số lượng bản ghi hiển thị thực tế:" design="Bold" />
+                                            <ObjectStatus id="txtRecordCount" text="10 / 10 Bản ghi (100% Khả dụng)" state="Success" icon="sap-icon://sys-enter-2" />
+                                        </VBox>
+                                    </VBox>
+                                </l:Grid>
+
+                                <!-- CSRF Handshake Section -->
+                                <Panel headerText="Cơ Chế Bắt Tay Bỏ Túi Token Bảo Mật CSRF (Cross-Site Request Forgery)" expandable="true" expanded="true" class="sapUiMediumMarginTop">
+                                    <content>
+                                        <Text text="SAP Gateway bắt buộc mọi request ghi dữ liệu (POST, PUT, DELETE) qua OData phải gửi kèm header X-CSRF-Token hợp lệ thu được từ request đọc (GET) trước đó cùng Session Cookie." class="sapUiSmallMarginBottom" />
+                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                            <Button id="btnFetchCsrf" icon="sap-icon://key" text="1. Gửi Request Bắt Tay (Fetch CSRF Token)" type="Emphasized" press=".onSimulateCsrfFetch" class="sapUiSmallMarginEnd" />
+                                            <Button id="btnSendPostWithCsrf" icon="sap-icon://paper-plane" text="2. Gửi Lệnh Ghi Dữ Liệu Kèm Token" type="Ghost" press=".onSimulatePostWithCsrf" enabled="false" />
+                                        </HBox>
+
+                                        <VBox id="csrfResultBox" visible="false" class="codeDiffBox codeDiffBoxAfter">
+                                            <Label text="Kết quả Bắt tay thành công (200 OK):" design="Bold" />
+                                            <Text id="txtCsrfTokenVal" text="X-CSRF-Token: A9B2C4D8E0F1234567890ABCDEF12345==" class="codeDiffText codeAfterColor sapUiTinyMarginBottom" />
+                                            <Text id="txtCsrfCookieVal" text="Set-Cookie: SAP_SESSIONID_PQP_100=abcdef0123456789; path=/" class="codeDiffText sapUiTextMuted" />
+                                        </VBox>
+                                    </content>
+                                </Panel>
+                            </VBox>
+                        </content>
+                    </IconTabFilter>
+
+                    <!-- TAB 2: INTEGRATION & CONNECTIVITY LAB (LAB 06) -->
+                    <IconTabFilter
+                        key="integrationLab"
+                        icon="sap-icon://chain-link"
+                        text="2. SM59 &amp; CORS (Lab 06)"
+                        iconColor="Positive">
+                        <content>
+                            <VBox class="sapUiSmallMargin">
+                                <Title text="🔗 Cấu Hình SM59 RFC/HTTP Destinations &amp; UI5 Proxy Middleware Giải Quyết CORS" level="H3" class="sapUiSmallMarginBottom" />
+                                <Text text="Để ứng dụng SAP Fiori chạy tại môi trường phát triển cục bộ có thể kết nối an toàn tới máy chủ SAP S/4HANA mà không bị trình duyệt chặn bởi chính sách CORS (Cross-Origin Resource Sharing), UI5 Tooling sử dụng Proxy Middleware để chuyển tiếp request." class="sapUiSmallMarginBottom" />
+
+                                <Table
+                                    id="sm59Table"
+                                    items="{advLab>/integration/destinations}"
+                                    headerText="Danh Sách SM59 Outbound Destinations Trên Hệ Thống"
+                                    class="sapUiSmallMarginBottom">
+                                    <columns>
+                                        <Column width="14rem"><Text text="Destination Name" /></Column>
+                                        <Column width="10rem"><Text text="Connection Type" /></Column>
+                                        <Column width="16rem"><Text text="Target Host / URL" /></Column>
+                                        <Column width="8rem"><Text text="Trạng Thái" /></Column>
+                                        <Column width="9rem" hAlign="End"><Text text="Thao Tác" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem vAlign="Middle">
+                                            <cells>
+                                                <ObjectIdentifier title="{advLab>destination}" text="{advLab>description}" />
+                                                <Text text="{advLab>type}" />
+                                                <Text text="{advLab>targetHost}" />
+                                                <ObjectStatus text="{advLab>status}" state="Success" icon="sap-icon://sys-enter-2" />
+                                                <Button icon="sap-icon://connected" text="Ping Test" type="Transparent" press=".onPingDestination" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+
+                                <!-- Proxy Middleware Config YAML -->
+                                <Panel headerText="Cấu Hình Proxy Middleware Trên ui5.yaml" expandable="true" expanded="true" class="sapUiSmallMarginTop">
+                                    <content>
+                                        <VBox class="codeDiffBox codeDiffBoxAfter">
+                                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                                <Label text="File Cấu Hình ui5.yaml (Proxy Bypass CORS):" design="Bold" />
+                                                <Button icon="sap-icon://copy" text="Copy YAML" type="Transparent" press=".onCopyProxyYaml" />
+                                            </HBox>
+                                            <Text text="{advLab>/integration/proxyConfigYaml}" class="codeDiffText codeAfterColor" />
+                                        </VBox>
+                                    </content>
+                                </Panel>
+                            </VBox>
+                        </content>
+                    </IconTabFilter>
+
+                    <!-- TAB 3: TESTING & QUALITY ASSURANCE LAB (LAB 08) -->
+                    <IconTabFilter
+                        key="testingLab"
+                        icon="sap-icon://lab"
+                        text="3. Kiểm Thử QA (Lab 08)"
+                        iconColor="Neutral">
+                        <content>
+                            <VBox class="sapUiSmallMargin">
+                                <Title text="🧪 Kiểm Thử Tự Động: QUnit (Đơn vị), OPA5 (Hành trình) &amp; ABAP Unit for RAP" level="H3" class="sapUiSmallMarginBottom" />
+                                <Text text="Dự án triển khai chiến lược kim tự tháp kiểm thử 3 tầng: Unit Tests (kiểm tra hàm độc lập), Integration / OPA5 (tự động hóa thao tác người dùng trên giao diện), và ABAP Unit Test (kiểm tra Business Object qua EML)." class="sapUiSmallMarginBottom" />
+
+                                <l:Grid defaultSpan="XL4 L4 M6 S12" hSpacing="1" vSpacing="1" class="sapUiSmallMarginBottom">
+                                    <!-- Card 1: QUnit -->
+                                    <f:Card class="sapUiTinyMargin">
+                                        <f:header>
+                                            <card:Header title="QUnit Test Suite" subtitle="Kiểm thử Đơn vị Client-side" iconSrc="sap-icon://functional-item" statusText="28/28 Passed" />
+                                        </f:header>
+                                        <f:content>
+                                            <VBox class="sapUiSmallMargin">
+                                                <Label text="Tỷ Lệ Bao Phủ Code (Coverage):" />
+                                                <ProgressIndicator percentValue="96" displayValue="96.4%" state="Success" class="sapUiSmallMarginBottom" />
+                                                <Text text="Kiểm tra formatters, regex RFC 5322, mô hình dữ liệu và các hàm tiện ích độc lập." class="sapUiSmallMarginBottom sapUiTextMuted" />
+                                                <Button icon="sap-icon://action" text="Mở QUnit Test Runner (HTML)" type="Emphasized" press=".onOpenQUnitRunner" />
+                                            </VBox>
+                                        </f:content>
+                                    </f:Card>
+
+                                    <!-- Card 2: OPA5 -->
+                                    <f:Card class="sapUiTinyMargin">
+                                        <f:header>
+                                            <card:Header title="OPA5 Journey Suite" subtitle="Kiểm thử Hành trình Tự động" iconSrc="sap-icon://journey-arrive" statusText="14/14 Steps OK" />
+                                        </f:header>
+                                        <f:content>
+                                            <VBox class="sapUiSmallMargin">
+                                                <Label text="Thời gian thực thi trung bình:" />
+                                                <Text text="3.2 giây (Không có độ trễ race-condition)" class="sapUiSmallMarginBottom" />
+                                                <Text text="Tự động hóa hành trình: Mở Dashboard -> Lọc Catalog -> Điều hướng Code Explorer -> Kích hoạt Pop-up." class="sapUiSmallMarginBottom sapUiTextMuted" />
+                                                <Button icon="sap-icon://action" text="Mở OPA5 Journey Runner" type="Emphasized" press=".onOpenOpa5Runner" />
+                                            </VBox>
+                                        </f:content>
+                                    </f:Card>
+
+                                    <!-- Card 3: ABAP Unit -->
+                                    <f:Card class="sapUiTinyMargin">
+                                        <f:header>
+                                            <card:Header title="ABAP Unit for RAP" subtitle="Kiểm thử Lõi Nghiệp vụ Backend" iconSrc="sap-icon://database" statusText="Eclipse ADT Ready" />
+                                        </f:header>
+                                        <f:content>
+                                            <VBox class="sapUiSmallMargin">
+                                                <Label text="Framework:" />
+                                                <Text text="cl_cds_test_environment &amp; EML Test Double" class="sapUiSmallMarginBottom" />
+                                                <Text text="Kiểm thử Determinations, Validations và Actions trong môi trường giao dịch cô lập không làm bẩn DB." class="sapUiSmallMarginBottom sapUiTextMuted" />
+                                                <Button icon="sap-icon://source-code" text="Xem Mã Nguồn Test ABAP" type="Ghost" press=".onViewAbapUnitTestCode" />
+                                            </VBox>
+                                        </f:content>
+                                    </f:Card>
+                                </l:Grid>
+
+                                <!-- ABAP Unit Code Section -->
+                                <Panel id="abapUnitPanel" headerText="Mã Nguồn ABAP Unit Test Mẫu (Test Double với EML)" expandable="true" expanded="false" class="sapUiSmallMarginTop">
+                                    <content>
+                                        <VBox class="codeDiffBox codeDiffBoxAfter">
+                                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                                <Label text="Test Class ltcl_demo_header_test (Clean ABAP):" design="Bold" />
+                                                <Button icon="sap-icon://copy" text="Copy ABAP Code" type="Transparent" press=".onCopyAbapUnitCode" />
+                                            </HBox>
+                                            <Text text="{advLab>/testing/abapUnitCode}" class="codeDiffText codeAfterColor" />
+                                        </VBox>
+                                    </content>
+                                </Panel>
+                            </VBox>
+                        </content>
+                    </IconTabFilter>
+
+                    <!-- TAB 4: DEPLOYMENT & FLP SPACES LAB (LAB 09) -->
+                    <IconTabFilter
+                        key="deploymentLab"
+                        icon="sap-icon://flight"
+                        text="4. FLP &amp; Deploy (Lab 09)"
+                        iconColor="Critical">
+                        <content>
+                            <VBox class="sapUiSmallMargin">
+                                <Title text="🚀 Quy Trình Đóng Gói Triển Khai (BSP / CTS) &amp; Cấu Hình Fiori Launchpad 2025" level="H3" class="sapUiSmallMarginBottom" />
+                                <Text text="Trong kiến trúc Fiori hiện đại, ứng dụng được đóng gói thành tập tin nén qua ui5-task-zipper, tải lên kho lưu trữ BSP Repository trên SAP bằng @sap/ux-ui5-tooling kèm Transport Request, sau đó tích hợp vào Launchpad qua mô hình Spaces &amp; Pages." class="sapUiSmallMarginBottom" />
+
+                                <l:Grid defaultSpan="XL6 L6 M12 S12" hSpacing="1" vSpacing="1">
+                                    <!-- Box 1: FLP Tile Live Preview -->
+                                    <VBox class="codeDiffBox codeDiffBoxAfter sapUiSmallMarginBottom">
+                                        <Label text="Xem Trước Fiori Launchpad Tile (Live Preview):" design="Bold" class="sapUiSmallMarginBottom" />
+                                        <GenericTile
+                                            header="{advLab>/deployment/flpConfig/title}"
+                                            subheader="{advLab>/deployment/flpConfig/subTitle}"
+                                            class="sapUiSmallMarginBottom"
+                                            press=".onPreviewTilePress">
+                                            <TileContent unit="V4 Ready">
+                                                <NumericContent
+                                                    value="2025"
+                                                    icon="{advLab>/deployment/flpConfig/icon}"
+                                                    valueColor="Good" />
+                                            </TileContent>
+                                        </GenericTile>
+
+                                        <Label text="Thông Số Định Danh Điều Hướng (Target Mapping):" design="Bold" class="sapUiTinyMarginTop" />
+                                        <Text text="Semantic Object: {advLab>/deployment/flpConfig/semanticObject}" class="sapUiTinyMarginBottom" />
+                                        <Text text="Action: {advLab>/deployment/flpConfig/action}" class="sapUiTinyMarginBottom" />
+                                        <Text text="URL Hash: #DemoTechnicalApp-display" class="errorCodeBadge sapUiTinyMarginBottom" />
+                                        <Text text="Fiori Space ID: {advLab>/deployment/flpConfig/spaceId}" class="sapUiTextMuted" />
+                                        <Text text="Fiori Page ID: {advLab>/deployment/flpConfig/pageId}" class="sapUiTextMuted" />
+                                    </VBox>
+
+                                    <!-- Box 2: Deployment Configuration Descriptor -->
+                                    <VBox class="codeDiffBox codeDiffBoxBefore sapUiSmallMarginBottom">
+                                        <Label text="Thông Số Triển Khai Vào SAP ABAP BSP Repository:" design="Bold" class="sapUiSmallMarginBottom" />
+                                        <VBox class="sapUiSmallMarginBottom">
+                                            <Label text="Tên Ứng Dụng BSP (BSP Application Name):" design="Bold" />
+                                            <Text text="{advLab>/deployment/bspPackage/bspName}" class="sapUiTinyMarginBottom" />
+
+                                            <Label text="Gói Phát Triển (ABAP Package):" design="Bold" />
+                                            <Text text="{advLab>/deployment/bspPackage/package}" class="sapUiTinyMarginBottom" />
+
+                                            <Label text="Yêu Cầu Vận Chuyển (Transport Request):" design="Bold" />
+                                            <Text text="{advLab>/deployment/bspPackage/transportRequest}" class="errorCodeBadge sapUiTinyMarginBottom" />
+
+                                            <Label text="Hệ Thống Đích (Target System):" design="Bold" />
+                                            <Text text="{advLab>/deployment/bspPackage/targetSystem}" class="sapUiTinyMarginBottom" />
+
+                                            <Label text="Lệnh CLI Triển Khai Chuẩn:" design="Bold" />
+                                            <Text text="npm run deploy (hoặc: npx ui5-deploy --config ui5-deploy.yaml)" class="sapUiTextMuted sapUiTinyMarginBottom" />
+                                        </VBox>
+                                        <Button icon="sap-icon://download" text="Tải File Cấu Hình ui5-deploy.yaml" type="Emphasized" press=".onDownloadDeployYaml" />
+                                    </VBox>
+                                </l:Grid>
+                            </VBox>
+                        </content>
+                    </IconTabFilter>
+
+                </items>
+            </IconTabBar>
+
+        </content>
+    </Page>
+</mvc:View>
+

@@ -1,0 +1,8 @@
+@EndUserText.label: 'Service Def Technical Demo Header'
+define service ZUI_DEMO_HEADER_O4 {
+  expose ZI_DemoHeaderTP as DemoHeader;
+  expose ZI_DemoItemTP as DemoItem;
+  expose ZI_DemoConfigMSaveTP as DemoConfigMSave;
+  expose ZI_DemoConfigUnmanTP as DemoConfigUnman;
+  expose ZI_DemoLog as DemoLog;
+}

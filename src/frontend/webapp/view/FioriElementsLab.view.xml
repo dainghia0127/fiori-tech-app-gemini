@@ -1,0 +1,417 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.FioriElementsLab"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:uxap="sap.uxap"
+    height="100%">
+
+    <Page
+        id="feLabPage"
+        title="Phòng Lab 01: SAP Fiori Elements V4 &amp; OData V4 Engineering"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding">
+
+        <headerContent>
+            <ObjectStatus
+                text="OData V4 Mock Server Active"
+                state="Success"
+                icon="sap-icon://connected"
+                class="sapUiTinyMarginEnd" />
+        </headerContent>
+
+        <content>
+            <IconTabBar id="feIconTabBar" headerMode="Inline" select=".onTabSelect" expandable="false" applyContentPadding="false">
+                <items>
+                    <!-- TAB 1: LIST REPORT & OBJECT PAGE FLOORPLANS -->
+                    <IconTabFilter key="lrop" text="1. List Report &amp; Object Page" icon="sap-icon://table-view">
+                        <VBox class="sapUiSmallMargin">
+                            <!-- Hướng dẫn cho người mới -->
+                            <MessageStrip
+                                text="🧪 CHẾ ĐỘ SANDBOX HỌC TẬP: Bảng dưới đây mô phỏng cấu trúc @UI.LineItem, @UI.SelectionFields và Bound Action bằng JSONModel để Fresher dễ quan sát; file chuẩn EDMX &amp; Vocabularies thật nằm tại localService/metadata.xml và annotations.xml (Tab 3)."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <!-- FilterBar V4 Simulation -->
+                            <Panel headerText="Bộ Lọc Tìm Kiếm (FilterBar V4 - @UI.SelectionFields)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <l:Grid defaultSpan="XL3 L4 M6 S12">
+                                    <VBox>
+                                        <Label text="Mã Demo ID" />
+                                        <Input id="filterHeaderId" placeholder="VD: HDR-001..." liveChange=".onFilterLiveChange" />
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Phân Loại (Category)" />
+                                        <ComboBox id="filterCategory" change=".onFilterChange" width="100%">
+                                            <core:Item key="ALL" text="Tất cả phân loại" />
+                                            <core:Item key="RAP Core" text="RAP Core" />
+                                            <core:Item key="Fiori Elements" text="Fiori Elements" />
+                                            <core:Item key="Architecture" text="Architecture" />
+                                            <core:Item key="Security" text="Security" />
+                                        </ComboBox>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Trạng Thái (Status)" />
+                                        <ComboBox id="filterStatus" change=".onFilterChange" width="100%">
+                                            <core:Item key="ALL" text="Tất cả trạng thái" />
+                                            <core:Item key="Verified" text="Verified (Xác minh)" />
+                                            <core:Item key="In Progress" text="In Progress (Đang làm)" />
+                                            <core:Item key="Draft" text="Draft (Bản nháp)" />
+                                        </ComboBox>
+                                    </VBox>
+                                    <HBox alignItems="End" class="sapUiTinyMarginTop">
+                                        <Button text="Đặt Lại" icon="sap-icon://reset" press=".onResetFilters" class="sapUiTinyMarginEnd" />
+                                        <Button text="Tìm Kiếm" icon="sap-icon://search" type="Emphasized" press=".onApplyFilters" />
+                                    </HBox>
+                                </l:Grid>
+                            </Panel>
+
+                            <!-- List Report Table (@UI.LineItem) -->
+                            <Table
+                                id="headersTable"
+                                items="{path: 'feModel>/headers', templateShareable: false}"
+                                mode="SingleSelectMaster"
+                                selectionChange=".onHeaderSelect"
+                                growing="true"
+                                growingThreshold="10"
+                                class="sapUiSmallMarginBottom">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Danh Sách Thực Thể DemoHeader (@UI.LineItem)" level="H3" />
+                                        <ToolbarSpacer />
+                                        <Button
+                                            id="btnVerifyAction"
+                                            text="Xác Minh (Bound Action)"
+                                            icon="sap-icon://accept"
+                                            type="Accept"
+                                            enabled="{feModel>/hasSelection}"
+                                            press=".onExecuteVerifyAction" />
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column width="8rem"><Text text="Mã Demo ID" /></Column>
+                                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tiêu Đề Kỹ Thuật" /></Column>
+                                    <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Phân Loại" /></Column>
+                                    <Column width="9rem"><Text text="Trạng Thái" /></Column>
+                                    <Column hAlign="End" width="10rem"><Text text="Tổng Tiền" /></Column>
+                                    <Column minScreenWidth="Desktop" demandPopin="true" hAlign="End" width="8rem"><Text text="Chi Tiết" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem vAlign="Middle" type="Navigation">
+                                        <cells>
+                                            <ObjectIdentifier title="{feModel>HeaderId}" />
+                                            <Text text="{feModel>Title}" />
+                                            <Text text="{feModel>Category}" />
+                                            <ObjectStatus
+                                                text="{feModel>Status}"
+                                                state="{= ${feModel>Status} === 'Verified' ? 'Success' : (${feModel>Status} === 'In Progress' ? 'Warning' : 'None') }"
+                                                icon="{= ${feModel>Status} === 'Verified' ? 'sap-icon://sys-enter-2' : 'sap-icon://document' }" />
+                                            <ObjectNumber
+                                                number="{
+                                                    parts: [{path: 'feModel>TotalAmount'}, {path: 'feModel>CurrencyCode'}],
+                                                    type: 'sap.ui.model.type.Currency',
+                                                    formatOptions: {showMeasure: true}
+                                                }"
+                                                state="Success" />
+                                            <Button
+                                                text="Mở OP"
+                                                icon="sap-icon://open-command-field"
+                                                type="Transparent"
+                                                press=".onOpenObjectPage" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
+                            <!-- Object Page Detail Section (@UI.Facets & HeaderInfo) -->
+                            <Panel
+                                id="objectPagePanel"
+                                visible="{feModel>/hasSelection}"
+                                headerText="Object Page Floorplan: {feModel>/selectedHeader/Title} (@UI.HeaderInfo)"
+                                class="sapUiResponsiveMargin">
+                                <VBox class="sapUiSmallMargin">
+                                    <ObjectHeader
+                                        title="{feModel>/selectedHeader/Title}"
+                                        number="{
+                                            parts: [{path: 'feModel>/selectedHeader/TotalAmount'}, {path: 'feModel>/selectedHeader/CurrencyCode'}],
+                                            type: 'sap.ui.model.type.Currency',
+                                            formatOptions: {showMeasure: true}
+                                        }"
+                                        numberState="Success"
+                                        intro="{feModel>/selectedHeader/HeaderId}">
+                                        <statuses>
+                                            <ObjectStatus
+                                                title="Trạng Thái"
+                                                text="{feModel>/selectedHeader/Status}"
+                                                state="{= ${feModel>/selectedHeader/Status} === 'Verified' ? 'Success' : 'Warning' }" />
+                                            <ObjectStatus
+                                                title="Người Tạo"
+                                                text="{feModel>/selectedHeader/CreatedBy}" />
+                                        </statuses>
+                                    </ObjectHeader>
+
+                                    <!-- Section 1: General Data (@UI.FieldGroup#GeneralData) -->
+                                    <Title text="1. Thông Tin Thuộc Tính (@UI.FieldGroup#GeneralData)" level="H4" class="sapUiMediumMarginTopBottom" />
+                                    <l:Grid defaultSpan="XL3 L4 M6 S12" class="sapUiSmallMarginBottom">
+                                        <VBox>
+                                            <Label text="Mã Header ID:" />
+                                            <Text text="{feModel>/selectedHeader/HeaderId}" style="font-weight: 600;" />
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Phân Loại Kỹ Thuật:" />
+                                            <Text text="{feModel>/selectedHeader/Category}" />
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Thời Gian Khởi Tạo:" />
+                                            <Text text="{feModel>/selectedHeader/CreatedAt}" />
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Lần Sửa Đổi Cuối (ETag Master):" />
+                                            <Text text="{feModel>/selectedHeader/LocalLastChangedAt}" />
+                                        </VBox>
+                                    </l:Grid>
+
+                                    <!-- Section 2: Composition Items Table (_Items) -->
+                                    <Title text="2. Danh Sách Chi Tiết Items (Composition _Items - LineItem)" level="H4" class="sapUiMediumMarginTopBottom" />
+                                    <Table
+                                        id="itemsTable"
+                                        items="{path: 'feModel>/selectedItems', templateShareable: false}"
+                                        class="sapUiSmallMarginBottom">
+                                        <columns>
+                                            <Column width="7rem"><Text text="Mã Item" /></Column>
+                                            <Column><Text text="Tên Kỹ Thuật / Dịch Vụ" /></Column>
+                                            <Column width="8rem" hAlign="End"><Text text="Số Lượng (Qty)" /></Column>
+                                            <Column width="5rem"><Text text="Đơn Vị" /></Column>
+                                            <Column width="9rem" hAlign="End"><Text text="Đơn Giá" /></Column>
+                                            <Column width="10rem" hAlign="End"><Text text="Thành Tiền (LineTotal)" /></Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem vAlign="Middle">
+                                                <cells>
+                                                    <Text text="{feModel>ItemId}" />
+                                                    <Text text="{feModel>ItemName}" />
+                                                    <Text text="{feModel>Quantity}" />
+                                                    <Text text="{feModel>QuantityUnit}" />
+                                                    <ObjectNumber
+                                                        number="{
+                                                            parts: [{path: 'feModel>UnitPrice'}, {path: 'feModel>CurrencyCode'}],
+                                                            type: 'sap.ui.model.type.Currency',
+                                                            formatOptions: {showMeasure: true}
+                                                        }" />
+                                                    <ObjectNumber
+                                                        number="{
+                                                            parts: [{path: 'feModel>LineTotal'}, {path: 'feModel>CurrencyCode'}],
+                                                            type: 'sap.ui.model.type.Currency',
+                                                            formatOptions: {showMeasure: true}
+                                                        }"
+                                                        state="Success" />
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </VBox>
+                            </Panel>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 2: SIDE EFFECTS LIVE DEMONSTRATION -->
+                    <IconTabFilter key="sideEffects" text="2. Side Effects" icon="sap-icon://response">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="🧪 MÔ PHỎNG SIDE EFFECTS TRÊN CLIENT: Trong app thật, @Common.SideEffects trong localService/annotations.xml tự kích hoạt request PATCH/GET. Tại sandbox này, bấm đổi số lượng/đơn giá sẽ tính lại công thức trực tiếp trên client và ghi Reaction Log để bạn quan sát cơ chế."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiMediumMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <!-- Interactive Sandbox Box -->
+                                <Panel headerText="Bộ Thử Nghiệm Tương Tác (Live Sandbox)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Label text="Chọn Item Thử Nghiệm:" />
+                                        <ComboBox id="seItemSelect" change=".onSeItemChange" width="100%" class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Số Lượng (Quantity):" />
+                                        <StepInput
+                                            id="seQuantityInput"
+                                            value="{feModel>/sideEffectsDemo/quantity}"
+                                            min="1"
+                                            max="50"
+                                            step="1"
+                                            change=".onSideEffectTriggered"
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Đơn Giá (Unit Price - USD):" />
+                                        <StepInput
+                                            id="seUnitPriceInput"
+                                            value="{feModel>/sideEffectsDemo/unitPrice}"
+                                            min="50"
+                                            max="5000"
+                                            step="50"
+                                            change=".onSideEffectTriggered"
+                                            class="sapUiMediumMarginBottom" />
+
+                                        <HBox alignItems="Center" class="sapUiMediumMarginTop">
+                                            <Button
+                                                text="Kích Hoạt Tính Lại (Simulate Side Effect)"
+                                                icon="sap-icon://simulate"
+                                                type="Emphasized"
+                                                press=".onSideEffectTriggered"
+                                                class="sapUiTinyMarginEnd" />
+                                            <Button
+                                                text="Khôi Phục Ban Đầu"
+                                                icon="sap-icon://refresh"
+                                                press=".onResetSideEffectDemo" />
+                                        </HBox>
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Output & Side Effect Execution Log -->
+                                <Panel headerText="Kết Quả Tính Toán Tự Động (@Common.SideEffects)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <HBox justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                            <VBox>
+                                                <Label text="Thành Tiền Item (LineTotal):" />
+                                                <Text text="{feModel>/sideEffectsDemo/formattedLineTotal}" class="kpiNumberText" />
+                                            </VBox>
+                                            <VBox>
+                                                <Label text="Tổng Tiền Header (Header TotalAmount):" />
+                                                <Text text="{feModel>/sideEffectsDemo/formattedHeaderTotal}" class="kpiNumberText" style="color: #107e3e;" />
+                                            </VBox>
+                                        </HBox>
+
+                                        <Label text="Nhật Ký Luồng Sự Kiện (Side Effects Reaction Log):" class="sapUiMediumMarginTop" />
+                                        <List items="{path: 'feModel>/sideEffectsLogs', templateShareable: false}">
+                                            <StandardListItem
+                                                title="{feModel>event}"
+                                                description="{feModel>details}"
+                                                info="{feModel>timestamp}"
+                                                icon="{feModel>icon}" />
+                                        </List>
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 3: ANNOTATIONS & METADATA INSPECTOR -->
+                    <IconTabFilter key="inspector" text="3. Annotations &amp; EDMX" icon="sap-icon://source-code">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="Toàn bộ cấu trúc giao diện trên được định nghĩa bằng EDMX OData V4 Metadata và Vocabulary Annotations chuẩn SAP Fiori."
+                                type="Success"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <Panel headerText="Vocabulary Annotations (@UI &amp; @Common) - webapp/localService/annotations.xml" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiSmallMargin">
+                                    <core:HTML
+                                        content="{path: 'feModel>/rawAnnotationsXml', formatter: '.formatCodeBlockHtml'}"
+                                        preferDOM="true" />
+                                </VBox>
+                            </Panel>
+
+                            <Panel headerText="OData V4 EDMX Metadata - webapp/localService/metadata.xml" expandable="true" expanded="false">
+                                <VBox class="sapUiSmallMargin">
+                                    <core:HTML
+                                        content="{path: 'feModel>/rawMetadataXml', formatter: '.formatCodeBlockHtml'}"
+                                        preferDOM="true" />
+                                </VBox>
+                            </Panel>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 4: BUILDING BLOCKS & CONTROLLER EXTENSIONS (FPM) -->
+                    <IconTabFilter key="fpm" text="4. Building Blocks &amp; FPM" icon="sap-icon://puzzle">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="Flexible Programming Model (FPM) trong SAP Fiori Elements V4 cho phép tích hợp các Building Blocks khai báo sẵn (&lt;macros:Table&gt;, &lt;macros:FilterBar&gt;, &lt;macros:Field&gt;) và mở rộng logic tùy biến thông qua Controller Extensions."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <!-- Panel 1: Building Blocks Architecture & Live Simulation -->
+                                <Panel headerText="1. Kiến Trúc Building Blocks (&lt;macros:*&gt;)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="Các Building Blocks V4 tự động kế thừa Vocabularies từ CDS/Annotations EDMX, giảm 80% code boilerplate so với Freestyle thông thường:" class="sapUiSmallMarginBottom" />
+                                        
+                                        <Table
+                                            items="{path: 'feModel>/buildingBlocks', templateShareable: false}"
+                                            fixedLayout="false"
+                                            class="sapUiSmallMarginBottom">
+                                            <columns>
+                                                <Column width="28%"><Text text="Building Block" /></Column>
+                                                <Column width="30%"><Text text="Thuộc Tính metaPath" /></Column>
+                                                <Column width="42%"><Text text="Vai Trò &amp; Mô Tả" /></Column>
+                                            </columns>
+                                            <items>
+                                                <ColumnListItem vAlign="Middle">
+                                                    <cells>
+                                                        <ObjectIdentifier title="{feModel>name}" text="{feModel>tag}" />
+                                                        <Text text="{feModel>metaPath}" style="font-family: monospace; font-weight: 600;" />
+                                                        <Text text="{feModel>description}" />
+                                                    </cells>
+                                                </ColumnListItem>
+                                            </items>
+                                        </Table>
+
+                                        <Title text="Mẫu Khai Báo XML View (FPM Macro):" level="H5" class="sapUiSmallMarginTopBottom" />
+                                        <core:HTML
+                                            content="{path: 'feModel>/fpmMacroSnippet', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Panel 2: Controller Extensions & Lifecycle Simulator -->
+                                <Panel headerText="2. Controller Extension &amp; Custom Actions" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="Mở rộng chuẩn Fiori Elements bằng sap.ui.core.mvc.ControllerExtension để thêm Custom Actions hoặc can thiệp Lifecycle hooks:" class="sapUiSmallMarginBottom" />
+
+                                        <HBox wrap="Wrap" class="sapUiSmallMarginBottom">
+                                            <Button
+                                                text="Mô Phỏng: onPageReady Hook"
+                                                icon="sap-icon://activate"
+                                                type="Default"
+                                                press=".onSimulatePageReady"
+                                                class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                            <Button
+                                                text="Mô Phỏng: Custom Header Action"
+                                                icon="sap-icon://action"
+                                                type="Emphasized"
+                                                press=".onSimulateCustomHeaderAction"
+                                                class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                            <Button
+                                                text="Mô Phỏng: Batch Technical Report"
+                                                icon="sap-icon://excel-attachment"
+                                                type="Accept"
+                                                press=".onSimulateExportReport"
+                                                class="sapUiTinyMarginBottom" />
+                                        </HBox>
+
+                                        <Title text="Nhật Ký Thực Thi Controller Extension (Live Event Stream):" level="H5" class="sapUiSmallMarginTopBottom" />
+                                        <List items="{path: 'feModel>/fpmExtensionLogs', templateShareable: false}" class="sapUiSmallMarginBottom">
+                                            <StandardListItem
+                                                title="{feModel>action}"
+                                                description="{feModel>message}"
+                                                info="{feModel>timestamp}"
+                                                icon="{feModel>icon}" />
+                                        </List>
+
+                                        <Title text="Mã Nguồn ListReportExtension.controller.js:" level="H5" class="sapUiSmallMarginTopBottom" />
+                                        <core:HTML
+                                            content="{path: 'feModel>/rawExtensionJs', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </content>
+    </Page>
+</mvc:View>
+

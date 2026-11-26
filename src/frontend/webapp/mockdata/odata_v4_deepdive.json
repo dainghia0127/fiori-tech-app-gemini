@@ -1,0 +1,75 @@
+{
+  "queryPresets": [
+    {
+      "id": "PRESET-01",
+      "name": "1. Mở Rộng Quan Hệ Composition ($expand=_Items)",
+      "description": "Lấy toàn bộ dữ liệu Header kèm theo danh sách chi tiết Items trong một request duy nhất.",
+      "entity": "DemoHeader",
+      "select": "HeaderId,Title,Category,TotalAmount,CurrencyCode,Status",
+      "expand": "_Items($select=ItemId,ItemName,Quantity,UnitPrice,LineTotal)",
+      "filter": "Status eq 'Verified'",
+      "orderby": "TotalAmount desc",
+      "top": 5,
+      "skip": 0
+    },
+    {
+      "id": "PRESET-02",
+      "name": "2. Lọc Điều Kiện Phức Hợp ($filter với gt & eq)",
+      "description": "Lọc các bản ghi có tổng tiền > 1000 USD và thuộc phân hệ RAP Core.",
+      "entity": "DemoHeader",
+      "select": "HeaderId,Title,Category,TotalAmount",
+      "expand": "",
+      "filter": "TotalAmount gt 1000 and Category eq 'RAP Core'",
+      "orderby": "TotalAmount desc",
+      "top": 10,
+      "skip": 0
+    },
+    {
+      "id": "PRESET-03",
+      "name": "3. Tối Giản Băng Thông ($select cụ thể)",
+      "description": "Chỉ lấy HeaderId và TotalAmount để vẽ KPI Dashboard, tiết kiệm 75% băng thông mạng.",
+      "entity": "DemoHeader",
+      "select": "HeaderId,TotalAmount,CurrencyCode",
+      "expand": "",
+      "filter": "",
+      "orderby": "HeaderId asc",
+      "top": 10,
+      "skip": 0
+    },
+    {
+      "id": "PRESET-04",
+      "name": "4. Phân Trang & Sắp Xếp ($top, $skip & $orderby)",
+      "description": "Đọc trang thứ 2 (bỏ qua 5 bản ghi đầu, lấy 5 bản ghi tiếp theo).",
+      "entity": "DemoHeader",
+      "select": "HeaderId,Title,CreatedAt",
+      "expand": "",
+      "filter": "",
+      "orderby": "CreatedAt desc",
+      "top": 5,
+      "skip": 5
+    }
+  ],
+  "batchSample": {
+    "boundary": "batch_sap_fiori_tech_boundary_100",
+    "changeSetBoundary": "changeset_atomic_demo_01",
+    "requestRaw": "--batch_sap_fiori_tech_boundary_100\nContent-Type: multipart/mixed; boundary=changeset_atomic_demo_01\n\n--changeset_atomic_demo_01\nContent-Type: application/http\nContent-Transfer-Encoding: binary\nContent-ID: 1\n\nPOST DemoHeader HTTP/1.1\nContent-Type: application/json;odata.metadata=minimal\n\n{\n  \"HeaderId\": \"HDR-NEW\",\n  \"Title\": \"Kiến Trúc RAP Managed Draft\",\n  \"Category\": \"RAP Core\",\n  \"Status\": \"In Progress\",\n  \"CurrencyCode\": \"USD\"\n}\n\n--changeset_atomic_demo_01\nContent-Type: application/http\nContent-Transfer-Encoding: binary\nContent-ID: 2\n\nPOST $1/_Items HTTP/1.1\nContent-Type: application/json;odata.metadata=minimal\n\n{\n  \"ItemId\": \"ITM-01\",\n  \"ItemName\": \"Behavior Implementation Pool\",\n  \"Quantity\": 1,\n  \"UnitPrice\": 1200.00\n}\n\n--changeset_atomic_demo_01--\n--batch_sap_fiori_tech_boundary_100--",
+    "explanation": "Toàn bộ ChangeSet này được thực thi nguyên tử (Atomic). Nếu Item bị lỗi validation, toàn bộ giao dịch bao gồm tạo Header sẽ bị Rollback tự động."
+  },
+  "etagDemo": {
+    "entityId": "HDR-001",
+    "title": "Kiến Trúc ABAP RAP Managed Scenario",
+    "initialEtag": "W/\"datetimeoffset'2026-11-07T08:00:00.0000000Z'\"",
+    "userA": {
+      "name": "Kỹ Sư A (Client 1)",
+      "readEtag": "W/\"datetimeoffset'2026-11-07T08:00:00.0000000Z'\"",
+      "pendingTitle": "Cập Nhật Bởi Kỹ Sư A"
+    },
+    "userB": {
+      "name": "Kỹ Sư B (Client 2)",
+      "readEtag": "W/\"datetimeoffset'2026-11-07T08:00:00.0000000Z'\"",
+      "updatedTitle": "Cập Nhật Bởi Kỹ Sư B (Đã Commit)",
+      "newServerEtag": "W/\"datetimeoffset'2026-11-07T08:05:00.0000000Z'\""
+    }
+  }
+}
+

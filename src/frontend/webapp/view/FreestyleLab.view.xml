@@ -1,0 +1,370 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.FreestyleLab"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:custom="sap.fiori.tech.academy.control"
+    height="100%">
+
+    <Page
+        id="freestyleLabPage"
+        title="Phòng Lab 02: SAPUI5 Freestyle Architecture &amp; Controls Engineering"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding">
+
+        <headerContent>
+            <!-- MessagePopover Button with Error/Warning Badge -->
+            <Button
+                id="messagePopoverBtn"
+                icon="sap-icon://alert"
+                type="{= ${freestyleModel>/messageCount} > 0 ? 'Negative' : 'Neutral' }"
+                text="{freestyleModel>/messageCount}"
+                press=".onToggleMessagePopover"
+                tooltip="Mở Bảng Quản Trị Lỗi &amp; Thông Báo (MessagePopover)" />
+
+            <ObjectStatus
+                text="Freestyle MVC Playground Active"
+                state="Success"
+                icon="sap-icon://sys-enter-2"
+                class="sapUiTinyMarginEnd" />
+        </headerContent>
+
+        <content>
+            <IconTabBar id="freestyleTabBar" headerMode="Inline" select=".onTabSelect" expandable="false" applyContentPadding="false">
+                <items>
+                    <!-- TAB 1: DATA BINDING MASTER LAB -->
+                    <IconTabFilter key="dataBinding" text="1. Data Binding Lab" icon="sap-icon://attachment">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="Thực hành toàn diện 4 kiểu Data Binding cốt lõi trong SAPUI5: Property Binding (Two-Way), Aggregation Binding (Template &amp; Filter), Element Binding (Context Binding) và Expression Binding."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <!-- Section 1.1: Two-Way Property Binding Sandbox -->
+                                <Panel headerText="1.1. Property Binding &amp; Two-Way Reactivity" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="Sửa đổi giá trị ô Input bên dưới, toàn bộ các control phụ thuộc sẽ tự động cập nhật thời gian thực thông qua Two-Way Binding:" class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Tên Máy Chủ (Server Name):" />
+                                        <Input value="{freestyleModel>/systemConfig/serverName}" valueLiveUpdate="true" class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Số Phiên Đang Hoạt Động (Active Sessions):" />
+                                        <Slider
+                                            value="{freestyleModel>/systemConfig/currentActiveSessions}"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            enableTickmarks="true"
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                            <Label text="Chế Độ Bảo Trì (Maintenance Mode):" class="sapUiTinyMarginEnd" />
+                                            <Switch state="{freestyleModel>/systemConfig/maintenanceMode}" />
+                                        </HBox>
+
+                                        <!-- Expression Binding Display -->
+                                        <Panel headerText="Kết Quả Expression Binding Trực Tiếp (Không Cần Formatter):" class="sapUiTinyMarginTop">
+                                            <VBox class="sapUiTinyMargin">
+                                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                                                    <Text text="Trạng Thái Tải Hệ Thống:" style="font-weight: 600;" />
+                                                    <ObjectStatus
+                                                        text="{= ${freestyleModel>/systemConfig/currentActiveSessions} > 40 ? 'Quá Tải Cao' : (${freestyleModel>/systemConfig/currentActiveSessions} > 20 ? 'Tải Bình Thường' : 'Tải Thấp') }"
+                                                        state="{= ${freestyleModel>/systemConfig/currentActiveSessions} > 40 ? 'Error' : (${freestyleModel>/systemConfig/currentActiveSessions} > 20 ? 'Success' : 'Information') }"
+                                                        icon="{= ${freestyleModel>/systemConfig/currentActiveSessions} > 40 ? 'sap-icon://alert' : 'sap-icon://sys-enter-2' }" />
+                                                </HBox>
+
+                                                <HBox justifyContent="SpaceBetween">
+                                                    <Text text="Tình Trạng Truy Cập:" style="font-weight: 600;" />
+                                                    <Text
+                                                        text="{= ${freestyleModel>/systemConfig/maintenanceMode} ? 'HỆ THỐNG ĐANG KHÓA ĐỂ BẢO TRÌ' : 'HỆ THỐNG ĐANG MỞ PHỤC VỤ' }"
+                                                        style="{= ${freestyleModel>/systemConfig/maintenanceMode} ? 'color: #b00; font-weight: 700;' : 'color: #107e3e; font-weight: 700;' }" />
+                                                </HBox>
+                                            </VBox>
+                                        </Panel>
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Section 1.2: Element Context Binding (Master-Detail Pattern) -->
+                                <Panel headerText="1.2. Element Binding (Context Binding)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="Chọn một Module từ danh sách để kích hoạt Element Binding (bindElement). Khung chi tiết bên phải tự động trỏ vào đúng đối tượng mà không cần viết lệnh gán giá trị thủ công:" class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Chọn Module Thử Nghiệm Context:" />
+                                        <Select
+                                            id="moduleContextSelect"
+                                            items="{path: 'freestyleModel>/modules', templateShareable: false}"
+                                            change=".onModuleSelectChange"
+                                            width="100%"
+                                            class="sapUiSmallMarginBottom">
+                                            <core:Item key="{freestyleModel>id}" text="{freestyleModel>id} - {freestyleModel>name}" />
+                                        </Select>
+
+                                        <!-- Bound Detail Container -->
+                                        <Panel
+                                            id="moduleDetailContextPanel"
+                                            binding="{freestyleModel>/selectedModule}"
+                                            headerText="Chi Tiết Module Được Bind: {freestyleModel>name}">
+                                            <VBox class="sapUiSmallMargin">
+                                                <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                                    <VBox>
+                                                        <Label text="Mã Phân Hệ (ID):" />
+                                                        <Text text="{freestyleModel>id}" style="font-weight: 600;" />
+                                                    </VBox>
+                                                    <VBox>
+                                                        <Label text="Package Chứa:" />
+                                                        <Text text="{freestyleModel>package}" style="font-family: monospace;" />
+                                                    </VBox>
+                                                    <VBox>
+                                                        <Label text="Người Chịu Trách Nhiệm:" />
+                                                        <Text text="{freestyleModel>responsible}" />
+                                                    </VBox>
+                                                    <VBox>
+                                                        <Label text="Trạng Thái Vận Hành:" />
+                                                        <ObjectStatus text="{freestyleModel>status}" state="{freestyleModel>statusState}" />
+                                                    </VBox>
+                                                </l:Grid>
+
+                                                <Label text="Mô Tả Kỹ Thuật:" class="sapUiSmallMarginTop" />
+                                                <Text text="{freestyleModel>details/description}" class="sapUiSmallMarginBottom" />
+
+                                                <HBox justifyContent="End" class="sapUiTinyMarginTop">
+                                                    <Button
+                                                        text="Thanh Tra Qua XML Fragment"
+                                                        icon="sap-icon://inspect"
+                                                        type="Emphasized"
+                                                        press=".onOpenInspectDialog" />
+                                                </HBox>
+                                            </VBox>
+                                        </Panel>
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 2: MESSAGEMANAGER & ENTERPRISE ERROR HANDLING -->
+                    <IconTabFilter key="messageManager" text="2. MessageManager &amp; Errors" icon="sap-icon://alert">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="sap.ui.core.message.MessageManager là cơ chế quản trị lỗi tập trung chuẩn Enterprise trong SAPUI5. Nó tự động gắn kết thông báo lỗi với control trên giao diện và hiển thị trực quan qua MessagePopover."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <!-- Form With Client Validation Constraints -->
+                                <Panel headerText="Biểu Mẫu Nhập Liệu Ràng Buộc Kiểm Tra (Form Validation)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Label text="Tên Thực Thể Cấu Hình (Required):" required="true" />
+                                        <Input
+                                            id="inputEntityName"
+                                            value="{freestyleModel>/sampleValidationEntities/entityName}"
+                                            valueLiveUpdate="true"
+                                            placeholder="Nhập tên thực thể..."
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Khóa Cấu Hình (Bắt đầu bằng CFG_):" required="true" />
+                                        <Input
+                                            id="inputConfigKey"
+                                            value="{freestyleModel>/sampleValidationEntities/configKey}"
+                                            valueLiveUpdate="true"
+                                            placeholder="VD: CFG_MAX_CONNECTIONS..."
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <Label text="Email Thông Báo (Đúng định dạng email):" required="true" />
+                                        <Input
+                                            id="inputEmail"
+                                            type="Email"
+                                            value="{freestyleModel>/sampleValidationEntities/emailNotification}"
+                                            valueLiveUpdate="true"
+                                            placeholder="admin@domain.com"
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                                            <Button
+                                                text="Kiểm Tra Toàn Bộ Biểu Mẫu"
+                                                type="Emphasized"
+                                                icon="sap-icon://validate"
+                                                press=".onValidateForm"
+                                                class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                            <Button
+                                                text="Mô Phỏng Lỗi Backend (500)"
+                                                type="Reject"
+                                                icon="sap-icon://error"
+                                                press=".onSimulateBackendError"
+                                                class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                            <Button
+                                                text="Xóa Sạch Lỗi (Clear All)"
+                                                icon="sap-icon://clear-all"
+                                                press=".onClearAllMessages"
+                                                class="sapUiTinyMarginBottom" />
+                                        </HBox>
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Message Stream Panel -->
+                                <Panel headerText="Luồng Thông Báo Hiện Tại (Active Messages in MessageManager)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                            <Title text="Tổng Số Thông Báo: {freestyleModel>/messageCount}" level="H4" />
+                                            <Button
+                                                text="Mở MessagePopover"
+                                                icon="sap-icon://message-popup"
+                                                type="Ghost"
+                                                press=".onToggleMessagePopover" />
+                                        </HBox>
+
+                                        <List items="{path: 'freestyleModel>/messages', templateShareable: false}">
+                                            <StandardListItem
+                                                title="{freestyleModel>message}"
+                                                description="{freestyleModel>description}"
+                                                info="{freestyleModel>type}"
+                                                icon="{= ${freestyleModel>type} === 'Error' ? 'sap-icon://error' : (${freestyleModel>type} === 'Warning' ? 'sap-icon://alert' : 'sap-icon://sys-enter-2') }"
+                                                infoState="{= ${freestyleModel>type} === 'Error' ? 'Error' : (${freestyleModel>type} === 'Warning' ? 'Warning' : 'Success') }" />
+                                        </List>
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 3: CUSTOM & COMPOSITE CONTROLS -->
+                    <IconTabFilter key="customControls" text="3. Custom Controls Lab" icon="sap-icon://palette">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="Custom Controls trong SAPUI5 cho phép xây dựng các thành phần giao diện chuyên biệt kế thừa sap.ui.core.Control với cơ chế tự vẽ DOM HTML5 qua RenderManager, định nghĩa Metadata và xử lý sự kiện tùy biến."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL4 L4 M12 S12">
+                                <!-- Custom Control 1: Memory Usage -->
+                                <Panel headerText="Bộ Nhớ (Memory Utilization)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <custom:TechnicalHealthGauge
+                                            id="gaugeMemory"
+                                            title="Bộ Nhớ RAM Máy Chủ"
+                                            value="{freestyleModel>/systemConfig/memoryUsagePercent}"
+                                            maxValue="100"
+                                            unit="%"
+                                            thresholdWarning="70"
+                                            thresholdCritical="85"
+                                            press=".onGaugePress" />
+
+                                        <Label text="Điều Chỉnh Giả Lập:" class="sapUiTinyMarginTop" />
+                                        <Slider
+                                            value="{freestyleModel>/systemConfig/memoryUsagePercent}"
+                                            min="0"
+                                            max="100"
+                                            step="0.5" />
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Custom Control 2: CPU Load -->
+                                <Panel headerText="CPU Máy Chủ (CPU Load)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <custom:TechnicalHealthGauge
+                                            id="gaugeCpu"
+                                            title="Tải Vi Xử Lý SAP Kernel"
+                                            value="{freestyleModel>/systemConfig/cpuUsagePercent}"
+                                            maxValue="100"
+                                            unit="%"
+                                            thresholdWarning="65"
+                                            thresholdCritical="80"
+                                            press=".onGaugePress" />
+
+                                        <Label text="Điều Chỉnh Giả Lập:" class="sapUiTinyMarginTop" />
+                                        <Slider
+                                            value="{freestyleModel>/systemConfig/cpuUsagePercent}"
+                                            min="0"
+                                            max="100"
+                                            step="0.5" />
+                                    </VBox>
+                                </Panel>
+
+                                <!-- Custom Control 3: DB Hit Ratio -->
+                                <Panel headerText="Cơ Sở Dữ Liệu (HANA DB Hit Ratio)" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <custom:TechnicalHealthGauge
+                                            id="gaugeDb"
+                                            title="Tỉ Lệ Trúng Bộ Đệm SAP HANA"
+                                            value="{freestyleModel>/systemConfig/dbHitRatioPercent}"
+                                            maxValue="100"
+                                            unit="%"
+                                            thresholdWarning="85"
+                                            thresholdCritical="95"
+                                            press=".onGaugePress" />
+
+                                        <Label text="Điều Chỉnh Giả Lập:" class="sapUiTinyMarginTop" />
+                                        <Slider
+                                            value="{freestyleModel>/systemConfig/dbHitRatioPercent}"
+                                            min="50"
+                                            max="100"
+                                            step="0.1" />
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+
+                            <Panel headerText="Mã Nguồn Của Custom Control TechnicalHealthGauge.js" class="sapUiSmallMarginTop">
+                                <VBox class="sapUiSmallMargin">
+                                    <core:HTML
+                                        content="{path: 'freestyleModel>/rawCustomControlJs', formatter: '.formatCodeBlockHtml'}"
+                                        preferDOM="true" />
+                                </VBox>
+                            </Panel>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 4: XML FRAGMENTS & DIALOGS ARCHITECTURE -->
+                    <IconTabFilter key="fragments" text="4. XML Fragments &amp; Dialogs" icon="sap-icon://popup-window">
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="XML Fragments là các khối giao diện nhẹ, không có Controller riêng, được dùng để tái sử dụng các Dialogs, Popovers hoặc các phần UI phụ thuộc trên nhiều views."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <l:Grid defaultSpan="XL6 L6 M12 S12">
+                                <Panel headerText="Thao Tác Với XML Fragment" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="Nhấn nút bên dưới để tải bất đồng bộ Fragment 'QuickInspectDialog.fragment.xml' qua Fragment.load():" class="sapUiSmallMarginBottom" />
+                                        
+                                        <Button
+                                            text="Mở Reusable Fragment Dialog"
+                                            icon="sap-icon://popup-window"
+                                            type="Emphasized"
+                                            press=".onOpenInspectDialog"
+                                            class="sapUiSmallMarginBottom" />
+
+                                        <Title text="Nhật Ký Tương Tác Fragment (Fragment Lifecycle Stream):" level="H5" class="sapUiSmallMarginTopBottom" />
+                                        <List items="{path: 'freestyleModel>/fragmentLogs', templateShareable: false}">
+                                            <StandardListItem
+                                                title="{freestyleModel>event}"
+                                                description="{freestyleModel>details}"
+                                                info="{freestyleModel>timestamp}"
+                                                icon="{freestyleModel>icon}" />
+                                        </List>
+                                    </VBox>
+                                </Panel>
+
+                                <Panel headerText="Mã Nguồn QuickInspectDialog.fragment.xml" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiSmallMargin">
+                                        <core:HTML
+                                            content="{path: 'freestyleModel>/rawFragmentXml', formatter: '.formatCodeBlockHtml'}"
+                                            preferDOM="true" />
+                                    </VBox>
+                                </Panel>
+                            </l:Grid>
+                        </VBox>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </content>
+    </Page>
+</mvc:View>
+

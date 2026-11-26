@@ -1,0 +1,29 @@
+managed with unmanaged save implementation in class zbp_i_democonfigmsavetp unique;
+strict ( 2 );
+
+define behavior for ZI_DemoConfigMSaveTP alias DemoConfig
+lock master
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly : update ) ConfigKey;
+  field ( readonly ) LocalLastChangedBy, LocalLastChangedAt, LastChangedAt;
+
+  validation validateHandlerClass on save { create; update; field HandlerClass; }
+
+  mapping for zdemo_config_m
+  {
+    ConfigKey = config_key;
+    ConfigName = config_name;
+    ConfigType = config_type;
+    HandlerClass = handler_class;
+    IsActive = is_active;
+    LocalLastChangedBy = local_last_changed_by;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt = last_changed_at;
+  }
+}

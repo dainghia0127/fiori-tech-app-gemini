@@ -1,0 +1,172 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:tnt="sap.tnt"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    height="100%">
+
+    <tnt:ToolPage id="toolPage" sideExpanded="{appView>/isSideExpanded}">
+        <tnt:header>
+            <tnt:ToolHeader id="toolHeader" class="academyToolHeader">
+                <!-- Nút Thu Gọn / Mở Rộng Menu Bên Trái -->
+                <Button
+                    id="sideNavToggleBtn"
+                    icon="sap-icon://menu2"
+                    type="Transparent"
+                    press=".onSideNavToggle"
+                    tooltip="Mở rộng / Thu gọn Thanh điều hướng">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <!-- Logo & Tên Ứng Dụng -->
+                <core:Icon
+                    src="sap-icon://study-leave"
+                    color="#0a6ed1"
+                    size="1.5rem"
+                    class="sapUiTinyMarginBegin">
+                    <core:layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </core:layoutData>
+                </core:Icon>
+
+                <Title
+                    text="{i18n>appTitle}"
+                    level="H2"
+                    class="sapUiTinyMarginBegin academyHeaderTitle">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Title>
+
+                <!-- Spacer đẩy toàn bộ các nút tiện ích sang GÓC PHẢI TRÊN CÙNG -->
+                <ToolbarSpacer />
+
+                <!-- Đường phân cách Utility -->
+                <tnt:ToolHeaderUtilitySeparator />
+
+                <!-- ========================================================= -->
+                <!-- CỤM NÚT ĐẶC TRƯNG GÓC PHẢI TRÊN CÙNG (LUÔN HIỂN THỊ ĐẦY ĐỦ) -->
+                <!-- ========================================================= -->
+
+                <!-- 1. Nút Chuyển Đổi Chế Độ: Standalone Mock / SAP S/4HANA -->
+                <Button
+                    id="modeSelectorButton"
+                    icon="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? 'sap-icon://connected' : 'sap-icon://laptop' }"
+                    text="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? 'SAP S/4HANA (PQPOC)' : 'Standalone Mock' }"
+                    type="{= ${appView>/runtimeMode} === 'SAP_CONNECTED' ? 'Accept' : 'Neutral' }"
+                    press=".onOpenModeDialog"
+                    tooltip="Nhấp để chuyển đổi giữa Standalone Mock và SAP S/4HANA Connected Mode"
+                    class="sapUiTinyMarginEnd">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <!-- 2. Nút Guideline (Cẩm nang Fresher từ 0) -->
+                <Button
+                    id="btnGuideline"
+                    icon="sap-icon://education"
+                    text="Guideline (Fresher)"
+                    type="Emphasized"
+                    press=".onNavToGuideline"
+                    tooltip="Mở Cẩm Nang &amp; Hướng Dẫn Từng Bước (Step-by-Step) Cho Fresher Từ Số 0"
+                    class="sapUiTinyMarginEnd">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <!-- 3. Nút Handle Error (Sổ tay 15 Lỗi Kỹ Thuật) -->
+                <Button
+                    id="btnHandleError"
+                    icon="sap-icon://alert"
+                    text="Handle Error (15 Lỗi)"
+                    type="Critical"
+                    press=".onNavToErrorPlaybook"
+                    tooltip="Mở Sổ Tay 15 Sự Cố Kỹ Thuật Thực Chiến (Xem phân tích &amp; so sánh Code Diff)"
+                    class="sapUiTinyMarginEnd">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <!-- 4. Nút Hướng Dẫn (User Manual & Test Guide) -->
+                <Button
+                    id="btnUserManual"
+                    icon="sap-icon://user-edit"
+                    text="Hướng Dẫn (User Guide)"
+                    type="Ghost"
+                    press=".onNavToUserManual"
+                    tooltip="Mở Sổ Tay Hướng Dẫn Vận Hành &amp; Kịch Bản Kiểm Thử Toàn Diện 10 Phân Hệ"
+                    class="sapUiTinyMarginEnd">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <!-- 5. Nút Kiến Trúc Hệ Thống -->
+                <Button
+                    id="btnArchitecture"
+                    icon="sap-icon://sys-help"
+                    type="Transparent"
+                    press=".onNavToArchitecture"
+                    tooltip="Tài liệu Kiến trúc Kỹ thuật Hệ thống">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+            </tnt:ToolHeader>
+        </tnt:header>
+
+        <!-- ================================================================= -->
+        <!-- CÂY CHỈ MỤC BÊN TRÁI: CHỈ GIỮ LẠI CÁC PHÂN HỆ KỸ THUẬT NỀN TẢNG  -->
+        <!-- (Đã tách triệt để Standalone Mock, Guideline, Handle Error, Hướng Dẫn) -->
+        <!-- ================================================================= -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" selectedKey="{appView>/selectedKey}" itemSelect=".onItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem
+                        key="dashboard"
+                        text="{i18n>navDashboard}"
+                        icon="sap-icon://bbyd-dashboard" />
+                    <tnt:NavigationListItem
+                        key="catalog"
+                        text="{i18n>navCatalog}"
+                        icon="sap-icon://study-leave" />
+                    <tnt:NavigationListItem
+                        key="code"
+                        text="{i18n>navCode}"
+                        icon="sap-icon://source-code" />
+                    <tnt:NavigationListItem
+                        key="feLab"
+                        text="{i18n>navFeLab}"
+                        icon="sap-icon://table-view" />
+                    <tnt:NavigationListItem
+                        key="freestyleLab"
+                        text="{i18n>navFreestyleLab}"
+                        icon="sap-icon://palette" />
+                    <tnt:NavigationListItem
+                        key="odataLab"
+                        text="{i18n>navODataLab}"
+                        icon="sap-icon://chain-link" />
+                    <tnt:NavigationListItem
+                        key="advancedLab"
+                        text="{i18n>navAdvancedLab}"
+                        icon="sap-icon://lab" />
+                    <tnt:NavigationListItem
+                        key="architecture"
+                        text="{i18n>navArchitecture}"
+                        icon="sap-icon://overview-chart" />
+                </tnt:NavigationList>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <App id="pageContainer" />
+        </tnt:mainContents>
+    </tnt:ToolPage>
+</mvc:View>

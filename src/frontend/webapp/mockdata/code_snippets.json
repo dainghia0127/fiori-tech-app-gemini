@@ -1,0 +1,154 @@
+{
+  "snippets": [
+    {
+      "id": "SNIP_BDEF_HEADER",
+      "title": "RAP Behavior Definition: Managed with Draft (strict 2)",
+      "language": "ABAP BDL",
+      "status": "Synced with Local Repo File (PQPOC Verified in Docs)",
+      "category": "ABAP RAP",
+      "description": "Khai báo hành vi chuẩn mực của BO DemoHeader: ETag Master, Total ETag, Draft Actions, Child Composition và BDL Side Effects.",
+      "code": "managed implementation in class zbp_i_demoheadertp unique;\nstrict ( 2 );\nwith draft;\n\ndefine behavior for ZI_DemoHeaderTP alias DemoHeader\npersistent table zdemo_header\ndraft table zdemo_header_d\nlock master\ntotal etag LastChangedAt\netag master LocalLastChangedAt\nauthorization master ( instance )\n{\n  create;\n  update;\n  delete;\n\n  association _Items { create; with draft; }\n\n  draft action Edit;\n  draft action Activate optimized;\n  draft action Discard;\n  draft action Resume;\n  draft determine action Prepare;\n\n  action ( features : instance ) calculateTotals result [1] $self;\n  action ( features : instance ) approve result [1] $self;\n\n  determination calculateTotalAmount on modify { create; }\n  validation validateStatusCode on save { field StatusCode; create; update; }\n\n  mapping for zdemo_header\n  {\n    HeaderUUID = header_uuid;\n    DemoCode = demo_code;\n    StatusCode = status_code;\n    TotalAmount = total_amount;\n    CurrencyCode = currency_code;\n    ConfigKey = config_key;\n    CreatedBy = created_by;\n    CreatedAt = created_at;\n    LocalLastChangedAt = local_last_changed_at;\n    LastChangedAt = last_changed_at;\n  }\n}\n\ndefine behavior for ZI_DemoItemTP alias DemoItem\npersistent table zdemo_item\ndraft table zdemo_item_d\nlock dependent by _Header\netag dependent by _Header\nauthorization dependent by _Header\n{\n  update;\n  delete;\n\n  association _Header { with draft; }\n\n  determination calculateLineTotal on modify { create; field Quantity, UnitPrice; }\n  determination calculateHeaderTotal on modify { create; field Quantity, UnitPrice; }\n  determination calculateHeaderTotalOnSave on save { create; delete; }\n\n  side effects {\n    field Quantity affects field LineTotal, entity _Header;\n    field UnitPrice affects field LineTotal, entity _Header;\n  }\n\n  mapping for zdemo_item\n  {\n    ItemUUID = item_uuid;\n    HeaderUUID = header_uuid;\n    ItemNumber = item_number;\n    Quantity = quantity;\n    QuantityUnit = quantity_unit;\n    UnitPrice = unit_price;\n    LineTotal = line_total;\n    CurrencyCode = currency_code;\n    LocalLastChangedAt = local_last_changed_at;\n  }\n}\n",
+      "filePath": "src/backend/rap/behavior/ZI_DemoHeaderTP.bdef.asbdef",
+      "relatedFeature": "Phòng Lab RAP Backend (Chương 10 Guideline) — Managed BO với Draft, strict(2) & Side Effects",
+      "architectureNotes": [
+        "Behavior Pool thật dùng tên zbp_i_demoheadertp (không phải bp_i_demoheadertp).",
+        "Side effects trong file thật khai báo tại entity DemoItem: field Quantity affects field LineTotal, entity _Header.",
+        "Đã đồng bộ 100% nội dung với file src/backend/rap/behavior/ZI_DemoHeaderTP.bdef.asbdef."
+      ]
+    },
+    {
+      "id": "SNIP_CDS_HEADER_TP",
+      "title": "CDS View Entity: ZI_DemoHeaderTP (Root Entity)",
+      "language": "ABAP CDS",
+      "status": "Synced with Local Repo File (PQPOC Verified in Docs)",
+      "category": "ABAP Core Data Services",
+      "description": "Root View Entity định nghĩa cấu trúc dữ liệu, associations tới Item con và Config, đính kèm semantic annotations.",
+      "code": "@AccessControl.authorizationCheck: #NOT_REQUIRED\n@EndUserText.label: 'Demo Header Root View Entity'\ndefine root view entity ZI_DemoHeaderTP\n  as select from zdemo_header\n  composition [0..*] of ZI_DemoItemTP as _Items\n{\n  key header_uuid           as HeaderUUID,\n      demo_code             as DemoCode,\n      status_code           as StatusCode,\n      \n      @Semantics.amount.currencyCode: 'CurrencyCode'\n      total_amount          as TotalAmount,\n      \n      currency_code         as CurrencyCode,\n      config_key            as ConfigKey,\n      \n      created_by            as CreatedBy,\n      created_at            as CreatedAt,\n      \n      // ETag Master cho Header Instance\n      @Semantics.systemDateTime.localInstanceLastChangedAt: true\n      local_last_changed_at as LocalLastChangedAt,\n      \n      // Total ETag cho Root BO (Dùng cho Draft Validation / Resume)\n      @Semantics.systemDateTime.lastChangedAt: true\n      last_changed_at       as LastChangedAt,\n\n      _Items\n}\n",
+      "filePath": "src/backend/rap/data-model/ZI_DemoHeaderTP.ddls.asddls",
+      "relatedFeature": "Data Model gốc cho DemoHeader (Chương 9 Guideline)",
+      "architectureNotes": [
+        "CDS View Entity thật dùng @AccessControl.authorizationCheck: #NOT_REQUIRED cho phép chạy test nhanh trước khi gắn DCL.",
+        "Composition [0..*] trỏ sang ZI_DemoItemTP as _Items; giữ LocalLastChangedAt làm ETag Master và LastChangedAt làm Total ETag.",
+        "Đã đồng bộ 100% nội dung với file src/backend/rap/data-model/ZI_DemoHeaderTP.ddls.asddls."
+      ]
+    },
+    {
+      "id": "SNIP_DRAFT_TABLE",
+      "title": "DDIC Draft Table: ZDEMO_HEADER_D",
+      "language": "ABAP Dictionary (DDIC)",
+      "status": "Synced with Local Repo File",
+      "category": "Data Dictionary",
+      "description": "Cấu trúc bảng nháp tự động sinh bởi ADT Quick Fix từ BDEF, tích hợp include quản trị draft chuẩn mực sych_bdl_draft_admin_inc.",
+      "code": "@EndUserText.label : 'Technical Demo Header Draft Table'\n@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE\n@AbapCatalog.tableCategory : #TRANSPARENT\n@AbapCatalog.deliveryClass : #A\ndefine table zdemo_header_d {\n  key mandt          : mandt not null;\n  key headeruuid     : sysuuid_x16 not null;\n  democode           : abap.char(10);\n  statuscode         : abap.char(2);\n  @Semantics.amount.currencyCode : 'zdemo_header_d.currencycode'\n  totalamount        : abap.curr(15,2);\n  currencycode       : abap.cuky;\n  configkey          : abap.char(10);\n  createdby          : abp_creation_user;\n  createdat          : abp_creation_tstmpl;\n  locallastchangedat : abp_locinst_lastchange_tstmpl;\n  lastchangedat      : abp_lastchange_tstmpl;\n  \"%admin\"           : include sych_bdl_draft_admin_inc;\n}\n",
+      "filePath": "src/backend/rap/data-model/zdemo_header_d.tabl.sql",
+      "relatedFeature": "Bảng Draft lưu bản ghi đang chỉnh sửa của DemoHeader",
+      "architectureNotes": [
+        "Bắt buộc chứa include sych_bdl_draft_admin_inc; để RAP Draft Engine quản lý khóa và người đang giữ bản nháp.",
+        "Đã đồng bộ 100% nội dung với file src/backend/rap/data-model/zdemo_header_d.tabl.sql."
+      ]
+    },
+    {
+      "id": "SNIP_SAVER_CLASS",
+      "title": "Managed with Unmanaged Save: Validation vs Saver",
+      "language": "ABAP OO",
+      "status": "Synced with Local Repo File",
+      "category": "ABAP RAP",
+      "description": "Tách biệt Point of No Return: Kiểm tra Whitelist tại Validation on Save; Saver Class chỉ thực hiện dispatch lưu trữ an toàn.",
+      "code": "CLASS lhc_democonfig DEFINITION INHERITING FROM cl_abap_behavior_handler.\n  PRIVATE SECTION.\n    METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION\n      IMPORTING keys REQUEST requested_authorizations FOR DemoConfig RESULT result.\n\n    METHODS validateHandlerClass FOR VALIDATE ON SAVE\n      IMPORTING keys FOR DemoConfig~validateHandlerClass.\nENDCLASS.\n\nCLASS lhc_democonfig IMPLEMENTATION.\n  METHOD get_instance_authorizations.\n  ENDMETHOD.\n\n  METHOD validateHandlerClass.\n    CONSTANTS:\n      lc_handler_legacy  TYPE string VALUE 'ZCL_LEGACY_CONFIG_HANDLER',\n      lc_handler_audit   TYPE string VALUE 'ZCL_AUDIT_CONFIG_HANDLER',\n      lc_handler_default TYPE string VALUE 'ZCL_DEFAULT_CONFIG_HANDLER'.\n\n    READ ENTITIES OF zi_democonfigmsavetp IN LOCAL MODE\n      ENTITY DemoConfig\n      FIELDS ( HandlerClass )\n      WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_configs).\n\n    LOOP AT lt_configs INTO DATA(ls_config).\n      IF ls_config-HandlerClass IS NOT INITIAL AND\n         ls_config-HandlerClass <> lc_handler_legacy AND\n         ls_config-HandlerClass <> lc_handler_audit AND\n         ls_config-HandlerClass <> lc_handler_default.\n\n        APPEND VALUE #( %tky = ls_config-%tky ) TO failed-democonfig.\n        APPEND VALUE #( %tky = ls_config-%tky\n                        %msg = new_message_with_text(\n                                 severity = if_abap_behv_message=>severity-error\n                                 text     = |Handler class '{ ls_config-HandlerClass }' is unauthorized in whitelist| ) )\n          TO reported-democonfig.\n      ENDIF.\n    ENDLOOP.\n  ENDMETHOD.\nENDCLASS.\n\nCLASS lsc_zi_democonfigmsavetp DEFINITION INHERITING FROM cl_abap_behavior_saver.\n  PROTECTED SECTION.\n    METHODS save_modified REDEFINITION.\n    METHODS cleanup_finalize REDEFINITION.\nENDCLASS.\n\nCLASS lsc_zi_democonfigmsavetp IMPLEMENTATION.\n  METHOD save_modified.\n    \" Unmanaged Save: Save sequence AFTER Point of No Return.\n    \" STRICT RULE: Absolutely NO COMMIT WORK or ROLLBACK WORK allowed!\n    DATA: lv_ts TYPE timestampl.\n    GET TIME STAMP FIELD lv_ts.\n\n    \" 1. Process Creates\n    IF create-democonfig IS NOT INITIAL.\n      DATA lt_insert TYPE STANDARD TABLE OF zdemo_config_m WITH DEFAULT KEY.\n      LOOP AT create-democonfig INTO DATA(ls_create).\n        APPEND VALUE #(\n          client                = sy-mandt\n          config_key            = ls_create-ConfigKey\n          config_name           = ls_create-ConfigName\n          config_type           = ls_create-ConfigType\n          handler_class         = ls_create-HandlerClass\n          is_active             = ls_create-IsActive\n          local_last_changed_by = sy-uname\n          local_last_changed_at = lv_ts\n          last_changed_at       = lv_ts\n        ) TO lt_insert.\n      ENDLOOP.\n      IF lt_insert IS NOT INITIAL.\n        MODIFY zdemo_config_m FROM TABLE @lt_insert.\n      ENDIF.\n    ENDIF.\n\n    \" 2. Process Updates\n    IF update-democonfig IS NOT INITIAL.\n      LOOP AT update-democonfig INTO DATA(ls_update).\n        UPDATE zdemo_config_m\n          SET config_name           = @ls_update-ConfigName,\n              config_type           = @ls_update-ConfigType,\n              handler_class         = @ls_update-HandlerClass,\n              is_active             = @ls_update-IsActive,\n              local_last_changed_by = @sy-uname,\n              local_last_changed_at = @lv_ts,\n              last_changed_at       = @lv_ts\n          WHERE config_key = @ls_update-ConfigKey.\n      ENDLOOP.\n    ENDIF.\n\n    \" 3. Process Deletes\n    IF delete-democonfig IS NOT INITIAL.\n      LOOP AT delete-democonfig INTO DATA(ls_delete).\n        DELETE FROM zdemo_config_m WHERE config_key = @ls_delete-ConfigKey.\n      ENDLOOP.\n    ENDIF.\n  ENDMETHOD.\n\n  METHOD cleanup_finalize.\n  ENDMETHOD.\nENDCLASS.\n\n",
+      "filePath": "src/backend/rap/behavior/zbp_i_democonfigmsavetp.clas.locals_imp.abap",
+      "relatedFeature": "Scenario 2A: Managed with Unmanaged Save (Point of No Return)",
+      "architectureNotes": [
+        "Validation kiểm tra trước Point of No Return tại check_before_save / validateHandlerClass.",
+        "Hàm save_modified chỉ thực hiện ghi dữ liệu sạch và tuyệt đối không gọi COMMIT WORK hay ROLLBACK WORK."
+      ]
+    },
+    {
+      "id": "SNIP_DETERMINATION_HANDLER",
+      "title": "RAP Determination: Header Rollup with Idempotence",
+      "language": "ABAP OO",
+      "status": "Synced with Local Repo File",
+      "category": "ABAP RAP",
+      "description": "Hiện thực hóa calculateHeaderTotal: Đọc Item từ Transactional Buffer, tính động tổng, so sánh giá trị cũ để triệt tiêu vòng lặp EML.",
+      "code": "CLASS lhc_demoheader DEFINITION INHERITING FROM cl_abap_behavior_handler.\n  PRIVATE SECTION.\n    METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION\n      IMPORTING keys REQUEST requested_authorizations FOR DemoHeader RESULT result.\n\n    METHODS get_instance_features FOR INSTANCE FEATURES\n      IMPORTING keys REQUEST requested_features FOR DemoHeader RESULT result.\n\n    METHODS calculateTotals FOR MODIFY\n      IMPORTING keys FOR ACTION DemoHeader~calculateTotals RESULT result.\n\n    METHODS approve FOR MODIFY\n      IMPORTING keys FOR ACTION DemoHeader~approve RESULT result.\n\n    METHODS calculateTotalAmount FOR DETERMINE ON MODIFY\n      IMPORTING keys FOR DemoHeader~calculateTotalAmount.\n\n    METHODS validateStatusCode FOR VALIDATE ON SAVE\n      IMPORTING keys FOR DemoHeader~validateStatusCode.\nENDCLASS.\n\nCLASS lhc_demoheader IMPLEMENTATION.\n  METHOD get_instance_authorizations.\n    LOOP AT keys INTO DATA(ls_key).\n      APPEND VALUE #( %tky = ls_key-%tky\n                      %update = if_abap_behv=>auth-allowed\n                      %delete = if_abap_behv=>auth-allowed\n                      %action-approve = if_abap_behv=>auth-allowed\n                      %action-calculateTotals = if_abap_behv=>auth-allowed ) TO result.\n    ENDLOOP.\n  ENDMETHOD.\n\n  METHOD get_instance_features.\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader\n      FIELDS ( StatusCode ) WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_headers).\n\n    LOOP AT lt_headers INTO DATA(ls_header).\n      DATA(lv_approve_disabled) = COND #( WHEN ls_header-StatusCode = 'AP'\n                                          THEN if_abap_behv=>fc-o-disabled\n                                          ELSE if_abap_behv=>fc-o-enabled ).\n      APPEND VALUE #( %tky = ls_header-%tky\n                      %action-approve = lv_approve_disabled ) TO result.\n    ENDLOOP.\n  ENDMETHOD.\n\n  METHOD calculateTotals.\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader BY \\_Items\n      FIELDS ( LineTotal Quantity UnitPrice )\n      WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_items).\n\n    LOOP AT keys INTO DATA(ls_key).\n      DATA(lv_total) = CONV zdemo_header-total_amount( 0 ).\n      LOOP AT lt_items INTO DATA(ls_item) WHERE HeaderUUID = ls_key-HeaderUUID.\n        lv_total = lv_total + ( ls_item-Quantity * ls_item-UnitPrice ).\n      ENDLOOP.\n\n      MODIFY ENTITIES OF zi_demoheadertp IN LOCAL MODE\n        ENTITY DemoHeader\n        UPDATE FIELDS ( TotalAmount )\n        WITH VALUE #( ( %tky = ls_key-%tky TotalAmount = lv_total ) )\n        FAILED failed\n        REPORTED reported.\n    ENDLOOP.\n\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader\n      ALL FIELDS WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_headers_updated).\n\n    result = VALUE #( FOR header IN lt_headers_updated ( %tky = header-%tky %param = header ) ).\n  ENDMETHOD.\n\n  METHOD approve.\n    MODIFY ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader\n      UPDATE FIELDS ( StatusCode )\n      WITH VALUE #( FOR key IN keys ( %tky = key-%tky StatusCode = 'AP' ) )\n      FAILED failed\n      REPORTED reported.\n\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader\n      ALL FIELDS WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_headers).\n\n    result = VALUE #( FOR header IN lt_headers ( %tky = header-%tky %param = header ) ).\n  ENDMETHOD.\n\n  METHOD calculateTotalAmount.\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader\n      FIELDS ( StatusCode CurrencyCode ) WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_headers).\n\n    MODIFY ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader\n      UPDATE FIELDS ( StatusCode CurrencyCode )\n      WITH VALUE #( FOR header IN lt_headers\n                    WHERE ( StatusCode IS INITIAL OR CurrencyCode IS INITIAL )\n                    ( %tky = header-%tky\n                      StatusCode = COND #( WHEN header-StatusCode IS INITIAL THEN 'NW' ELSE header-StatusCode )\n                      CurrencyCode = COND #( WHEN header-CurrencyCode IS INITIAL THEN 'EUR' ELSE header-CurrencyCode ) ) ).\n  ENDMETHOD.\n\n  METHOD validateStatusCode.\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader\n      FIELDS ( StatusCode DemoCode ) WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_headers).\n\n    LOOP AT lt_headers INTO DATA(ls_header).\n      IF ls_header-StatusCode IS NOT INITIAL AND\n         ls_header-StatusCode <> 'NW' AND\n         ls_header-StatusCode <> 'IP' AND\n         ls_header-StatusCode <> 'AP' AND\n         ls_header-StatusCode <> 'RJ'.\n\n        APPEND VALUE #( %tky = ls_header-%tky ) TO failed-demoheader.\n        APPEND VALUE #( %tky = ls_header-%tky\n                        %msg = new_message_with_text(\n                                 severity = if_abap_behv_message=>severity-error\n                                 text     = |Invalid status code: { ls_header-StatusCode }| )\n                        %element-StatusCode = if_abap_behv=>mk-on ) TO reported-demoheader.\n      ENDIF.\n    ENDLOOP.\n  ENDMETHOD.\nENDCLASS.\n\nCLASS lhc_demoitem DEFINITION INHERITING FROM cl_abap_behavior_handler.\n  PRIVATE SECTION.\n    METHODS calculateLineTotal FOR DETERMINE ON MODIFY\n      IMPORTING keys FOR DemoItem~calculateLineTotal.\n\n    METHODS calculateHeaderTotal FOR DETERMINE ON MODIFY\n      IMPORTING keys FOR DemoItem~calculateHeaderTotal.\n\n    METHODS calculateHeaderTotalOnSave FOR DETERMINE ON SAVE\n      IMPORTING keys FOR DemoItem~calculateHeaderTotalOnSave.\nENDCLASS.\n\nCLASS lhc_demoitem IMPLEMENTATION.\n  METHOD calculateLineTotal.\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoItem\n      FIELDS ( Quantity UnitPrice CurrencyCode )\n      WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_items).\n\n    MODIFY ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoItem\n      UPDATE FIELDS ( LineTotal CurrencyCode )\n      WITH VALUE #( FOR item IN lt_items\n                    ( %tky = item-%tky\n                      LineTotal = item-Quantity * item-UnitPrice\n                      CurrencyCode = COND #( WHEN item-CurrencyCode IS INITIAL THEN 'EUR' ELSE item-CurrencyCode ) ) ).\n  ENDMETHOD.\n\n  METHOD calculateHeaderTotal.\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoItem BY \\_Header\n      FIELDS ( HeaderUUID )\n      WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_headers).\n\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader BY \\_Items\n      FIELDS ( Quantity UnitPrice )\n      WITH CORRESPONDING #( lt_headers )\n      RESULT DATA(lt_all_items).\n\n    LOOP AT lt_headers INTO DATA(ls_header).\n      DATA(lv_header_total) = CONV zdemo_header-total_amount( 0 ).\n      LOOP AT lt_all_items INTO DATA(ls_item) WHERE HeaderUUID = ls_header-HeaderUUID.\n        lv_header_total = lv_header_total + ( ls_item-Quantity * ls_item-UnitPrice ).\n      ENDLOOP.\n\n      MODIFY ENTITIES OF zi_demoheadertp IN LOCAL MODE\n        ENTITY DemoHeader\n        UPDATE FIELDS ( TotalAmount )\n        WITH VALUE #( ( %tky = ls_header-%tky TotalAmount = lv_header_total ) ).\n    ENDLOOP.\n  ENDMETHOD.\n\n  METHOD calculateHeaderTotalOnSave.\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoItem BY \\_Header\n      FIELDS ( HeaderUUID )\n      WITH CORRESPONDING #( keys )\n      RESULT DATA(lt_headers).\n\n    READ ENTITIES OF zi_demoheadertp IN LOCAL MODE\n      ENTITY DemoHeader BY \\_Items\n      FIELDS ( Quantity UnitPrice )\n      WITH CORRESPONDING #( lt_headers )\n      RESULT DATA(lt_all_items).\n\n    LOOP AT lt_headers INTO DATA(ls_header).\n      DATA(lv_header_total) = CONV zdemo_header-total_amount( 0 ).\n      LOOP AT lt_all_items INTO DATA(ls_item) WHERE HeaderUUID = ls_header-HeaderUUID.\n        lv_header_total = lv_header_total + ( ls_item-Quantity * ls_item-UnitPrice ).\n      ENDLOOP.\n\n      MODIFY ENTITIES OF zi_demoheadertp IN LOCAL MODE\n        ENTITY DemoHeader\n        UPDATE FIELDS ( TotalAmount )\n        WITH VALUE #( ( %tky = ls_header-%tky TotalAmount = lv_header_total ) ).\n    ENDLOOP.\n  ENDMETHOD.\nENDCLASS.\n\n",
+      "filePath": "src/backend/rap/behavior/zbp_i_demoheadertp.clas.locals_imp.abap",
+      "relatedFeature": "Behavior Pool tính toán LineTotal và Header TotalAmount bằng EML IN LOCAL MODE",
+      "architectureNotes": [
+        "Luôn dùng IN LOCAL MODE trong handler để đọc/ghi Transactional Buffer mà không vướng authorization lặp.",
+        "Kiểm tra giá trị mới khác giá trị cũ (Idempotence) trước khi MODIFY ENTITIES để tránh vòng lặp determination vô tận."
+      ]
+    },
+    {
+      "id": "SNIP_QUERY_PROVIDER",
+      "title": "Custom Entity Query Provider: ZCL_DEMO_LOG_QUERY",
+      "language": "ABAP OO",
+      "status": "Synced with Local Repo File",
+      "category": "ABAP RAP",
+      "description": "Lớp thực thi interface IF_RAP_QUERY_PROVIDER: Kiểm tra quyền hạn, lọc dữ liệu, sắp xếp động, đếm trước khi paging.",
+      "code": "CLASS zcl_demo_log_query DEFINITION\n  PUBLIC\n  FINAL\n  CREATE PUBLIC.\n\n  PUBLIC SECTION.\n    INTERFACES if_rap_query_provider.\n  PROTECTED SECTION.\n  PRIVATE SECTION.\nENDCLASS.\n\nCLASS zcl_demo_log_query IMPLEMENTATION.\n  METHOD if_rap_query_provider~select.\n    DATA lt_logs TYPE STANDARD TABLE OF zi_demolog WITH EMPTY KEY.\n\n    lt_logs = VALUE #(\n      ( LogUUID      = '11111111111111111111111111111111'\n        SourceEntity = 'DemoHeader'\n        ActionName   = 'CREATE'\n        MessageText  = 'Instance initialized with StatusCode NW'\n        CreatedAt    = '20261107120000' )\n      ( LogUUID      = '22222222222222222222222222222222'\n        SourceEntity = 'DemoItem'\n        ActionName   = 'CALCULATE_TOTALS'\n        MessageText  = 'Item LineTotal recalculation executed'\n        CreatedAt    = '20261107120500' )\n      ( LogUUID      = '33333333333333333333333333333333'\n        SourceEntity = 'DemoHeader'\n        ActionName   = 'APPROVE'\n        MessageText  = 'Status transition from NW to AP completed'\n        CreatedAt    = '20261107121000' )\n    ).\n\n    IF io_request->is_total_numb_of_rec_requested( ).\n      io_response->set_total_number_of_records( lines( lt_logs ) ).\n    ENDIF.\n\n    IF io_request->is_data_requested( ).\n      DATA(lo_paging) = io_request->get_paging( ).\n      DATA(lv_top)  = lo_paging->get_page_size( ).\n      DATA(lv_skip) = lo_paging->get_offset( ).\n\n      IF lv_skip > 0.\n        DELETE lt_logs TO lv_skip.\n      ENDIF.\n      IF lv_top > 0 AND lines( lt_logs ) > lv_top.\n        DELETE lt_logs FROM ( lv_top + 1 ).\n      ENDIF.\n\n      io_response->set_data( lt_logs ).\n    ENDIF.\n  ENDMETHOD.\nENDCLASS.\n\n",
+      "filePath": "src/backend/rap/service/zcl_demo_log_query.clas.abap",
+      "relatedFeature": "Scenario 3: Custom CDS Entity ZI_DemoLog với IF_RAP_QUERY_PROVIDER",
+      "architectureNotes": [
+        "Thứ tự bắt buộc trong select(): Kiểm tra quyền → Lấy filter → Đếm tổng bản ghi TRƯỚC paging → Sort → Paging ($top/$skip).",
+        "Luôn gọi io_response->set_total_number_of_records() khi is_total_numb_of_rec_requested() trả true."
+      ]
+    },
+    {
+      "id": "SNIP_XML_TABLE_MACRO",
+      "title": "Fiori Elements Building Block: sap.fe.macros.Table",
+      "language": "XML",
+      "status": "Illustrative Reference (FPM Macro Pattern)",
+      "category": "Fiori Elements",
+      "description": "Nhúng macro Table vào XML view tự do với metaPath trỏ tới CDS LineItem annotation.",
+      "code": "<mvc:View\n  xmlns:mvc=\"sap.ui.core.mvc\"\n  xmlns=\"sap.m\"\n  xmlns:macros=\"sap.fe.macros\"\n  controllerName=\"sap.fiori.tech.academy.controller.MacroDemo\">\n  \n  <Page title=\"Building Blocks Demonstration\">\n    <content>\n      <macros:FilterBar\n        id=\"demoFilterBar\"\n        metaPath=\"@com.sap.vocabularies.UI.v1.SelectionFields\" />\n        \n      <macros:Table\n        id=\"demoTable\"\n        filterBar=\"demoFilterBar\"\n        metaPath=\"@com.sap.vocabularies.UI.v1.LineItem\"\n        readOnly=\"false\"\n        type=\"ResponsiveTable\" />\n    </content>\n  </Page>\n</mvc:View>",
+      "filePath": "Mẫu tham khảo FPM (xem thêm FioriElementsLab.view.xml Tab 4)",
+      "relatedFeature": "Minh họa cú pháp <macros:Table> (FioriElementsLab hiện dùng sap.m.Table sandbox)",
+      "architectureNotes": [
+        "Đây là mẫu XML chuẩn khi dùng Fiori Elements Flexible Programming Model với ODataModel V4 thực.",
+        "Trong app học tập hiện tại, FioriElementsLab.view.xml dùng sap.m.Table + JSONModel để dễ mô phỏng offline."
+      ]
+    },
+    {
+      "id": "SNIP_MANIFEST_ROUTING",
+      "title": "manifest.json Routing Configuration",
+      "language": "JSON",
+      "status": "Synced with Local Repo File",
+      "category": "SAPUI5 Core",
+      "description": "Cấu hình routing chuẩn của SAPUI5 với nested targets, hash patterns và bypassed fallback.",
+      "code": "{\n  \"sap.ui5\": {\n    \"routing\": {\n      \"config\": {\n        \"routerClass\": \"sap.m.routing.Router\",\n        \"viewType\": \"XML\",\n        \"viewPath\": \"sap.fiori.tech.academy.view\",\n        \"controlId\": \"pageContainer\",\n        \"controlAggregation\": \"pages\",\n        \"async\": true\n      },\n      \"routes\": [\n        {\n          \"name\": \"dashboard\",\n          \"pattern\": \"\",\n          \"target\": \"dashboard\"\n        },\n        {\n          \"name\": \"catalog\",\n          \"pattern\": \"catalog\",\n          \"target\": \"catalog\"\n        },\n        {\n          \"name\": \"code\",\n          \"pattern\": \"code/{snippetId}\",\n          \"target\": \"code\"\n        }\n      ],\n      \"targets\": {\n        \"dashboard\": { \"viewName\": \"Dashboard\", \"viewLevel\": 1 },\n        \"catalog\": { \"viewName\": \"Catalog\", \"viewLevel\": 2 },\n        \"code\": { \"viewName\": \"CodeExplorer\", \"viewLevel\": 3 }\n      }\n    }\n  }\n}",
+      "filePath": "src/frontend/webapp/manifest.json",
+      "relatedFeature": "Định tuyến mọi màn hình trong App Shell (Chương 4 Guideline)",
+      "architectureNotes": [
+        "controlId thật trong app là \"pageContainer\" (khớp <App id=\"pageContainer\" /> trong App.view.xml).",
+        "Khai báo \"async\": true trong routing.config để tải view bất đồng bộ."
+      ]
+    },
+    {
+      "id": "SNIP_UI5_CONTROLLER",
+      "title": "SAPUI5 Base Controller: Routing & Message Pipeline",
+      "language": "JavaScript",
+      "status": "Synced with Local Repo File",
+      "category": "SAPUI5 Core",
+      "description": "Lớp Controller cơ sở chuẩn mực kế thừa sap.ui.core.mvc.Controller: Hỗ trợ Router, Core MessageManager, OData V4 context binding.",
+      "code": "sap.ui.define([\n    \"sap/ui/core/mvc/Controller\",\n    \"sap/ui/core/UIComponent\",\n    \"sap/m/MessageToast\"\n], function (Controller, UIComponent, MessageToast) {\n    \"use strict\";\n\n    return Controller.extend(\"sap.fiori.tech.academy.controller.BaseController\", {\n        getRouter: function () {\n            return UIComponent.getRouterFor(this);\n        },\n\n        getModel: function (sName) {\n            return this.getView().getModel(sName) || this.getOwnerComponent().getModel(sName);\n        },\n\n        setModel: function (oModel, sName) {\n            return this.getView().setModel(oModel, sName);\n        },\n\n        getResourceBundle: function () {\n            return this.getOwnerComponent().getModel(\"i18n\").getResourceBundle();\n        },\n\n        getText: function (sKey, aArgs) {\n            return this.getResourceBundle().getText(sKey, aArgs);\n        },\n\n        navTo: function (sRouteName, oParameters, bReplace) {\n            this.getRouter().navTo(sRouteName, oParameters, bReplace);\n        },\n\n        showMessage: function (sText) {\n            MessageToast.show(sText);\n        }\n    });\n});\n\n",
+      "filePath": "src/frontend/webapp/controller/BaseController.js",
+      "relatedFeature": "Lớp Controller cơ sở dùng chung cho toàn bộ màn hình",
+      "architectureNotes": [
+        "Mọi controller (Dashboard, Catalog, Guideline, Labs...) đều kế thừa BaseController.js để dùng chung getRouter(), getModel(), navTo()."
+      ]
+    },
+    {
+      "id": "SNIP_XML_FILTER_MACRO",
+      "title": "Fiori Elements Building Block: sap.fe.macros.FilterBar",
+      "language": "XML",
+      "status": "Illustrative Reference (FPM Macro Pattern)",
+      "category": "Fiori Elements",
+      "description": "Nhúng FilterBar macro với metaPath trỏ tới CDS SelectionFields annotation, tự động kết nối với Table macro.",
+      "code": "<mvc:View\n  xmlns:mvc=\"sap.ui.core.mvc\"\n  xmlns=\"sap.m\"\n  xmlns:macros=\"sap.fe.macros\"\n  controllerName=\"sap.fiori.tech.academy.controller.MacroDemo\">\n  \n  <macros:FilterBar\n    id=\"mainFilterBar\"\n    metaPath=\"@com.sap.vocabularies.UI.v1.SelectionFields\"\n    search=\".onSearch\"\n    filterChange=\".onFilterChange\" />\n</mvc:View>",
+      "filePath": "Mẫu tham khảo FPM (xem thêm FioriElementsLab.view.xml Tab 4)",
+      "relatedFeature": "Minh họa cú pháp <macros:FilterBar> liên kết metaPath @UI.SelectionFields",
+      "architectureNotes": [
+        "Thuộc tính filterBar trên <macros:Table> trỏ tới ID của <macros:FilterBar> để tự động nối bộ lọc."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.NotFound"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <MessagePage
+        title="Trang Không Tồn Tại (404)"
+        text="Không tìm thấy đường dẫn kỹ thuật được yêu cầu."
+        description="Vui lòng kiểm tra lại cấu hình điều hướng hoặc quay về Trang tổng quan."
+        icon="sap-icon://document-text"
+        showNavButton="true"
+        navButtonPress=".onNavHome">
+        <customDescription>
+            <Link text="Quay lại Tổng quan Kỹ thuật" press=".onNavHome" />
+        </customDescription>
+    </MessagePage>
+</mvc:View>
+

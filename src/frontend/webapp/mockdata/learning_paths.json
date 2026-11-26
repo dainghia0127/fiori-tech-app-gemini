@@ -1,0 +1,50 @@
+{
+  "paths": [
+    {
+      "id": "PATH_ASSOC",
+      "title": "Track 1: Associate Technical Developer",
+      "level": "Associate",
+      "icon": "sap-icon://study-leave",
+      "progress": 35,
+      "totalLabs": 3,
+      "completedLabs": 1,
+      "description": "Nắm vững nền tảng kiến trúc Fiori Elements V4, Freestyle MVC, Component lifecycle và OData V4 cơ bản.",
+      "labs": [
+        { "id": "LAB_1", "name": "Lab 1: Fiori Elements V4 Floorplans", "status": "Completed" },
+        { "id": "LAB_2", "name": "Lab 2: Freestyle SAPUI5 Core Engineering", "status": "In Progress" },
+        { "id": "LAB_3", "name": "Lab 3: OData V4 Protocol Mastery", "status": "Pending" }
+      ]
+    },
+    {
+      "id": "PATH_PROF",
+      "title": "Track 2: Professional RAP & UI5 Engineer",
+      "level": "Professional",
+      "icon": "sap-icon://wrench",
+      "progress": 15,
+      "totalLabs": 3,
+      "completedLabs": 0,
+      "description": "Làm chủ mô hình Managed RAP BO, Determinations, Side Effects, ETag concurrency, Building Blocks và DCL security.",
+      "labs": [
+        { "id": "LAB_4", "name": "Lab 4: RAP Managed BO with Draft", "status": "In Progress" },
+        { "id": "LAB_5", "name": "Lab 5: Advanced RAP (Unmanaged & Custom Query)", "status": "Pending" },
+        { "id": "LAB_6", "name": "Lab 6: Clean Core, ABAP Cloud & Security", "status": "Pending" }
+      ]
+    },
+    {
+      "id": "PATH_ARCH",
+      "title": "Track 3: Lead Technical Architect",
+      "level": "Architect",
+      "icon": "sap-icon://line-charts",
+      "progress": 0,
+      "totalLabs": 3,
+      "completedLabs": 0,
+      "description": "Thiết kế hệ thống doanh nghiệp: Cross-BO association, Save Sequence Governance, Performance Profiling, FLP Deployment.",
+      "labs": [
+        { "id": "LAB_7", "name": "Lab 7: Enterprise Integration & SM59", "status": "Pending" },
+        { "id": "LAB_8", "name": "Lab 8: Test Automation (QUnit, OPA5, ABAP Unit)", "status": "Pending" },
+        { "id": "LAB_9", "name": "Lab 9: Performance Profiling & FLP Delivery", "status": "Pending" }
+      ]
+    }
+  ]
+}
+

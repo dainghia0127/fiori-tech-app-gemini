@@ -1,0 +1,27 @@
+# ui5-deploy.yaml: Cấu hình Deploy ứng dụng SAP Fiori vào SAP ABAP BSP Repository
+# Tuân thủ Transport Request S4DK911884 và Package ZNGHIANDD_TEST
+specVersion: '3.0'
+metadata:
+  name: sap.fiori.tech.academy
+type: application
+builder:
+  resources:
+    excludes:
+      - '/test/**'
+      - '/localService/**'
+  customTasks:
+    - name: ui5-task-zipper
+      afterTask: generateComponentPreload
+      configuration:
+        archiveName: ZFIORI_TECH_APP
+    - name: deploy-to-abap
+      afterTask: ui5-task-zipper
+      configuration:
+        target:
+          url: http://s4h2025.corp.internal:8000
+          client: '100'
+        app:
+          name: ZFIORI_TECH_APP
+          package: ZNGHIANDD_TEST
+          transport: S4DK911884
+

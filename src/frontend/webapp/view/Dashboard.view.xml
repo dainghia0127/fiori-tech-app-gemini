@@ -1,0 +1,218 @@
+<mvc:View
+    controllerName="sap.fiori.tech.academy.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+
+    <Page
+        id="dashboardPage"
+        title="{i18n>dashKpiTitle}"
+        showNavButton="false"
+        backgroundDesign="Solid"
+        class="sapUiResponsiveContentPadding">
+
+        <content>
+            <!-- ================================================================= -->
+            <!-- 1. TECHNICAL OVERVIEW HERO BANNER                                 -->
+            <!-- (Đã tách triệt để Standalone Mock, Guideline, Handle Error, Hướng Dẫn) -->
+            <!-- ================================================================= -->
+            <VBox class="academyHeroBanner sapUiSmallMarginBottom">
+                <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                    <VBox class="sapUiSmallMarginEnd">
+                        <Title
+                            text="🎓 SAP Fiori Technical Academy (V4)"
+                            level="H2"
+                            class="academyHeroTitle" />
+                        <Text
+                            text="Nền tảng thực hành &amp; chuẩn hóa kỹ thuật chuyên sâu về SAPUI5, OData V4 và ABAP RAP Clean Core trên SAP S/4HANA 2025."
+                            class="academyHeroSubtitle" />
+                    </VBox>
+
+                    <!-- Lối tắt nhanh tới các phân hệ kỹ thuật trọng tâm -->
+                    <HBox alignItems="Center" class="sapUiTinyMarginTop" wrap="Wrap">
+                        <Button
+                            text="👉 Bắt Đầu: Hướng Dẫn"
+                            icon="sap-icon://education"
+                            type="Emphasized"
+                            press=".onNavToUserManual"
+                            class="academyActionPill sapUiTinyMarginEnd"
+                            tooltip="Dành cho người mới: Xem sổ tay vận hành và kịch bản kiểm thử 10 phân hệ" />
+                        <Button
+                            text="Từ Điển Kỹ Thuật"
+                            icon="sap-icon://study-leave"
+                            type="Default"
+                            press=".onNavToCatalog"
+                            class="academyActionPill sapUiTinyMarginEnd"
+                            tooltip="Tra cứu 10 phân hệ kỹ thuật và hơn 80 chuyên đề" />
+                        <Button
+                            text="Phòng Lab Nâng Cao"
+                            icon="sap-icon://lab"
+                            type="Ghost"
+                            press=".onNavToAdvancedLab"
+                            class="academyActionPill"
+                            tooltip="Khám phá DCL Security, SM59, QUnit/OPA5 và FLP Spaces" />
+                    </HBox>
+                </HBox>
+            </VBox>
+
+            <!-- Gợi Ý Lộ Trình Cho Người Mới Bắt Đầu -->
+            <MessageStrip
+                text="🧭 Lộ Trình Khởi Động Cho Người Mới: 1. Đọc Sổ Tay [📖 Hướng Dẫn] để nắm tổng thể ➔ 2. Thực hành từng bước tại [🎓 Cẩm Nang Fresher] ➔ 3. Trải nghiệm phòng lab Fiori Elements V4 và Freestyle SAPUI5!"
+                type="Information"
+                showIcon="true"
+                class="sapUiSmallMarginBottom" />
+
+            <!-- ================================================================= -->
+            <!-- 2. KPI SUMMARY CARDS (KIẾN TRÚC & MÔI TRƯỜNG VẬN HÀNH)            -->
+            <!-- ================================================================= -->
+            <VBox class="sapUiMediumMarginTop sapUiTinyMarginBottom">
+                <Title text="📊 Chỉ Số Kiến Trúc &amp; Môi Trường Vận Hành" level="H3" class="academySectionTitle" />
+                <Text text="Tổng quan thông số kỹ thuật phân hệ, lab thực hành và nền tảng SAP S/4HANA 2025" class="academySectionSubtext" />
+            </VBox>
+
+            <l:Grid
+                defaultSpan="XL3 L3 M6 S12"
+                hSpacing="1"
+                vSpacing="1"
+                class="sapUiSmallMarginBottom">
+                
+                <GenericTile
+                    class="sapUiTinyMarginBegin academyTileCard"
+                    header="Nhóm Kỹ Thuật Cốt Lõi"
+                    subheader="Phân hệ Kiến trúc"
+                    press=".onNavToCatalog">
+                    <TileContent unit="Phân hệ">
+                        <NumericContent
+                            value="10"
+                            icon="sap-icon://dimension"
+                            valueColor="Good" />
+                    </TileContent>
+                </GenericTile>
+
+                <GenericTile
+                    class="sapUiTinyMarginBegin academyTileCard"
+                    header="Chuyên Đề Kỹ Thuật"
+                    subheader="Fiori, OData V4 &amp; RAP"
+                    press=".onNavToCatalog">
+                    <TileContent unit="Topics">
+                        <NumericContent
+                            value="80"
+                            indicator="Up"
+                            icon="sap-icon://study-leave"
+                            valueColor="Neutral" />
+                    </TileContent>
+                </GenericTile>
+
+                <GenericTile
+                    class="sapUiTinyMarginBegin academyTileCard"
+                    header="Phòng Lab Thực Hành"
+                    subheader="Từ FE V4 tới Clean Core"
+                    press=".onNavToCatalog">
+                    <TileContent unit="Labs">
+                        <NumericContent
+                            value="9"
+                            icon="sap-icon://lab"
+                            valueColor="Critical" />
+                    </TileContent>
+                </GenericTile>
+
+                <GenericTile
+                    class="sapUiTinyMarginBegin academyTileCard"
+                    header="S/4HANA 2025 Foundation"
+                    subheader="SAP_BASIS &amp; SAP_UI"
+                    press=".onNavToArchitecture">
+                    <TileContent unit="Release">
+                        <NumericContent
+                            value="816"
+                            icon="sap-icon://database"
+                            valueColor="Good" />
+                    </TileContent>
+                </GenericTile>
+            </l:Grid>
+
+            <!-- ================================================================= -->
+            <!-- 3. LEARNING TRACKS (3 LEVEL CARDS)                                -->
+            <!-- ================================================================= -->
+            <VBox class="sapUiMediumMarginTop sapUiTinyMarginBottom">
+                <Title text="{i18n>dashPathsTitle}" level="H3" class="academySectionTitle" />
+                <Text text="Lộ trình học tập và thực hành phân tầng từ cơ bản tới chuyên gia theo chuẩn Clean Core" class="academySectionSubtext" />
+            </VBox>
+
+            <l:Grid
+                defaultSpan="XL4 L4 M12 S12"
+                hSpacing="1"
+                vSpacing="1"
+                content="{paths>/paths}"
+                class="sapUiSmallMarginBottom">
+                <f:Card class="sapUiTinyMargin">
+                    <f:header>
+                        <card:Header
+                            title="{paths>title}"
+                            subtitle="{paths>description}"
+                            iconSrc="{paths>icon}"
+                            statusText="{paths>level}"
+                            titleWrapping="true"
+                            subtitleWrapping="true" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <Label text="Tiến độ Hoàn thành:" />
+                            <ProgressIndicator
+                                percentValue="{paths>progress}"
+                                displayValue="{paths>progress}%"
+                                state="{= ${paths>progress} > 30 ? 'Success' : 'Information' }"
+                                class="sapUiSmallMarginBottom" />
+                            <List items="{path: 'paths>labs', templateShareable: false}">
+                                <StandardListItem
+                                    title="{paths>name}"
+                                    info="{paths>status}"
+                                    infoState="{= ${paths>status} === 'Completed' ? 'Success' : (${paths>status} === 'In Progress' ? 'Warning' : 'None') }"
+                                    icon="sap-icon://course-book"
+                                    wrapping="true" />
+                            </List>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+            </l:Grid>
+
+            <!-- ================================================================= -->
+            <!-- 4. 10 TECHNICAL DOMAINS GRID                                      -->
+            <!-- ================================================================= -->
+            <VBox class="sapUiMediumMarginTop sapUiTinyMarginBottom">
+                <Title text="📚 10 Phân Hệ Kỹ Thuật Chuyên Sâu (Technical Categories)" level="H3" class="academySectionTitle" />
+                <Text text="Khám phá chi tiết các chuyên đề chuyên sâu từ Fiori Elements đến ABAP RAP &amp; Clean Core" class="academySectionSubtext" />
+            </VBox>
+
+            <l:Grid
+                defaultSpan="XL6 L6 M12 S12"
+                hSpacing="1"
+                vSpacing="1"
+                content="{catalog>/categories}">
+                <f:Card class="sapUiTinyMargin">
+                    <f:header>
+                        <card:Header
+                            title="{catalog>name}"
+                            subtitle="{catalog>description}"
+                            iconSrc="{catalog>icon}"
+                            statusText="{catalog>count} Chuyên đề"
+                            titleWrapping="true"
+                            subtitleWrapping="true" />
+                    </f:header>
+                    <f:content>
+                        <HBox justifyContent="End" class="sapUiSmallMargin">
+                            <Button
+                                text="Khám phá Danh mục"
+                                icon="sap-icon://navigation-right-arrow"
+                                type="Ghost"
+                                press=".onCategoryPress" />
+                        </HBox>
+                    </f:content>
+                </f:Card>
+            </l:Grid>
+
+        </content>
+    </Page>
+</mvc:View>

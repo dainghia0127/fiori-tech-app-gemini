@@ -1,0 +1,71 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+
+    <Dialog
+        id="quickInspectDialog"
+        title="Thanh Tra Kỹ Thuật Module: {freestyleModel>/inspectedModule/name}"
+        icon="sap-icon://inspect"
+        contentWidth="580px"
+        resizable="true"
+        draggable="true"
+        class="sapUiContentPadding">
+
+        <content>
+            <VBox class="sapUiTinyMargin">
+                <MessageStrip
+                    text="XML Fragment độc lập được nạp bất đồng bộ qua Fragment.load() và gắn kết vòng đời với Freestyle Controller."
+                    type="Information"
+                    showIcon="true"
+                    class="sapUiSmallMarginBottom" />
+
+                <l:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                    <VBox class="sapUiTinyMarginBottom">
+                        <Label text="Mã Phân Hệ (ID):" />
+                        <Text text="{freestyleModel>/inspectedModule/id}" style="font-weight: 600;" />
+                    </VBox>
+                    <VBox class="sapUiTinyMarginBottom">
+                        <Label text="Package SAP:" />
+                        <Text text="{freestyleModel>/inspectedModule/package}" style="font-family: monospace;" />
+                    </VBox>
+                    <VBox class="sapUiTinyMarginBottom">
+                        <Label text="Kỹ Sư Phụ Trách:" />
+                        <Text text="{freestyleModel>/inspectedModule/responsible}" />
+                    </VBox>
+                    <VBox class="sapUiTinyMarginBottom">
+                        <Label text="Điểm Sức Khỏe Kỹ Thuật:" />
+                        <ObjectNumber
+                            number="{freestyleModel>/inspectedModule/healthScore}"
+                            unit="/ 100"
+                            state="{= ${freestyleModel>/inspectedModule/healthScore} >= 90 ? 'Success' : 'Warning' }" />
+                    </VBox>
+                </l:Grid>
+
+                <Title text="Chi Tiết Thuộc Tính Kỹ Thuật:" level="H5" class="sapUiTinyMarginTopBottom" />
+                <Panel headerText="Thông Số Runtime" class="sapUiTinyMarginBottom">
+                    <VBox class="sapUiSmallMargin">
+                        <Text text="Mô tả: {freestyleModel>/inspectedModule/details/description}" class="sapUiSmallMarginBottom" wrapping="true" />
+                        <Text text="Root Entity / Binding: {= ${freestyleModel>/inspectedModule/details/rootEntity} || ${freestyleModel>/inspectedModule/details/serviceName} || ${freestyleModel>/inspectedModule/details/framework} || ${freestyleModel>/inspectedModule/details/languageVersion} }" style="font-family: monospace; font-size: 12px; color: #0854a0;" wrapping="true" />
+                    </VBox>
+                </Panel>
+            </VBox>
+        </content>
+
+        <beginButton>
+            <Button
+                text="Xác Nhận Đạt Chuẩn"
+                type="Emphasized"
+                icon="sap-icon://accept"
+                press=".onConfirmModuleInspection" />
+        </beginButton>
+
+        <endButton>
+            <Button
+                text="Đóng"
+                press=".onCloseInspectDialog" />
+        </endButton>
+
+    </Dialog>
+</core:FragmentDefinition>
+
